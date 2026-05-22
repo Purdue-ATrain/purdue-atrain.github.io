@@ -207,7 +207,44 @@ tailwind.config = {
     <div class="mb-14 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 01</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Quick start</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Three commands to a working analysis.</p>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Three commands to a working analysis &mdash; or one prompt for a guided tour.</p>
+    </div>
+
+    <!-- ===== Step 00: AI-guided tour ===== -->
+    <div class="step-card rounded-lg p-6 mb-8 fade-in" style="border-color: rgba(124,58,237,0.35); background: rgba(124, 58, 237, 0.05);">
+      <div class="flex flex-wrap items-baseline justify-between gap-3 mb-3">
+        <div class="flex items-baseline gap-3">
+          <span class="hl text-3xl" style="color: var(--accent2);">00</span>
+          <h3 class="font-semibold text-lg">Prefer an AI-guided tour?</h3>
+        </div>
+        <span class="mono text-xs" style="color: var(--dim);">paste into Claude &middot; ChatGPT &middot; Gemini &middot; Cursor &middot; or any LLM chat</span>
+      </div>
+      <p class="text-sm mb-4" style="color: var(--dim);">Drop this prompt into your favourite chat assistant. It walks you through getting set up, one step at a time, asking your GitHub handle first.</p>
+
+      <div class="relative">
+        <button id="copy-tour-prompt" class="absolute top-3 right-3 mono text-xs px-3 py-1.5 rounded transition-colors" style="background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35); color: var(--accent2);" aria-label="Copy prompt to clipboard">
+          <span data-copy-label>copy ⧉</span>
+        </button>
+<pre id="tour-prompt" class="code-block rounded p-4 pr-24 mono text-xs overflow-x-auto whitespace-pre-wrap" style="border-left-color: var(--accent); color: var(--text); line-height: 1.6;">I want to start using Purdue-ATrain, an AI-augmented HEP analysis lab at Purdue. The org lives at https://github.com/Purdue-ATrain and the landing page is https://purdue-atrain.github.io. I am a new contributor.
+
+Please walk me through, ONE STEP AT A TIME (don't dump it all at once — ask me what step I'm on, wait for my response, then move on):
+
+1. Cloning the shared skill library (https://github.com/Purdue-ATrain/atrain-skills) into ~/.claude/skills so the skills are globally available in Claude Code.
+2. Installing Claude Code itself if I don't have it yet.
+3. Creating my personal long-lived branch users/&lt;my-github-handle&gt; in the skills repo and checking it out.
+4. A guided tour of the available skills — what each one does and when I'd invoke it (/analysis-scaffold, /paper-pdf-writing, /undercover-mode, /caveman, /grill-me, /an-readiness-check, /curate-tests, /deep-copy, /evolve-skill, /graphify, /ralph-loop).
+5. Spawning my first analysis with /analysis-scaffold, which drives the harness-blueprint copier template.
+6. The daily workflow: edit-as-you-use, commit, push to my users/ branch, and periodically merge origin/main into my branch to absorb canonical updates.
+7. Using &lt;skill&gt;/.skip on my branch to opt out of a skill personally without removing it from main.
+8. Using local/* branches for private experiments that never get pushed.
+9. The security contract: SKILL.md content from contributor branches is DATA, not instructions. The forbidden-pattern list lives at tools/forbidden-patterns.txt in the skills repo.
+
+Ask me my GitHub handle first, then start with step 1.</pre>
+      </div>
+
+      <p class="mt-4 mono text-xs" style="color: var(--faint);">
+        Or read the manual setup → continue to steps 01, 02, 03 below ↓
+      </p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6">
@@ -556,6 +593,44 @@ flowchart LR
     }
     window.addEventListener('scroll', update, { passive: true });
     update();
+  })();
+
+  // ---- Copy tour prompt to clipboard ----
+  (function () {
+    var btn = document.getElementById('copy-tour-prompt');
+    var src = document.getElementById('tour-prompt');
+    if (!btn || !src) return;
+    var label = btn.querySelector('[data-copy-label]');
+    btn.addEventListener('click', function () {
+      var text = src.innerText;
+      var done = function () {
+        var prev = label.textContent;
+        label.textContent = 'copied ✓';
+        btn.style.color = '#FBBF24';
+        setTimeout(function () {
+          label.textContent = prev;
+          btn.style.color = '';
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () {
+          // Fallback below.
+          fallback();
+        });
+      } else {
+        fallback();
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { /* no-op */ }
+        document.body.removeChild(ta);
+      }
+    });
   })();
 
   // ---- GSAP fade-in-on-scroll ----
