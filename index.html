@@ -186,7 +186,7 @@ tailwind.config = {
       <a href="#harness" class="hover:text-primary transition-colors">harness</a>
       <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
-      <a href="compare/" class="hover:text-primary transition-colors">compare</a>
+      <a href="#compare" class="hover:text-primary transition-colors">compare</a>
       <a href="#refs" class="hover:text-primary transition-colors">refs</a>
       <a href="#get-involved" class="hover:text-primary transition-colors">get-involved</a>
     </div>
@@ -681,7 +681,7 @@ git push origin users/&lt;handle&gt;
           <span class="mono text-xs" style="color: var(--dim);">skill-bench &middot; full-v06</span>
         </div>
         <div class="flex items-center gap-4">
-          <a href="compare/" class="mono text-xs inline-link">compare models &harr;</a>
+          <a href="#compare" class="mono text-xs inline-link">compare models &harr;</a>
           <a href="benchmarks/report.html" class="mono text-xs inline-link">open full report &nearr;</a>
         </div>
       </div>
@@ -696,11 +696,279 @@ git push origin users/&lt;handle&gt;
 
 <div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== COMPARE MODELS =========== -->
+<style>
+  #compare .cmp-slot {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-height: 540px;
+    padding: 18px;
+    transition: border-color .2s, transform .2s, box-shadow .2s;
+    position: relative;
+  }
+  #compare .cmp-slot.cmp-empty {
+    border-style: dashed;
+    border-color: rgba(34, 211, 238, .35);
+    background: rgba(34, 211, 238, 0.03);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  #compare .cmp-slot.cmp-empty:hover {
+    border-color: var(--cyan);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(34, 211, 238, 0.12);
+  }
+  #compare .cmp-plus {
+    font-size: 64px;
+    color: rgba(34, 211, 238, .5);
+    line-height: 1;
+    font-weight: 200;
+  }
+  #compare .cmp-plus-label {
+    margin-top: 16px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+    color: var(--dim);
+  }
+  #compare .cmp-slot.cmp-filled .cmp-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  #compare .cmp-model-name {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-size: 24px;
+    color: var(--primary);
+    cursor: pointer;
+    letter-spacing: -0.02em;
+  }
+  #compare .cmp-model-name:hover { color: var(--amber2); }
+  #compare .cmp-slot-close {
+    background: transparent;
+    border: 1px solid rgba(63,169,245,.2);
+    color: var(--dim);
+    border-radius: 4px;
+    padding: 2px 7px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  #compare .cmp-slot-close:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--red, #EF4444);
+    border-color: var(--red, #EF4444);
+  }
+  #compare .cmp-ext-badge {
+    display: inline-block;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--amber);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    margin-left: 8px;
+  }
+  #compare .cmp-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  #compare .cmp-stat {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  #compare .cmp-stat-label {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  #compare .cmp-stat-value {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-size: 22px;
+    color: var(--text);
+    margin-top: 4px;
+    letter-spacing: -0.02em;
+  }
+  #compare .cmp-stat-value.cmp-amber { color: var(--amber2); }
+  #compare .cmp-stat-value.cmp-green { color: #10B981; }
+  #compare .cmp-stat-value.cmp-cyan  { color: var(--cyan); }
+  #compare .cmp-tier-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(63,169,245,.06);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+  #compare .cmp-tier-row:last-child { border-bottom: 0; }
+  #compare .cmp-tier-name { color: var(--dim); }
+  #compare .cmp-tier-stat { color: var(--text); }
+  #compare .cmp-tier-cost { color: var(--faint); margin-left: 8px; }
+  #compare .cmp-skills-block { margin-top: 14px; }
+  #compare .cmp-skills-block h4 {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    margin: 0 0 6px;
+  }
+  #compare .cmp-skill-line {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  #compare .cmp-skill-name { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #compare .cmp-skill-score { color: var(--amber2); flex-shrink: 0; margin-left: 8px; }
+  #compare .cmp-skill-score.cmp-bad { color: #EF4444; }
+  /* Picker modal (fixed-position) */
+  .cmp-picker-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+  }
+  .cmp-picker-backdrop.cmp-open { display: flex; }
+  .cmp-picker {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 70vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  }
+  .cmp-picker-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cmp-picker-head input {
+    flex: 1;
+    background: rgba(15,23,42,0.5);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 8px 12px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+  .cmp-picker-head input:focus { outline: none; border-color: var(--cyan); }
+  .cmp-picker-close {
+    background: transparent;
+    border: 0;
+    color: var(--dim);
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .cmp-picker-close:hover { color: #EF4444; }
+  .cmp-picker-list { flex: 1; overflow-y: auto; padding: 8px; }
+  .cmp-picker-item {
+    padding: 12px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+    transition: background .12s, border-color .12s;
+  }
+  .cmp-picker-item:hover { background: rgba(63,169,245,0.08); border-color: var(--border); }
+  .cmp-picker-item.cmp-disabled { opacity: 0.4; cursor: not-allowed; }
+  .cmp-picker-item.cmp-disabled:hover { background: transparent; border-color: transparent; }
+  .cmp-picker-item .cmp-pi-name {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .cmp-picker-item .cmp-pi-stats {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--dim);
+  }
+  .cmp-picker-item .cmp-pi-stats .cmp-pi-score { color: var(--amber2); }
+  .cmp-picker-empty {
+    padding: 28px 20px;
+    color: var(--faint);
+    text-align: center;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+</style>
+<section id="compare" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-10 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Compare models</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Pick up to three models from the tested list. Put them side by side.</p>
+      <p id="cmp-meta" class="mono text-xs mt-3" style="color: var(--faint);">8 models &middot; 24 tests &middot; source: skill-bench/results/full-v06</p>
+    </div>
+    <div id="cmp-slots" class="grid md:grid-cols-3 gap-4 fade-in">
+      <div class="cmp-slot cmp-empty" data-slot="0">
+        <div class="cmp-plus">+</div>
+        <div class="cmp-plus-label">Add a model</div>
+      </div>
+      <div class="cmp-slot cmp-empty" data-slot="1">
+        <div class="cmp-plus">+</div>
+        <div class="cmp-plus-label">Add a model</div>
+      </div>
+      <div class="cmp-slot cmp-empty" data-slot="2">
+        <div class="cmp-plus">+</div>
+        <div class="cmp-plus-label">Add a model</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Picker modal lives outside the section so its fixed positioning is unambiguous -->
+<div id="cmp-picker-backdrop" class="cmp-picker-backdrop" role="dialog" aria-modal="true">
+  <div class="cmp-picker">
+    <div class="cmp-picker-head">
+      <input id="cmp-picker-search" type="search" placeholder="Search by model name..." autocomplete="off" aria-label="Search models" />
+      <button class="cmp-picker-close" id="cmp-picker-close" aria-label="Close picker">&times;</button>
+    </div>
+    <div class="cmp-picker-list" id="cmp-picker-list"></div>
+  </div>
+</div>
+
+<div class="section-divider max-w-5xl mx-auto"></div>
+
 <!-- =========== REFERENCE ANALYSES =========== -->
 <section id="refs" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Reference analyses</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two working CMS analyses built on the harness. Read the code.</p>
     </div>
@@ -735,7 +1003,7 @@ git push origin users/&lt;handle&gt;
 <section id="get-involved" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 09</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Membership is closed for v0. Open an issue to request access.</p>
     </div>
@@ -1311,6 +1579,193 @@ git push origin users/&lt;handle&gt;
   }
 })();
 </script>
+
+
+<!-- =========== COMPARE MODELS engine =========== -->
+<script>
+(function () {
+  var DATA = {"models":["haiku","opus41","opus45","opus46","opus","sonnet40","sonnet45","sonnet"],"model_cards":{"haiku":{"model":"haiku","n_cells":78,"overall_score":90.22525252525251,"tier_summary":{"micro":{"n":18,"passes":17,"pass_rate":0.9444444444444444,"mean_score":94.44444444444444,"mean_cost":0.04947515555555557,"weight":1},"mid":{"n":60,"passes":49,"pass_rate":0.8166666666666667,"mean_score":89.80333333333333,"mean_cost":0.142766655,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"discover-ralph-loop","score":0.0},{"skill":"analysis-scaffold","score":52.0},{"skill":"an-readiness-check","score":68.05833333333334}],"total_cost":9.456552099999998,"cost_per_score":0.10481048082800622,"median_wall":20.689999999999998,"external":{"HumanEval":null,"MBPP":null}},"opus41":{"model":"opus41","n_cells":48,"overall_score":98.1405,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.11733706249999999,"weight":1},"mid":{"n":36,"passes":33,"pass_rate":0.9166666666666666,"mean_score":97.93388888888889,"mean_cost":0.24135052083333333,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":84.0},{"skill":"curate-tests","score":98.89999999999999},{"skill":"an-readiness-check","score":99.175}],"total_cost":10.0966635,"cost_per_score":0.10287968269980283,"median_wall":15.02,"external":{}},"opus45":{"model":"opus45","n_cells":48,"overall_score":99.37391666666667,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.15792416666666667,"weight":1},"mid":{"n":36,"passes":35,"pass_rate":0.9722222222222222,"mean_score":99.30435185185186,"mean_cost":0.2320151361111111,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"curate-tests","score":97.21666666666667},{"skill":"graphify","score":98.66},{"skill":"analysis-scaffold","score":99.0}],"total_cost":10.2476349,"cost_per_score":0.10312197852052055,"median_wall":34.775,"external":{}},"opus46":{"model":"opus46","n_cells":48,"overall_score":98.91716666666667,"tier_summary":{"micro":{"n":12,"passes":10,"pass_rate":0.8333333333333334,"mean_score":100.0,"mean_cost":0.17881366666666665,"weight":1},"mid":{"n":36,"passes":35,"pass_rate":0.9722222222222222,"mean_score":98.79685185185186,"mean_cost":0.2957873958333333,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"grill-me","score":94.44444444444444},{"skill":"curate-tests","score":98.89999999999999},{"skill":"graphify","score":99.33}],"total_cost":12.794110249999996,"cost_per_score":0.12934165707671227,"median_wall":38.68,"external":{}},"opus":{"model":"opus","n_cells":78,"overall_score":99.6092929292929,"tier_summary":{"micro":{"n":18,"passes":18,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.11774880555555556,"weight":1},"mid":{"n":60,"passes":55,"pass_rate":0.9166666666666666,"mean_score":99.5702222222222,"mean_cost":0.25270959583333336,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"curate-tests","score":98.52222222222223},{"skill":"graphify","score":98.66000000000001},{"skill":"an-readiness-check","score":99.175}],"total_cost":17.28205425,"cost_per_score":0.17349841306741903,"median_wall":19.785,"external":{"HumanEval":null,"MBPP":null}},"sonnet40":{"model":"sonnet40","n_cells":48,"overall_score":94.74500000000002,"tier_summary":{"micro":{"n":12,"passes":11,"pass_rate":0.9166666666666666,"mean_score":100.0,"mean_cost":0.116244825,"weight":1},"mid":{"n":36,"passes":32,"pass_rate":0.8888888888888888,"mean_score":94.16111111111111,"mean_cost":0.25502383749999996,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":60.0},{"skill":"graphify","score":90.0},{"skill":"an-readiness-check","score":99.00999999999999}],"total_cost":10.57579605,"cost_per_score":0.11162379070135624,"median_wall":45.24,"external":{}},"sonnet45":{"model":"sonnet45","n_cells":48,"overall_score":95.33624999999999,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.08305002916666666,"weight":1},"mid":{"n":36,"passes":33,"pass_rate":0.9166666666666666,"mean_score":94.81805555555555,"mean_cost":0.18235068055555553,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":59.5},{"skill":"graphify","score":95.0},{"skill":"an-readiness-check","score":99.175}],"total_cost":7.561224849999997,"cost_per_score":0.07931112090102135,"median_wall":34.44,"external":{}},"sonnet":{"model":"sonnet","n_cells":78,"overall_score":97.96257575757575,"tier_summary":{"micro":{"n":18,"passes":15,"pass_rate":0.8333333333333334,"mean_score":100.0,"mean_cost":0.1346799027777778,"weight":1},"mid":{"n":60,"passes":58,"pass_rate":0.9666666666666667,"mean_score":97.75883333333333,"mean_cost":0.18115291249999999,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":79.0},{"skill":"an-readiness-check","score":99.175},{"skill":"grill-me","score":99.8}],"total_cost":13.293413000000001,"cost_per_score":0.1356988921248529,"median_wall":39.83,"external":{"HumanEval":null,"MBPP":null}}},"tests":["agent-bounded-tool-budget","agent-cross-file-rename","agent-find-bug-in-tree","agent-handle-tool-error","agent-multi-step-plan","agent-recover-from-error","agent-self-verify-impl","agent-stop-on-success","an-readiness-on-fixture","analysis-scaffold-from-prompt","curate-tests-on-pipeline","discover-an-readiness-check","discover-analysis-scaffold","discover-curate-tests","discover-deep-copy","discover-evolve-skill","discover-graphify","discover-grill-me","discover-paper-pdf-writing","discover-ralph-loop","evolve-skill-dryrun","graphify-small-repo","grill-me-basic","paper-pdf-writing-intro-section"],"tier_weights":{"micro":1,"mid":3,"complex":5},"generated_from":"skill-bench/results/full-v06/report.html"};
+
+  function fmt2(n) { return (Math.round(n * 100) / 100).toFixed(2); }
+  function fmtScore(n) { return n == null ? '·' : fmt2(n); }
+  function fmtCost(n) { return n == null ? '·' : '$' + (Math.round(n * 100) / 100).toFixed(2); }
+  function fmtWall(s) { return s == null ? '·' : (s >= 60 ? (s / 60).toFixed(1) + 'm' : Math.round(s) + 's'); }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var state = { slots: [null, null, null], activeSlot: null };
+
+  function init() {
+    var section = document.getElementById('compare');
+    if (!section) return;
+    document.querySelectorAll('#cmp-slots .cmp-slot').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        if (el.classList.contains('cmp-empty')) {
+          openPicker(parseInt(el.dataset.slot, 10));
+        }
+      });
+    });
+    document.getElementById('cmp-picker-close').addEventListener('click', closePicker);
+    document.getElementById('cmp-picker-backdrop').addEventListener('click', function (e) {
+      if (e.target === e.currentTarget) closePicker();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closePicker();
+    });
+    document.getElementById('cmp-picker-search').addEventListener('input', function (e) {
+      renderPickerList(e.target.value);
+    });
+    applyURLState();
+  }
+
+  function openPicker(slotIdx) {
+    state.activeSlot = slotIdx;
+    var backdrop = document.getElementById('cmp-picker-backdrop');
+    var search = document.getElementById('cmp-picker-search');
+    backdrop.classList.add('cmp-open');
+    search.value = '';
+    renderPickerList('');
+    setTimeout(function () { search.focus(); }, 50);
+  }
+
+  function closePicker() {
+    document.getElementById('cmp-picker-backdrop').classList.remove('cmp-open');
+    state.activeSlot = null;
+  }
+
+  function renderPickerList(query) {
+    var list = document.getElementById('cmp-picker-list');
+    var q = query.trim().toLowerCase();
+    var cards = DATA.model_cards || {};
+    var ordered = (DATA.models || []).slice().sort(function (a, b) {
+      var sa = (cards[a] || {}).overall_score || 0;
+      var sb = (cards[b] || {}).overall_score || 0;
+      return sb - sa;
+    });
+    var matches = ordered.filter(function (m) { return !q || m.toLowerCase().indexOf(q) !== -1; });
+    if (!matches.length) {
+      list.innerHTML = '<div class="cmp-picker-empty">No models match.</div>';
+      return;
+    }
+    var alreadySelected = {};
+    state.slots.forEach(function (s) { if (s) alreadySelected[s] = true; });
+    list.innerHTML = matches.map(function (m) {
+      var c = cards[m] || {};
+      var disabled = !!alreadySelected[m];
+      var hasExt = c.external && Object.keys(c.external).some(function (k) { return c.external[k] != null; });
+      var ext = hasExt ? '<span class="cmp-ext-badge">has external baseline</span>' : '';
+      return '<div class="cmp-picker-item' + (disabled ? ' cmp-disabled' : '') + '" data-model="' + escapeHtml(m) + '">' +
+        '<div><span class="cmp-pi-name">' + escapeHtml(m) + '</span>' + ext + '</div>' +
+        '<div class="cmp-pi-stats"><span class="cmp-pi-score">' + fmtScore(c.overall_score) + '</span> &middot; ' +
+        fmtCost(c.total_cost) + ' &middot; ' + fmtWall(c.median_wall) + '</div>' +
+        '</div>';
+    }).join('');
+    list.querySelectorAll('.cmp-picker-item').forEach(function (el) {
+      if (el.classList.contains('cmp-disabled')) return;
+      el.addEventListener('click', function () { selectModel(el.dataset.model); });
+    });
+  }
+
+  function selectModel(modelName) {
+    if (state.activeSlot == null) return;
+    state.slots[state.activeSlot] = modelName;
+    renderSlot(state.activeSlot);
+    closePicker();
+    updateURL();
+  }
+
+  function clearSlot(slotIdx) {
+    state.slots[slotIdx] = null;
+    var el = document.querySelector('#cmp-slots .cmp-slot[data-slot="' + slotIdx + '"]');
+    el.className = 'cmp-slot cmp-empty';
+    el.dataset.slot = slotIdx;
+    el.innerHTML = '<div class="cmp-plus">+</div><div class="cmp-plus-label">Add a model</div>';
+    el.addEventListener('click', function (e) {
+      if (el.classList.contains('cmp-empty')) openPicker(slotIdx);
+    });
+    updateURL();
+  }
+
+  function renderTier(name, t) {
+    if (!t) {
+      return '<div class="cmp-tier-row"><span class="cmp-tier-name">' + name + '</span><span class="cmp-tier-stat" style="color: var(--faint);">no cells</span></div>';
+    }
+    var pr = (t.pass_rate != null) ? Math.round(t.pass_rate * 100) + '%' : '·';
+    var rb = (t.mean_score != null) ? fmt2(t.mean_score) : '·';
+    var cost = (t.mean_cost != null) ? fmtCost(t.mean_cost) : '·';
+    return '<div class="cmp-tier-row"><span class="cmp-tier-name">' + name +
+      ' <span style="color: var(--faint);">(' + (t.n || 0) + ' cells)</span></span>' +
+      '<span class="cmp-tier-stat">' + pr + ' pass &middot; ' + rb + ' rubric <span class="cmp-tier-cost">' + cost + '</span></span></div>';
+  }
+
+  function renderSlot(slotIdx) {
+    var modelName = state.slots[slotIdx];
+    var el = document.querySelector('#cmp-slots .cmp-slot[data-slot="' + slotIdx + '"]');
+    if (!modelName) { clearSlot(slotIdx); return; }
+    var c = (DATA.model_cards || {})[modelName] || {};
+    var tiers = c.tier_summary || {};
+    var top = (c.top_skills || []).slice(0, 4);
+    var bot = (c.bot_skills || []).slice(0, 4);
+    var hasExt = c.external && Object.keys(c.external).some(function (k) { return c.external[k] != null; });
+    var ext = hasExt ? '<span class="cmp-ext-badge">has external baseline</span>' : '';
+    el.className = 'cmp-slot cmp-filled';
+    el.innerHTML =
+      '<div class="cmp-header">' +
+        '<div><span class="cmp-model-name">' + escapeHtml(modelName) + '</span>' + ext + '</div>' +
+        '<button class="cmp-slot-close" aria-label="Remove">remove</button>' +
+      '</div>' +
+      '<div class="cmp-stat-grid">' +
+        '<div class="cmp-stat"><div class="cmp-stat-label">overall</div><div class="cmp-stat-value cmp-amber">' + fmtScore(c.overall_score) + '</div></div>' +
+        '<div class="cmp-stat"><div class="cmp-stat-label">cells</div><div class="cmp-stat-value">' + (c.n_cells || 0) + '</div></div>' +
+        '<div class="cmp-stat"><div class="cmp-stat-label">total cost</div><div class="cmp-stat-value cmp-green">' + fmtCost(c.total_cost) + '</div></div>' +
+        '<div class="cmp-stat"><div class="cmp-stat-label">median wall</div><div class="cmp-stat-value cmp-cyan">' + fmtWall(c.median_wall) + '</div></div>' +
+      '</div>' +
+      '<div>' + renderTier('micro', tiers.micro) + renderTier('mid', tiers.mid) + renderTier('complex', tiers.complex) + '</div>' +
+      (top.length ? '<div class="cmp-skills-block"><h4>top skills</h4>' +
+        top.map(function (s) { return '<div class="cmp-skill-line"><span class="cmp-skill-name">' + escapeHtml(s.skill) + '</span><span class="cmp-skill-score">' + fmtScore(s.score) + '</span></div>'; }).join('') +
+        '</div>' : '') +
+      (bot.length ? '<div class="cmp-skills-block"><h4>weakest skills</h4>' +
+        bot.map(function (s) { return '<div class="cmp-skill-line"><span class="cmp-skill-name">' + escapeHtml(s.skill) + '</span><span class="cmp-skill-score cmp-bad">' + fmtScore(s.score) + '</span></div>'; }).join('') +
+        '</div>' : '');
+    el.querySelector('.cmp-slot-close').addEventListener('click', function (e) {
+      e.stopPropagation(); clearSlot(slotIdx);
+    });
+    el.querySelector('.cmp-model-name').addEventListener('click', function (e) {
+      e.stopPropagation(); openPicker(slotIdx);
+    });
+  }
+
+  function updateURL() {
+    var picked = state.slots.filter(function (s) { return s; });
+    var url = new URL(window.location.href);
+    if (picked.length) url.searchParams.set('m', picked.join(','));
+    else url.searchParams.delete('m');
+    history.replaceState(null, '', url.toString());
+  }
+
+  function applyURLState() {
+    var params = new URLSearchParams(window.location.search);
+    var m = params.get('m');
+    if (!m) return;
+    var picks = m.split(',').slice(0, 3);
+    var cards = DATA.model_cards || {};
+    picks.forEach(function (name, i) {
+      if (cards[name]) { state.slots[i] = name; renderSlot(i); }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
 
 </body>
 </html>
