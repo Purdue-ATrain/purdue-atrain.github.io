@@ -179,6 +179,7 @@ tailwind.config = {
       <a href="#ai-tour" class="hover:text-primary transition-colors">ai-tour</a>
       <a href="#quick-start" class="hover:text-primary transition-colors">quick-start</a>
       <a href="#skills" class="hover:text-primary transition-colors">skills</a>
+      <a href="#demos" class="hover:text-primary transition-colors">demos</a>
       <a href="#harness" class="hover:text-primary transition-colors">harness</a>
       <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
@@ -386,11 +387,337 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
 <div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== DEMOS IN THE TERMINAL =========== -->
+<section id="demos" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-12 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 03</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Demos in the terminal</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Five realistic sessions. Long, full, scrollable. Click a label to jump.</p>
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-10 fade-in mono text-xs">
+      <a href="#demo-1" class="pill px-3 py-1 rounded-full transition-colors">01 / run an analysis</a>
+      <a href="#demo-2" class="pill amber px-3 py-1 rounded-full transition-colors">02 / evolve a skill</a>
+      <a href="#demo-3" class="pill violet px-3 py-1 rounded-full transition-colors">03 / contribute</a>
+      <a href="#demo-4" class="pill px-3 py-1 rounded-full transition-colors">04 / spawn an analysis</a>
+      <a href="#demo-5" class="pill amber px-3 py-1 rounded-full transition-colors">05 / undercover-mode</a>
+    </div>
+
+    <div class="space-y-8">
+
+      <!-- ===== Demo 1 ===== -->
+      <article id="demo-1" class="step-card rounded-lg overflow-hidden fade-in">
+        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
+          <div>
+            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 01</span>
+            <h3 class="hl text-xl mt-1">Run an analysis</h3>
+          </div>
+          <span class="serif-italic text-sm" style="color: var(--dim);">Ask Claude to plot a distribution; it follows the project conventions.</span>
+        </div>
+<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--primary); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/work/hh-vbf-bbtt
+<span style="color: var(--faint);">$</span> pixi shell
+<span style="color: var(--faint);">(hh-vbf-bbtt) $</span> claude
+
+<span style="color: var(--cyan);">&gt; I want to look at the b-tagging score distribution. Show me what's in</span>
+<span style="color: var(--cyan);">  the harness, then plot it stacked vs data for the DST_JetHT trigger.</span>
+
+<span style="color: var(--accent2);">[Claude reads CLAUDE.md, looks at analysis/variables.py]</span>
+<span style="color: var(--accent2);">[Found PlotVar pattern at analysis/variables.py:42]</span>
+<span style="color: var(--accent2);">[Scanning config/channels.py for trigger keys... found DST_JetHT]</span>
+<span style="color: var(--accent2);">[No existing plots at z_prelims/btag_score/]</span>
+
+I'll mirror the existing PlotVar pattern, save to z_prelims/btag_score/ per
+the project convention, and use 1 MC file so it runs fast.
+
+  Created: z_prelims/scripts/btag_score_stacked.py
+  Created: z_prelims/btag_score/.gitkeep
+
+Run it now? (y/n)
+
+<span style="color: var(--cyan);">&gt; y</span>
+
+<span style="color: var(--faint);">(hh-vbf-bbtt) $</span> pixi run python z_prelims/scripts/btag_score_stacked.py --max-mc-files 1
+<span style="color: var(--accent2);">[ROOT]</span> gROOT.GetVersion() == 6.32.04
+<span style="color: var(--accent2);">[load]</span> HHbbtt (1/1 files), DY (1/1), TT (1/1), QCD (1/1)
+<span style="color: var(--accent2);">[trigger]</span> DST_JetHT applied, eff=<span style="color: var(--amber2);">0.18</span> on data
+<span style="color: var(--accent2);">[plot]</span> saved <span style="color: var(--amber2);">z_prelims/btag_score/DST_JetHT_data_stacked.png</span>
+<span style="color: var(--accent2);">[plot]</span> saved <span style="color: var(--amber2);">z_prelims/btag_score/DST_JetHT_data_shape.png</span>
+<span style="color: var(--accent2);">[plot]</span> saved <span style="color: var(--amber2);">z_prelims/btag_score/DST_JetHT_data_ratio.png</span>
+
+<span style="color: var(--cyan);">&gt; Looks good. Add the b-jet eta distribution to the same script.</span>
+
+<span style="color: var(--accent2);">[Claude edits z_prelims/scripts/btag_score_stacked.py]</span>
+<span style="color: var(--accent2);">[Added: bjet_eta PlotVar (50 bins, -2.5..2.5)]</span>
+<span style="color: var(--accent2);">[Re-running...]</span>
+
+<span style="color: var(--faint);">(hh-vbf-bbtt) $</span> ls z_prelims/btag_score/
+DST_JetHT_data_stacked.png    DST_JetHT_data_shape.png
+DST_JetHT_data_ratio.png      DST_JetHT_data_stacked_bjet_eta.png
+</pre>
+      </article>
+
+      <!-- ===== Demo 2 ===== -->
+      <article id="demo-2" class="step-card rounded-lg overflow-hidden fade-in">
+        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
+          <div>
+            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 02</span>
+            <h3 class="hl text-xl mt-1">Evolve a skill</h3>
+          </div>
+          <span class="serif-italic text-sm" style="color: var(--dim);">Sharpen on your <span class="mono text-text">users/</span> branch. Cron synthesises onto <span class="mono text-text">nightly</span>.</span>
+        </div>
+<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--amber); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/.claude/skills
+<span style="color: var(--faint);">$</span> git checkout users/jdoe
+Switched to branch 'users/jdoe'
+
+<span style="color: var(--faint);">$</span> claude
+
+<span style="color: var(--cyan);">&gt; /grill-me has been too aggressive. Tone the questions down so they</span>
+<span style="color: var(--cyan);">  don't feel like an interrogation.</span>
+
+<span style="color: var(--accent2);">[Claude reads grill-me/SKILL.md]</span>
+<span style="color: var(--accent2);">[Found tone-related lines at SKILL.md:8-15]</span>
+
+The current opener uses "Interview me relentlessly", which is the
+aggressive framing you mean. Softening to "Walk me through" and adding
+a line about question pacing.
+
+  Edited: grill-me/SKILL.md
+    <span style="color: var(--amber2);">-</span> "Interview me relentlessly about every aspect..."
+    <span style="color: var(--amber2);">+</span> "Walk me through every aspect..."
+    <span style="color: var(--amber2);">+</span> "Pace the questions. Wait for the user to fully answer before
+      moving on. Don't stack follow-ups."
+
+<span style="color: var(--faint);">$</span> git diff grill-me/SKILL.md
+diff --git a/grill-me/SKILL.md b/grill-me/SKILL.md
+@@ -8,7 +8,9 @@ user_invocable: true
+
+<span style="color: var(--amber2);">-</span>Interview me relentlessly about every aspect of this plan until we reach
+<span style="color: var(--amber2);">-</span>a shared understanding.
+<span style="color: var(--cyan);">+</span>Walk me through every aspect of this plan until we reach a shared
+<span style="color: var(--cyan);">+</span>understanding. Pace the questions. Wait for the user to fully answer
+<span style="color: var(--cyan);">+</span>before moving on. Don't stack follow-ups.
+
+<span style="color: var(--faint);">$</span> git add grill-me/SKILL.md
+<span style="color: var(--faint);">$</span> git commit -m "sharpen grill-me: softer pacing"
+<span style="color: var(--accent2);">[users/jdoe a1b2c3d]</span> sharpen grill-me: softer pacing
+<span style="color: var(--faint);">$</span> git push origin users/jdoe
+
+<span style="color: var(--accent2"># next morning on the Purdue cron, 06:00 ET:</span>
+<span style="color: var(--accent2);">[atrain-cron]</span> walking branches: main, users/jdoe, users/alice, users/bob
+<span style="color: var(--accent2);">[evolve-skill]</span> grill-me &mdash; 3 candidates
+  layer-1 regex: <span style="color: var(--amber2);">3/3 pass</span>
+  layer-2 claude: synthesising best-of-breed...
+  decision: incorporate jdoe's pacing line, keep alice's example block
+<span style="color: var(--accent2);">[atrain-cron]</span> committed to nightly: evolve: synthesise grill-me
+
+<span style="color: var(--faint);">$</span> git fetch origin nightly
+<span style="color: var(--faint);">$</span> git log origin/nightly --oneline | head -3
+<span style="color: var(--amber2);">1a2b3c4</span> evolve: synthesise grill-me from main, users/jdoe, users/alice
+<span style="color: var(--amber2);">5d6e7f8</span> evolve: synthesise curate-tests from main, users/alice
+<span style="color: var(--amber2);">9a0b1c2</span> evolve: synthesise analysis-scaffold from main, users/jdoe
+</pre>
+      </article>
+
+      <!-- ===== Demo 3 ===== -->
+      <article id="demo-3" class="step-card rounded-lg overflow-hidden fade-in">
+        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
+          <div>
+            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 03</span>
+            <h3 class="hl text-xl mt-1">Contribute a new skill</h3>
+          </div>
+          <span class="serif-italic text-sm" style="color: var(--dim);">Direct PR path. Scaffold + tests + <span class="mono text-text">gh pr create</span>.</span>
+        </div>
+<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--accent); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/.claude/skills
+<span style="color: var(--faint);">$</span> git checkout main && git pull
+<span style="color: var(--faint);">$</span> git checkout -b add/measure-trigger-efficiency
+
+<span style="color: var(--faint);">$</span> claude
+
+<span style="color: var(--cyan);">&gt; Create a new skill called measure-trigger-efficiency. It produces a</span>
+<span style="color: var(--cyan);">  markdown table of per-trigger efficiency (passed/total) for each MC</span>
+<span style="color: var(--cyan);">  sample plus a stacked bar plot. Use the /an-readiness-check structure</span>
+<span style="color: var(--cyan);">  as the reference.</span>
+
+<span style="color: var(--accent2);">[Claude reads an-readiness-check/SKILL.md for the pattern]</span>
+<span style="color: var(--accent2);">[Found: scripts/audit.py + SKILL.md router pattern]</span>
+
+Scaffolding:
+  measure-trigger-efficiency/
+  &#x251C;&#x2500; SKILL.md             (frontmatter + invocation prompt template)
+  &#x251C;&#x2500; README.md            (human-readable overview)
+  &#x2514;&#x2500; scripts/
+      &#x251C;&#x2500; efficiency.py    (the producer, stdlib + ROOT only)
+      &#x2514;&#x2500; tests/
+          &#x2514;&#x2500; test_efficiency.py
+
+  Drafting SKILL.md...                        <span style="color: var(--amber2);">~80 LOC</span>
+  Drafting scripts/efficiency.py...           <span style="color: var(--amber2);">~120 LOC</span>
+  Drafting tests...                           <span style="color: var(--amber2);">4 fixtures</span>
+
+Run pytest scripts/tests/ to verify.
+
+<span style="color: var(--faint);">$</span> cd measure-trigger-efficiency && pytest scripts/tests/
+============================= test session starts =============================
+collected 4 items
+
+scripts/tests/test_efficiency.py::test_counts_per_trigger     <span style="color: var(--amber2);">PASSED</span>  [ 25%]
+scripts/tests/test_efficiency.py::test_table_renders_markdown <span style="color: var(--amber2);">PASSED</span>  [ 50%]
+scripts/tests/test_efficiency.py::test_bar_plot_saves         <span style="color: var(--amber2);">PASSED</span>  [ 75%]
+scripts/tests/test_efficiency.py::test_handles_empty_sample   <span style="color: var(--amber2);">PASSED</span>  [100%]
+
+============================== <span style="color: var(--amber2);">4 passed in 0.42s</span> ==============================
+
+<span style="color: var(--faint);">$</span> cd .. && git add measure-trigger-efficiency/
+<span style="color: var(--faint);">$</span> git commit -m "add: measure-trigger-efficiency skill"
+<span style="color: var(--accent2);">[add/measure-trigger-efficiency 3c4d5e6]</span> add: measure-trigger-efficiency skill
+
+<span style="color: var(--faint);">$</span> git push -u origin add/measure-trigger-efficiency
+<span style="color: var(--faint);">$</span> gh pr create --base main --fill
+<span style="color: var(--amber2);">https://github.com/Purdue-ATrain/atrain-skills/pull/42</span>
+
+<span style="color: var(--accent2);"># maintainer reviews + merges</span>
+</pre>
+      </article>
+
+      <!-- ===== Demo 4 ===== -->
+      <article id="demo-4" class="step-card rounded-lg overflow-hidden fade-in">
+        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
+          <div>
+            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 04</span>
+            <h3 class="hl text-xl mt-1">Spawn an analysis with the harness</h3>
+          </div>
+          <span class="serif-italic text-sm" style="color: var(--dim);"><span class="mono text-text">/analysis-scaffold</span> &rarr; copier &rarr; pixi install &rarr; pytest passes.</span>
+        </div>
+<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--cyan); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/work
+<span style="color: var(--faint);">$</span> claude
+
+<span style="color: var(--cyan);">&gt; /analysis-scaffold</span>
+
+I'll walk you through. Describe the analysis in one sentence.
+
+<span style="color: var(--cyan);">&gt; I'm setting up VBF HH &rarr; bbWW in the semileptonic channel.</span>
+<span style="color: var(--cyan);">  Trigger is DST_HLT_PFJet. My handle is jdoe.</span>
+
+<span style="color: var(--accent2);">[Extracting copier variables...]</span>
+  analysis_name      = <span style="color: var(--amber2);">"hh-vbf-bbww-sl"</span>
+  analysis_title     = <span style="color: var(--amber2);">"HH bbWW VBF (semileptonic)"</span>
+  channels           = <span style="color: var(--amber2);">"lephad,lepelhad"</span>
+  primary_trigger    = <span style="color: var(--amber2);">"DST_HLT_PFJet"</span>
+  physics_process    = <span style="color: var(--amber2);">"HH_bbWW_VBF_SL"</span>
+  lead_author_github = <span style="color: var(--amber2);">"jdoe"</span>
+  motivation         = <span style="color: var(--amber2);">"VBF HH bbWW search in the</span>
+                       <span style="color: var(--amber2);"> semileptonic channel using Run-3 NanoAOD."</span>
+
+Confirm? (y/n)
+
+<span style="color: var(--cyan);">&gt; y</span>
+
+<span style="color: var(--faint);">$</span> copier copy gh:Purdue-ATrain/harness-blueprint ./hh-vbf-bbww-sl \
+    -d analysis_name=hh-vbf-bbww-sl \
+    -d analysis_title="HH bbWW VBF (semileptonic)" \
+    -d channels=lephad,lepelhad \
+    -d primary_trigger=DST_HLT_PFJet \
+    -d physics_process=HH_bbWW_VBF_SL \
+    -d lead_author_github=jdoe \
+    --defaults --trust
+
+Copying from template version 1.2.3
+ created  ./hh-vbf-bbww-sl/
+ created  ./hh-vbf-bbww-sl/CLAUDE.md
+ created  ./hh-vbf-bbww-sl/pixi.toml
+ created  ./hh-vbf-bbww-sl/analysis/runner.py
+ created  ./hh-vbf-bbww-sl/analysis/event_loop.py
+ created  ./hh-vbf-bbww-sl/analysis/definitions.py
+ created  ./hh-vbf-bbww-sl/config/channels.py
+ ... (30+ files)
+<span style="color: var(--accent2);">[_tasks]</span> git init -b main      <span style="color: var(--amber2);">&#x2713;</span>
+<span style="color: var(--accent2);">[_tasks]</span> git add -A; commit    <span style="color: var(--amber2);">&#x2713;</span> "Initial scaffold from harness-blueprint @ 1.2.3"
+<span style="color: var(--accent2);">[_tasks]</span> pixi install          <span style="color: var(--amber2);">&#x2713;</span> (12 packages)
+
+<span style="color: var(--faint);">$</span> cd hh-vbf-bbww-sl && pixi shell
+
+<span style="color: var(--faint);">(hh-vbf-bbww-sl) $</span> pytest tests/
+============================= test session starts =============================
+collected 1 item
+
+tests/test_imports.py::test_smoke      <span style="color: var(--amber2);">PASSED</span>                          [100%]
+
+============================== <span style="color: var(--amber2);">1 passed in 0.18s</span> ==============================
+
+<span style="color: var(--faint);">(hh-vbf-bbww-sl) $</span> ls
+analysis/  bin/       config/    draft/     elements/  inference/
+ml/        output/    pixi.toml  reports/   scratch/   tests/
+tools/     utils/     CLAUDE.md  README.md
+
+<span style="color: var(--accent2);"># ready to start writing event_loop logic</span>
+</pre>
+      </article>
+
+      <!-- ===== Demo 5 ===== -->
+      <article id="demo-5" class="step-card rounded-lg overflow-hidden fade-in">
+        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
+          <div>
+            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 05</span>
+            <h3 class="hl text-xl mt-1">Strip AI fingerprints with <span class="mono text-primary">/undercover-mode</span></h3>
+          </div>
+          <span class="serif-italic text-sm" style="color: var(--dim);">No <span class="mono text-text">Co-Authored-By</span>. No generator trailer. Audited clean.</span>
+        </div>
+<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--amber); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/work/hh-vbf-bbtt
+<span style="color: var(--faint);">$</span> claude
+
+<span style="color: var(--cyan);">&gt; undercover mode</span>
+
+<span style="color: var(--accent2);">[undercover-mode active]</span>
+  harness commit-template trailers:  <span style="color: var(--amber2);">SUPPRESSED</span>
+  prose-fingerprint scrubbing:        <span style="color: var(--amber2);">ON</span>
+  code-marker scrubbing:              <span style="color: var(--amber2);">ON</span>
+
+Ready. All subsequent output follows undercover rules.
+
+<span style="color: var(--cyan);">&gt; Write a commit message for these changes.</span>
+
+<span style="color: var(--faint);">$</span> git diff --stat
+ analysis/event_loop.py        | 14 +++++++++++---
+ config/channels.py            |  2 +-
+ tests/test_event_loop.py      |  8 ++++++++
+
+<span style="color: var(--accent2);">[draft commit message]</span>
+
+fix(event_loop): handle empty RDataFrame after trigger cut
+
+A trigger that vetoes all events produced an RDataFrame whose
+.Histo1D() raised on .GetValue(). Guard with a .Count() check before
+histogramming.
+
+Closes #142
+
+<span style="color: var(--accent2);">[no Co-Authored-By: Claude trailer added]</span>
+<span style="color: var(--accent2);">[no Generated-with-Claude-Code line added]</span>
+
+<span style="color: var(--cyan);">&gt; Now audit the diff to confirm.</span>
+
+<span style="color: var(--faint);">$</span> python -m scripts.audit --diff
+<span style="color: var(--amber2);">no hits.</span>
+
+<span style="color: var(--faint);">$</span> git commit -F /tmp/msg.txt
+<span style="color: var(--accent2);">[main a1b2c3d]</span> fix(event_loop): handle empty RDataFrame after trigger cut
+
+<span style="color: var(--accent2);"># the commit landed clean. no AI attribution anywhere.</span>
+</pre>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-5xl mx-auto"></div>
+
 <!-- =========== HARNESS BLUEPRINT =========== -->
 <section id="harness" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 03</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 04</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The harness blueprint</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">A copier template. Everything a CMS analysis needs.</p>
     </div>
@@ -423,7 +750,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="synthesis" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 04</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 05</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">How skills evolve</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
     </div>
@@ -521,7 +848,7 @@ git push origin users/&lt;handle&gt;
 <section id="benchmarks" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 05</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Per (task, model) cost and pass-rate.</p>
     </div>
@@ -553,7 +880,7 @@ git push origin users/&lt;handle&gt;
 <section id="refs" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Reference analyses</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two working CMS analyses built on the harness. Read the code.</p>
     </div>
@@ -588,7 +915,7 @@ git push origin users/&lt;handle&gt;
 <section id="get-involved" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Membership is closed for v0. Open an issue to request access.</p>
     </div>
