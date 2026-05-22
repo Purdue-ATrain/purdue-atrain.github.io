@@ -18,6 +18,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -388,326 +391,139 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <div class="section-divider max-w-5xl mx-auto"></div>
 
 <!-- =========== DEMOS IN THE TERMINAL =========== -->
+<style>
+  .terminal-window {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #1a1b26;
+    border: 1px solid rgba(63,169,245,.15);
+    box-shadow: 0 14px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.02) inset;
+  }
+  .terminal-tabs {
+    display: flex;
+    overflow-x: auto;
+    background: rgba(15,23,42,.7);
+    border-bottom: 1px solid rgba(63,169,245,.1);
+    scrollbar-width: thin;
+  }
+  .terminal-tabs::-webkit-scrollbar { height: 4px; }
+  .terminal-tabs::-webkit-scrollbar-thumb { background: rgba(63,169,245,.2); border-radius: 2px; }
+  .term-tab {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--dim);
+    background: transparent;
+    border: 0;
+    border-right: 1px solid rgba(63,169,245,.06);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+  .term-tab:hover { background: rgba(63,169,245,.05); color: var(--text); }
+  .term-tab.active {
+    color: var(--cyan);
+    background: rgba(122,162,247,.08);
+    box-shadow: inset 0 -2px 0 0 var(--cyan);
+  }
+  .terminal-chrome {
+    display: flex;
+    align-items: center;
+    padding: 9px 14px;
+    background: #161721;
+    border-bottom: 1px solid rgba(63,169,245,.06);
+    position: relative;
+    min-height: 38px;
+  }
+  .chrome-dots { display: flex; gap: 8px; flex-shrink: 0; }
+  .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    display: inline-block;
+    box-shadow: inset 0 0 0 .5px rgba(0,0,0,.2);
+  }
+  .dot-red    { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green  { background: #27c93f; }
+  .chrome-title {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 55%;
+    pointer-events: none;
+  }
+  .chrome-replay {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid rgba(63,169,245,.2);
+    color: var(--dim);
+    border-radius: 4px;
+    padding: 3px 9px 4px;
+    font-size: 14px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background .15s, color .15s, border-color .15s;
+    flex-shrink: 0;
+  }
+  .chrome-replay:hover {
+    background: rgba(63,169,245,.1);
+    color: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .terminal-pane {
+    padding: 12px 14px 14px;
+    background: #1a1b26;
+    height: 500px;
+  }
+  .terminal-pane .xterm-viewport::-webkit-scrollbar { width: 6px; }
+  .terminal-pane .xterm-viewport::-webkit-scrollbar-thumb {
+    background: rgba(122,162,247,.2);
+    border-radius: 3px;
+  }
+  @media (max-width: 768px) {
+    .terminal-pane { height: 420px; }
+    .chrome-title { max-width: 40%; font-size: 10.5px; }
+    .term-tab { padding: 9px 12px; font-size: 10.5px; }
+  }
+</style>
+
 <section id="demos" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
-    <div class="mb-12 max-w-2xl">
+    <div class="mb-10 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 03</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Demos in the terminal</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Five realistic sessions. Long, full, scrollable. Click a label to jump.</p>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Five real sessions. Click a tab to switch; press <span class="mono text-text">&#x27F2;</span> to replay.</p>
     </div>
 
-    <div class="flex flex-wrap gap-2 mb-10 fade-in mono text-xs">
-      <a href="#demo-1" class="pill px-3 py-1 rounded-full transition-colors">01 / run an analysis</a>
-      <a href="#demo-2" class="pill amber px-3 py-1 rounded-full transition-colors">02 / evolve a skill</a>
-      <a href="#demo-3" class="pill violet px-3 py-1 rounded-full transition-colors">03 / contribute</a>
-      <a href="#demo-4" class="pill px-3 py-1 rounded-full transition-colors">04 / spawn an analysis</a>
-      <a href="#demo-5" class="pill amber px-3 py-1 rounded-full transition-colors">05 / undercover-mode</a>
+    <div id="atrain-terminal" class="terminal-window fade-in">
+      <div class="terminal-tabs" role="tablist" aria-label="Terminal demos">
+        <button type="button" class="term-tab active" role="tab" data-demo="0" aria-selected="true">01 / run an analysis</button>
+        <button type="button" class="term-tab" role="tab" data-demo="1" aria-selected="false">02 / evolve a skill</button>
+        <button type="button" class="term-tab" role="tab" data-demo="2" aria-selected="false">03 / contribute</button>
+        <button type="button" class="term-tab" role="tab" data-demo="3" aria-selected="false">04 / spawn an analysis</button>
+        <button type="button" class="term-tab" role="tab" data-demo="4" aria-selected="false">05 / undercover-mode</button>
+      </div>
+      <div class="terminal-chrome">
+        <div class="chrome-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <div class="chrome-title" id="atrain-term-title">user@ATrain &middot; demo-01-run-an-analysis</div>
+        <button type="button" class="chrome-replay" id="atrain-term-replay" aria-label="Replay this demo">&#x27F2;</button>
+      </div>
+      <div id="atrain-xterm-host" class="terminal-pane"></div>
     </div>
 
-    <div class="space-y-8">
+    <p class="mt-4 mono text-xs" style="color: var(--faint);">
+      Rendered with <a href="https://xtermjs.org/" class="inline-link">xterm.js</a> + Tokyo Night palette. Sessions are scripted; the prompt and output are illustrative.
+    </p>
 
-      <!-- ===== Demo 1 ===== -->
-      <article id="demo-1" class="step-card rounded-lg overflow-hidden fade-in">
-        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
-          <div>
-            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 01</span>
-            <h3 class="hl text-xl mt-1">Run an analysis</h3>
-          </div>
-          <span class="serif-italic text-sm" style="color: var(--dim);">Ask Claude to plot a distribution; it follows the project conventions.</span>
-        </div>
-<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--primary); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/work/hh-vbf-bbtt
-<span style="color: var(--faint);">$</span> pixi shell
-<span style="color: var(--faint);">(hh-vbf-bbtt) $</span> claude
-
-<span style="color: var(--cyan);">&gt; I want to look at the b-tagging score distribution. Show me what's in</span>
-<span style="color: var(--cyan);">  the harness, then plot it stacked vs data for the DST_JetHT trigger.</span>
-
-<span style="color: var(--accent2);">[Claude reads CLAUDE.md, looks at analysis/variables.py]</span>
-<span style="color: var(--accent2);">[Found PlotVar pattern at analysis/variables.py:42]</span>
-<span style="color: var(--accent2);">[Scanning config/channels.py for trigger keys... found DST_JetHT]</span>
-<span style="color: var(--accent2);">[No existing plots at z_prelims/btag_score/]</span>
-
-I'll mirror the existing PlotVar pattern, save to z_prelims/btag_score/ per
-the project convention, and use 1 MC file so it runs fast.
-
-  Created: z_prelims/scripts/btag_score_stacked.py
-  Created: z_prelims/btag_score/.gitkeep
-
-Run it now? (y/n)
-
-<span style="color: var(--cyan);">&gt; y</span>
-
-<span style="color: var(--faint);">(hh-vbf-bbtt) $</span> pixi run python z_prelims/scripts/btag_score_stacked.py --max-mc-files 1
-<span style="color: var(--accent2);">[ROOT]</span> gROOT.GetVersion() == 6.32.04
-<span style="color: var(--accent2);">[load]</span> HHbbtt (1/1 files), DY (1/1), TT (1/1), QCD (1/1)
-<span style="color: var(--accent2);">[trigger]</span> DST_JetHT applied, eff=<span style="color: var(--amber2);">0.18</span> on data
-<span style="color: var(--accent2);">[plot]</span> saved <span style="color: var(--amber2);">z_prelims/btag_score/DST_JetHT_data_stacked.png</span>
-<span style="color: var(--accent2);">[plot]</span> saved <span style="color: var(--amber2);">z_prelims/btag_score/DST_JetHT_data_shape.png</span>
-<span style="color: var(--accent2);">[plot]</span> saved <span style="color: var(--amber2);">z_prelims/btag_score/DST_JetHT_data_ratio.png</span>
-
-<span style="color: var(--cyan);">&gt; Looks good. Add the b-jet eta distribution to the same script.</span>
-
-<span style="color: var(--accent2);">[Claude edits z_prelims/scripts/btag_score_stacked.py]</span>
-<span style="color: var(--accent2);">[Added: bjet_eta PlotVar (50 bins, -2.5..2.5)]</span>
-<span style="color: var(--accent2);">[Re-running...]</span>
-
-<span style="color: var(--faint);">(hh-vbf-bbtt) $</span> ls z_prelims/btag_score/
-DST_JetHT_data_stacked.png    DST_JetHT_data_shape.png
-DST_JetHT_data_ratio.png      DST_JetHT_data_stacked_bjet_eta.png
-</pre>
-      </article>
-
-      <!-- ===== Demo 2 ===== -->
-      <article id="demo-2" class="step-card rounded-lg overflow-hidden fade-in">
-        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
-          <div>
-            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 02</span>
-            <h3 class="hl text-xl mt-1">Evolve a skill</h3>
-          </div>
-          <span class="serif-italic text-sm" style="color: var(--dim);">Sharpen on your <span class="mono text-text">users/</span> branch. Cron synthesises onto <span class="mono text-text">nightly</span>.</span>
-        </div>
-<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--amber); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/.claude/skills
-<span style="color: var(--faint);">$</span> git checkout users/jdoe
-Switched to branch 'users/jdoe'
-
-<span style="color: var(--faint);">$</span> claude
-
-<span style="color: var(--cyan);">&gt; /grill-me has been too aggressive. Tone the questions down so they</span>
-<span style="color: var(--cyan);">  don't feel like an interrogation.</span>
-
-<span style="color: var(--accent2);">[Claude reads grill-me/SKILL.md]</span>
-<span style="color: var(--accent2);">[Found tone-related lines at SKILL.md:8-15]</span>
-
-The current opener uses "Interview me relentlessly", which is the
-aggressive framing you mean. Softening to "Walk me through" and adding
-a line about question pacing.
-
-  Edited: grill-me/SKILL.md
-    <span style="color: var(--amber2);">-</span> "Interview me relentlessly about every aspect..."
-    <span style="color: var(--amber2);">+</span> "Walk me through every aspect..."
-    <span style="color: var(--amber2);">+</span> "Pace the questions. Wait for the user to fully answer before
-      moving on. Don't stack follow-ups."
-
-<span style="color: var(--faint);">$</span> git diff grill-me/SKILL.md
-diff --git a/grill-me/SKILL.md b/grill-me/SKILL.md
-@@ -8,7 +8,9 @@ user_invocable: true
-
-<span style="color: var(--amber2);">-</span>Interview me relentlessly about every aspect of this plan until we reach
-<span style="color: var(--amber2);">-</span>a shared understanding.
-<span style="color: var(--cyan);">+</span>Walk me through every aspect of this plan until we reach a shared
-<span style="color: var(--cyan);">+</span>understanding. Pace the questions. Wait for the user to fully answer
-<span style="color: var(--cyan);">+</span>before moving on. Don't stack follow-ups.
-
-<span style="color: var(--faint);">$</span> git add grill-me/SKILL.md
-<span style="color: var(--faint);">$</span> git commit -m "sharpen grill-me: softer pacing"
-<span style="color: var(--accent2);">[users/jdoe a1b2c3d]</span> sharpen grill-me: softer pacing
-<span style="color: var(--faint);">$</span> git push origin users/jdoe
-
-<span style="color: var(--accent2"># next morning on the Purdue cron, 06:00 ET:</span>
-<span style="color: var(--accent2);">[atrain-cron]</span> walking branches: main, users/jdoe, users/alice, users/bob
-<span style="color: var(--accent2);">[evolve-skill]</span> grill-me &mdash; 3 candidates
-  layer-1 regex: <span style="color: var(--amber2);">3/3 pass</span>
-  layer-2 claude: synthesising best-of-breed...
-  decision: incorporate jdoe's pacing line, keep alice's example block
-<span style="color: var(--accent2);">[atrain-cron]</span> committed to nightly: evolve: synthesise grill-me
-
-<span style="color: var(--faint);">$</span> git fetch origin nightly
-<span style="color: var(--faint);">$</span> git log origin/nightly --oneline | head -3
-<span style="color: var(--amber2);">1a2b3c4</span> evolve: synthesise grill-me from main, users/jdoe, users/alice
-<span style="color: var(--amber2);">5d6e7f8</span> evolve: synthesise curate-tests from main, users/alice
-<span style="color: var(--amber2);">9a0b1c2</span> evolve: synthesise analysis-scaffold from main, users/jdoe
-</pre>
-      </article>
-
-      <!-- ===== Demo 3 ===== -->
-      <article id="demo-3" class="step-card rounded-lg overflow-hidden fade-in">
-        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
-          <div>
-            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 03</span>
-            <h3 class="hl text-xl mt-1">Contribute a new skill</h3>
-          </div>
-          <span class="serif-italic text-sm" style="color: var(--dim);">Direct PR path. Scaffold + tests + <span class="mono text-text">gh pr create</span>.</span>
-        </div>
-<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--accent); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/.claude/skills
-<span style="color: var(--faint);">$</span> git checkout main && git pull
-<span style="color: var(--faint);">$</span> git checkout -b add/measure-trigger-efficiency
-
-<span style="color: var(--faint);">$</span> claude
-
-<span style="color: var(--cyan);">&gt; Create a new skill called measure-trigger-efficiency. It produces a</span>
-<span style="color: var(--cyan);">  markdown table of per-trigger efficiency (passed/total) for each MC</span>
-<span style="color: var(--cyan);">  sample plus a stacked bar plot. Use the /an-readiness-check structure</span>
-<span style="color: var(--cyan);">  as the reference.</span>
-
-<span style="color: var(--accent2);">[Claude reads an-readiness-check/SKILL.md for the pattern]</span>
-<span style="color: var(--accent2);">[Found: scripts/audit.py + SKILL.md router pattern]</span>
-
-Scaffolding:
-  measure-trigger-efficiency/
-  &#x251C;&#x2500; SKILL.md             (frontmatter + invocation prompt template)
-  &#x251C;&#x2500; README.md            (human-readable overview)
-  &#x2514;&#x2500; scripts/
-      &#x251C;&#x2500; efficiency.py    (the producer, stdlib + ROOT only)
-      &#x2514;&#x2500; tests/
-          &#x2514;&#x2500; test_efficiency.py
-
-  Drafting SKILL.md...                        <span style="color: var(--amber2);">~80 LOC</span>
-  Drafting scripts/efficiency.py...           <span style="color: var(--amber2);">~120 LOC</span>
-  Drafting tests...                           <span style="color: var(--amber2);">4 fixtures</span>
-
-Run pytest scripts/tests/ to verify.
-
-<span style="color: var(--faint);">$</span> cd measure-trigger-efficiency && pytest scripts/tests/
-============================= test session starts =============================
-collected 4 items
-
-scripts/tests/test_efficiency.py::test_counts_per_trigger     <span style="color: var(--amber2);">PASSED</span>  [ 25%]
-scripts/tests/test_efficiency.py::test_table_renders_markdown <span style="color: var(--amber2);">PASSED</span>  [ 50%]
-scripts/tests/test_efficiency.py::test_bar_plot_saves         <span style="color: var(--amber2);">PASSED</span>  [ 75%]
-scripts/tests/test_efficiency.py::test_handles_empty_sample   <span style="color: var(--amber2);">PASSED</span>  [100%]
-
-============================== <span style="color: var(--amber2);">4 passed in 0.42s</span> ==============================
-
-<span style="color: var(--faint);">$</span> cd .. && git add measure-trigger-efficiency/
-<span style="color: var(--faint);">$</span> git commit -m "add: measure-trigger-efficiency skill"
-<span style="color: var(--accent2);">[add/measure-trigger-efficiency 3c4d5e6]</span> add: measure-trigger-efficiency skill
-
-<span style="color: var(--faint);">$</span> git push -u origin add/measure-trigger-efficiency
-<span style="color: var(--faint);">$</span> gh pr create --base main --fill
-<span style="color: var(--amber2);">https://github.com/Purdue-ATrain/atrain-skills/pull/42</span>
-
-<span style="color: var(--accent2);"># maintainer reviews + merges</span>
-</pre>
-      </article>
-
-      <!-- ===== Demo 4 ===== -->
-      <article id="demo-4" class="step-card rounded-lg overflow-hidden fade-in">
-        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
-          <div>
-            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 04</span>
-            <h3 class="hl text-xl mt-1">Spawn an analysis with the harness</h3>
-          </div>
-          <span class="serif-italic text-sm" style="color: var(--dim);"><span class="mono text-text">/analysis-scaffold</span> &rarr; copier &rarr; pixi install &rarr; pytest passes.</span>
-        </div>
-<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--cyan); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/work
-<span style="color: var(--faint);">$</span> claude
-
-<span style="color: var(--cyan);">&gt; /analysis-scaffold</span>
-
-I'll walk you through. Describe the analysis in one sentence.
-
-<span style="color: var(--cyan);">&gt; I'm setting up VBF HH &rarr; bbWW in the semileptonic channel.</span>
-<span style="color: var(--cyan);">  Trigger is DST_HLT_PFJet. My handle is jdoe.</span>
-
-<span style="color: var(--accent2);">[Extracting copier variables...]</span>
-  analysis_name      = <span style="color: var(--amber2);">"hh-vbf-bbww-sl"</span>
-  analysis_title     = <span style="color: var(--amber2);">"HH bbWW VBF (semileptonic)"</span>
-  channels           = <span style="color: var(--amber2);">"lephad,lepelhad"</span>
-  primary_trigger    = <span style="color: var(--amber2);">"DST_HLT_PFJet"</span>
-  physics_process    = <span style="color: var(--amber2);">"HH_bbWW_VBF_SL"</span>
-  lead_author_github = <span style="color: var(--amber2);">"jdoe"</span>
-  motivation         = <span style="color: var(--amber2);">"VBF HH bbWW search in the</span>
-                       <span style="color: var(--amber2);"> semileptonic channel using Run-3 NanoAOD."</span>
-
-Confirm? (y/n)
-
-<span style="color: var(--cyan);">&gt; y</span>
-
-<span style="color: var(--faint);">$</span> copier copy gh:Purdue-ATrain/harness-blueprint ./hh-vbf-bbww-sl \
-    -d analysis_name=hh-vbf-bbww-sl \
-    -d analysis_title="HH bbWW VBF (semileptonic)" \
-    -d channels=lephad,lepelhad \
-    -d primary_trigger=DST_HLT_PFJet \
-    -d physics_process=HH_bbWW_VBF_SL \
-    -d lead_author_github=jdoe \
-    --defaults --trust
-
-Copying from template version 1.2.3
- created  ./hh-vbf-bbww-sl/
- created  ./hh-vbf-bbww-sl/CLAUDE.md
- created  ./hh-vbf-bbww-sl/pixi.toml
- created  ./hh-vbf-bbww-sl/analysis/runner.py
- created  ./hh-vbf-bbww-sl/analysis/event_loop.py
- created  ./hh-vbf-bbww-sl/analysis/definitions.py
- created  ./hh-vbf-bbww-sl/config/channels.py
- ... (30+ files)
-<span style="color: var(--accent2);">[_tasks]</span> git init -b main      <span style="color: var(--amber2);">&#x2713;</span>
-<span style="color: var(--accent2);">[_tasks]</span> git add -A; commit    <span style="color: var(--amber2);">&#x2713;</span> "Initial scaffold from harness-blueprint @ 1.2.3"
-<span style="color: var(--accent2);">[_tasks]</span> pixi install          <span style="color: var(--amber2);">&#x2713;</span> (12 packages)
-
-<span style="color: var(--faint);">$</span> cd hh-vbf-bbww-sl && pixi shell
-
-<span style="color: var(--faint);">(hh-vbf-bbww-sl) $</span> pytest tests/
-============================= test session starts =============================
-collected 1 item
-
-tests/test_imports.py::test_smoke      <span style="color: var(--amber2);">PASSED</span>                          [100%]
-
-============================== <span style="color: var(--amber2);">1 passed in 0.18s</span> ==============================
-
-<span style="color: var(--faint);">(hh-vbf-bbww-sl) $</span> ls
-analysis/  bin/       config/    draft/     elements/  inference/
-ml/        output/    pixi.toml  reports/   scratch/   tests/
-tools/     utils/     CLAUDE.md  README.md
-
-<span style="color: var(--accent2);"># ready to start writing event_loop logic</span>
-</pre>
-      </article>
-
-      <!-- ===== Demo 5 ===== -->
-      <article id="demo-5" class="step-card rounded-lg overflow-hidden fade-in">
-        <div class="px-5 py-3 flex flex-wrap items-baseline justify-between gap-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
-          <div>
-            <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// demo &middot; 05</span>
-            <h3 class="hl text-xl mt-1">Strip AI fingerprints with <span class="mono text-primary">/undercover-mode</span></h3>
-          </div>
-          <span class="serif-italic text-sm" style="color: var(--dim);">No <span class="mono text-text">Co-Authored-By</span>. No generator trailer. Audited clean.</span>
-        </div>
-<pre class="mono text-xs p-5 overflow-y-auto" style="max-height: 420px; line-height: 1.7; background: rgba(15,23,42,.4); border-left: 3px solid var(--amber); color: var(--text);"><span style="color: var(--faint);">$</span> cd ~/work/hh-vbf-bbtt
-<span style="color: var(--faint);">$</span> claude
-
-<span style="color: var(--cyan);">&gt; undercover mode</span>
-
-<span style="color: var(--accent2);">[undercover-mode active]</span>
-  harness commit-template trailers:  <span style="color: var(--amber2);">SUPPRESSED</span>
-  prose-fingerprint scrubbing:        <span style="color: var(--amber2);">ON</span>
-  code-marker scrubbing:              <span style="color: var(--amber2);">ON</span>
-
-Ready. All subsequent output follows undercover rules.
-
-<span style="color: var(--cyan);">&gt; Write a commit message for these changes.</span>
-
-<span style="color: var(--faint);">$</span> git diff --stat
- analysis/event_loop.py        | 14 +++++++++++---
- config/channels.py            |  2 +-
- tests/test_event_loop.py      |  8 ++++++++
-
-<span style="color: var(--accent2);">[draft commit message]</span>
-
-fix(event_loop): handle empty RDataFrame after trigger cut
-
-A trigger that vetoes all events produced an RDataFrame whose
-.Histo1D() raised on .GetValue(). Guard with a .Count() check before
-histogramming.
-
-Closes #142
-
-<span style="color: var(--accent2);">[no Co-Authored-By: Claude trailer added]</span>
-<span style="color: var(--accent2);">[no Generated-with-Claude-Code line added]</span>
-
-<span style="color: var(--cyan);">&gt; Now audit the diff to confirm.</span>
-
-<span style="color: var(--faint);">$</span> python -m scripts.audit --diff
-<span style="color: var(--amber2);">no hits.</span>
-
-<span style="color: var(--faint);">$</span> git commit -F /tmp/msg.txt
-<span style="color: var(--accent2);">[main a1b2c3d]</span> fix(event_loop): handle empty RDataFrame after trigger cut
-
-<span style="color: var(--accent2);"># the commit landed clean. no AI attribution anywhere.</span>
-</pre>
-      </article>
-
-    </div>
   </div>
 </section>
 
@@ -1107,6 +923,389 @@ git push origin users/&lt;handle&gt;
       }
     }
   });
+</script>
+
+<!-- =========== xterm.js terminal demos =========== -->
+<script>
+(function () {
+  function waitForXterm(cb) {
+    if (typeof Terminal !== 'undefined' && typeof FitAddon !== 'undefined') return cb();
+    setTimeout(function () { waitForXterm(cb); }, 80);
+  }
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+  ready(function () { waitForXterm(init); });
+
+  function init() {
+    var host = document.getElementById('atrain-xterm-host');
+    if (!host) return;
+    var titleEl = document.getElementById('atrain-term-title');
+    var replayBtn = document.getElementById('atrain-term-replay');
+    var tabs = document.querySelectorAll('.term-tab');
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var theme = {
+      background: '#1a1b26', foreground: '#a9b1d6',
+      cursor: '#c0caf5', cursorAccent: '#1a1b26',
+      selectionBackground: '#33467c',
+      black: '#15161e', red: '#f7768e',
+      green: '#9ece6a', yellow: '#e0af68',
+      blue: '#7aa2f7', magenta: '#bb9af7',
+      cyan: '#7dcfff', white: '#a9b1d6',
+      brightBlack: '#414868', brightRed: '#f7768e',
+      brightGreen: '#9ece6a', brightYellow: '#e0af68',
+      brightBlue: '#7aa2f7', brightMagenta: '#bb9af7',
+      brightCyan: '#7dcfff', brightWhite: '#c0caf5'
+    };
+
+    var term = new Terminal({
+      fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+      fontSize: 13,
+      lineHeight: 1.3,
+      cursorBlink: true,
+      cursorStyle: 'bar',
+      scrollback: 2000,
+      theme: theme,
+      convertEol: true,
+      disableStdin: true,
+      rightClickSelectsWord: false
+    });
+    var fit = new FitAddon.FitAddon();
+    term.loadAddon(fit);
+    term.open(host);
+    setTimeout(function () { try { fit.fit(); } catch (e) {} }, 30);
+    window.addEventListener('resize', function () {
+      try { fit.fit(); } catch (e) {}
+    }, { passive: true });
+
+    // ANSI shortcuts (Tokyo Night via standard ANSI codes)
+    var R = '\x1b[0m';
+    var DIM = '\x1b[90m', WHT = '\x1b[97m';
+    var RED = '\x1b[31m', GRN = '\x1b[32m', YEL = '\x1b[33m';
+    var BLU = '\x1b[34m', MAG = '\x1b[35m', CYN = '\x1b[36m';
+
+    function PS(env, path) {
+      var e = env ? CYN + '(' + env + ')' + R + ' ' : '';
+      return e + BLU + 'user@ATrain' + R + ':' + MAG + path + R + '$ ';
+    }
+
+    var demos = [
+      {
+        label: '01 / run an analysis',
+        title: 'demo-01-run-an-analysis',
+        events: [
+          { p: { path: '~/work/my-analysis' } },
+          { c: 'pixi shell' },
+          { p: { env: 'my-analysis', path: '~/work/my-analysis' } },
+          { c: 'claude', a: 350 },
+          { o: '', a: 200 },
+          { o: CYN + '> I want to look at the b-tagging score distribution. Show me what is in' + R, a: 80 },
+          { o: CYN + '  the harness, then plot it stacked vs data for the DST_JetHT trigger.' + R + '\r\n', a: 500 },
+          { o: MAG + '[Claude reads CLAUDE.md, looks at analysis/variables.py]' + R, a: 220 },
+          { o: MAG + '[Found PlotVar pattern at analysis/variables.py:42]' + R, a: 220 },
+          { o: MAG + '[Scanning config/channels.py for trigger keys... found DST_JetHT]' + R, a: 220 },
+          { o: MAG + '[No existing plots at z_prelims/btag_score/]' + R + '\r\n', a: 450 },
+          { o: 'I will mirror the existing PlotVar pattern, save to z_prelims/btag_score/', a: 60 },
+          { o: 'per the project convention, and use 1 MC file so it runs fast.\r\n', a: 200 },
+          { o: '  Created: ' + YEL + 'z_prelims/scripts/btag_score_stacked.py' + R },
+          { o: '  Created: ' + YEL + 'z_prelims/btag_score/.gitkeep' + R + '\r\n', a: 200 },
+          { o: 'Run it now? (y/n)\r\n', a: 500 },
+          { o: CYN + '> y' + R + '\r\n', a: 300 },
+          { p: { env: 'my-analysis', path: '~/work/my-analysis' } },
+          { c: 'pixi run python z_prelims/scripts/btag_score_stacked.py --max-mc-files 1', a: 350 },
+          { o: MAG + '[ROOT]' + R + ' gROOT.GetVersion() == 6.32.04' },
+          { o: MAG + '[load]' + R + ' HHbbtt (1/1 files), DY (1/1), TT (1/1), QCD (1/1)' },
+          { o: MAG + '[trigger]' + R + ' DST_JetHT applied, eff=' + YEL + '0.18' + R + ' on data' },
+          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'z_prelims/btag_score/DST_JetHT_data_stacked.png' + R },
+          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'z_prelims/btag_score/DST_JetHT_data_shape.png' + R },
+          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'z_prelims/btag_score/DST_JetHT_data_ratio.png' + R + '\r\n', a: 400 },
+          { o: CYN + '> Looks good. Add the b-jet eta distribution to the same script.' + R + '\r\n', a: 400 },
+          { o: MAG + '[Claude edits z_prelims/scripts/btag_score_stacked.py]' + R, a: 180 },
+          { o: MAG + '[Added: bjet_eta PlotVar (50 bins, -2.5..2.5)]' + R, a: 180 },
+          { o: MAG + '[Re-running...]' + R + '\r\n', a: 350 },
+          { p: { env: 'my-analysis', path: '~/work/my-analysis' } },
+          { c: 'ls z_prelims/btag_score/' },
+          { o: 'DST_JetHT_data_stacked.png    DST_JetHT_data_shape.png' },
+          { o: 'DST_JetHT_data_ratio.png      DST_JetHT_data_stacked_bjet_eta.png' }
+        ]
+      },
+      {
+        label: '02 / evolve a skill',
+        title: 'demo-02-evolve-a-skill',
+        events: [
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git checkout users/jdoe' },
+          { o: "Switched to branch 'users/jdoe'\r\n", a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'claude', a: 350 },
+          { o: '', a: 150 },
+          { o: CYN + '> /grill-me has been too aggressive. Tone the questions down so they' + R, a: 80 },
+          { o: CYN + "  do not feel like an interrogation." + R + '\r\n', a: 500 },
+          { o: MAG + '[Claude reads grill-me/SKILL.md]' + R, a: 200 },
+          { o: MAG + '[Found tone-related lines at SKILL.md:8-15]' + R + '\r\n', a: 400 },
+          { o: 'The current opener uses "Interview me relentlessly", which is the', a: 60 },
+          { o: 'aggressive framing you mean. Softening to "Walk me through" and adding', a: 60 },
+          { o: 'a line about question pacing.\r\n', a: 250 },
+          { o: '  Edited: ' + YEL + 'grill-me/SKILL.md' + R },
+          { o: '    ' + RED + '-' + R + ' "Interview me relentlessly about every aspect..."' },
+          { o: '    ' + GRN + '+' + R + ' "Walk me through every aspect..."' },
+          { o: '    ' + GRN + '+' + R + ' "Pace the questions. Wait for the user to fully answer before' },
+          { o: '      moving on. Do not stack follow-ups."\r\n', a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git diff grill-me/SKILL.md', a: 250 },
+          { o: DIM + 'diff --git a/grill-me/SKILL.md b/grill-me/SKILL.md' + R },
+          { o: DIM + '@@ -8,7 +8,9 @@ user_invocable: true' + R },
+          { o: '' },
+          { o: RED + '-Interview me relentlessly about every aspect of this plan until we reach' + R },
+          { o: RED + '-a shared understanding.' + R },
+          { o: GRN + '+Walk me through every aspect of this plan until we reach a shared' + R },
+          { o: GRN + '+understanding. Pace the questions. Wait for the user to fully answer' + R },
+          { o: GRN + "+before moving on. Do not stack follow-ups." + R + '\r\n', a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git add grill-me/SKILL.md && git commit -m "sharpen grill-me: softer pacing"' },
+          { o: '[users/jdoe ' + YEL + 'a1b2c3d' + R + '] sharpen grill-me: softer pacing' },
+          { o: ' 1 file changed, 4 insertions(+), 2 deletions(-)\r\n', a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git push origin users/jdoe', a: 350 },
+          { o: DIM + '# next morning on the Purdue cron at 06:00 ET:' + R, a: 600 },
+          { o: MAG + '[atrain-cron]' + R + ' walking branches: main, users/jdoe, users/alice, users/bob' },
+          { o: MAG + '[evolve-skill]' + R + ' grill-me: 3 candidates' },
+          { o: '  layer-1 regex:   ' + GRN + '3/3 pass' + R },
+          { o: '  layer-2 claude:  synthesising best-of-breed...' },
+          { o: "  decision:        incorporate jdoe's pacing line, keep alice's example block" },
+          { o: MAG + '[atrain-cron]' + R + ' committed to nightly: evolve: synthesise grill-me\r\n', a: 350 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git fetch origin nightly && git log origin/nightly --oneline | head -3' },
+          { o: YEL + '1a2b3c4' + R + ' evolve: synthesise grill-me from main, users/jdoe, users/alice' },
+          { o: YEL + '5d6e7f8' + R + ' evolve: synthesise curate-tests from main, users/alice' },
+          { o: YEL + '9a0b1c2' + R + ' evolve: synthesise analysis-scaffold from main, users/jdoe' }
+        ]
+      },
+      {
+        label: '03 / contribute',
+        title: 'demo-03-contribute-a-skill',
+        events: [
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git checkout main && git pull' },
+          { o: "Switched to branch 'main'" },
+          { o: 'Already up to date.\r\n', a: 200 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git checkout -b add/measure-trigger-efficiency' },
+          { o: "Switched to a new branch 'add/measure-trigger-efficiency'\r\n", a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'claude', a: 350 },
+          { o: '', a: 150 },
+          { o: CYN + '> Create a new skill called measure-trigger-efficiency. It produces a' + R, a: 70 },
+          { o: CYN + '  markdown table of per-trigger efficiency (passed/total) for each MC' + R, a: 70 },
+          { o: CYN + '  sample plus a stacked bar plot. Use the /an-readiness-check structure' + R, a: 70 },
+          { o: CYN + '  as the reference.' + R + '\r\n', a: 500 },
+          { o: MAG + '[Claude reads an-readiness-check/SKILL.md for the pattern]' + R, a: 200 },
+          { o: MAG + '[Found: scripts/audit.py + SKILL.md router pattern]' + R + '\r\n', a: 400 },
+          { o: 'Scaffolding:' },
+          { o: '  measure-trigger-efficiency/' },
+          { o: '  ├─ SKILL.md             (frontmatter + invocation prompt template)' },
+          { o: '  ├─ README.md            (human-readable overview)' },
+          { o: '  └─ scripts/' },
+          { o: '      ├─ efficiency.py    (the producer, stdlib + ROOT only)' },
+          { o: '      └─ tests/' },
+          { o: '          └─ test_efficiency.py\r\n' },
+          { o: '  Drafting SKILL.md...              ' + YEL + '~80 LOC' + R, a: 180 },
+          { o: '  Drafting scripts/efficiency.py... ' + YEL + '~120 LOC' + R, a: 180 },
+          { o: '  Drafting tests...                 ' + YEL + '4 fixtures' + R + '\r\n', a: 300 },
+          { o: 'Run pytest scripts/tests/ to verify.\r\n', a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'cd measure-trigger-efficiency && pytest scripts/tests/', a: 350 },
+          { o: DIM + '============================= test session starts =============================' + R },
+          { o: 'collected 4 items\r\n' },
+          { o: 'scripts/tests/test_efficiency.py::test_counts_per_trigger     ' + GRN + 'PASSED' + R + '  [ 25%]' },
+          { o: 'scripts/tests/test_efficiency.py::test_table_renders_markdown ' + GRN + 'PASSED' + R + '  [ 50%]' },
+          { o: 'scripts/tests/test_efficiency.py::test_bar_plot_saves         ' + GRN + 'PASSED' + R + '  [ 75%]' },
+          { o: 'scripts/tests/test_efficiency.py::test_handles_empty_sample   ' + GRN + 'PASSED' + R + '  [100%]\r\n' },
+          { o: DIM + '============================== ' + R + GRN + '4 passed in 0.42s' + R + DIM + ' ==============================' + R + '\r\n', a: 350 },
+          { p: { path: '~/.claude/skills/measure-trigger-efficiency' } },
+          { c: 'cd .. && git add measure-trigger-efficiency/' },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git commit -m "add: measure-trigger-efficiency skill"' },
+          { o: '[add/measure-trigger-efficiency ' + YEL + '3c4d5e6' + R + '] add: measure-trigger-efficiency skill' },
+          { o: ' 4 files changed, 217 insertions(+)\r\n', a: 250 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'git push -u origin add/measure-trigger-efficiency', a: 300 },
+          { p: { path: '~/.claude/skills' } },
+          { c: 'gh pr create --base main --fill', a: 350 },
+          { o: YEL + 'https://github.com/Purdue-ATrain/atrain-skills/pull/42' + R + '\r\n', a: 200 },
+          { o: DIM + '# maintainer reviews + merges' + R }
+        ]
+      },
+      {
+        label: '04 / spawn an analysis',
+        title: 'demo-04-spawn-an-analysis',
+        events: [
+          { p: { path: '~/work' } },
+          { c: 'claude', a: 300 },
+          { o: '', a: 150 },
+          { o: CYN + '> /analysis-scaffold' + R + '\r\n', a: 400 },
+          { o: "I will walk you through. Describe the analysis in one sentence.\r\n", a: 350 },
+          { o: CYN + '> I am setting up VBF HH to bbWW in the semileptonic channel.' + R, a: 60 },
+          { o: CYN + '  Trigger is DST_HLT_PFJet. My handle is jdoe.' + R + '\r\n', a: 500 },
+          { o: MAG + '[Extracting copier variables...]' + R, a: 350 },
+          { o: '  analysis_name      = ' + YEL + '"hh-vbf-bbww-sl"' + R },
+          { o: '  analysis_title     = ' + YEL + '"HH bbWW VBF (semileptonic)"' + R },
+          { o: '  channels           = ' + YEL + '"lephad,lepelhad"' + R },
+          { o: '  primary_trigger    = ' + YEL + '"DST_HLT_PFJet"' + R },
+          { o: '  physics_process    = ' + YEL + '"HH_bbWW_VBF_SL"' + R },
+          { o: '  lead_author_github = ' + YEL + '"jdoe"' + R + '\r\n', a: 300 },
+          { o: 'Confirm? (y/n)\r\n', a: 500 },
+          { o: CYN + '> y' + R + '\r\n', a: 350 },
+          { p: { path: '~/work' } },
+          { c: 'copier copy gh:Purdue-ATrain/harness-blueprint ./hh-vbf-bbww-sl --defaults --trust', a: 400 },
+          { o: 'Copying from template version 1.2.3' },
+          { o: ' created  ./hh-vbf-bbww-sl/' },
+          { o: ' created  ./hh-vbf-bbww-sl/CLAUDE.md' },
+          { o: ' created  ./hh-vbf-bbww-sl/pixi.toml' },
+          { o: ' created  ./hh-vbf-bbww-sl/analysis/runner.py' },
+          { o: ' created  ./hh-vbf-bbww-sl/analysis/event_loop.py' },
+          { o: ' created  ./hh-vbf-bbww-sl/analysis/definitions.py' },
+          { o: ' created  ./hh-vbf-bbww-sl/config/channels.py' },
+          { o: ' ' + DIM + '... (30+ files)' + R + '\r\n', a: 250 },
+          { o: MAG + '[_tasks]' + R + ' git init -b main      ' + GRN + 'OK' + R },
+          { o: MAG + '[_tasks]' + R + ' git add -A; commit    ' + GRN + 'OK' + R + ' "Initial scaffold from harness-blueprint @ 1.2.3"' },
+          { o: MAG + '[_tasks]' + R + ' pixi install          ' + GRN + 'OK' + R + ' (12 packages)\r\n', a: 350 },
+          { p: { path: '~/work' } },
+          { c: 'cd hh-vbf-bbww-sl && pixi shell', a: 350 },
+          { p: { env: 'hh-vbf-bbww-sl', path: '~/work/hh-vbf-bbww-sl' } },
+          { c: 'pytest tests/', a: 350 },
+          { o: DIM + '============================= test session starts =============================' + R },
+          { o: 'collected 1 item\r\n' },
+          { o: 'tests/test_imports.py::test_smoke    ' + GRN + 'PASSED' + R + '                            [100%]\r\n' },
+          { o: DIM + '============================== ' + R + GRN + '1 passed in 0.18s' + R + DIM + ' ==============================' + R + '\r\n', a: 300 },
+          { p: { env: 'hh-vbf-bbww-sl', path: '~/work/hh-vbf-bbww-sl' } },
+          { c: 'ls' },
+          { o: 'analysis/  bin/       config/    draft/     elements/  inference/' },
+          { o: 'ml/        output/    pixi.toml  reports/   scratch/   tests/' },
+          { o: 'tools/     utils/     CLAUDE.md  README.md\r\n', a: 250 },
+          { o: DIM + '# ready to start writing event_loop logic' + R }
+        ]
+      },
+      {
+        label: '05 / undercover-mode',
+        title: 'demo-05-undercover-mode',
+        events: [
+          { p: { path: '~/work/my-analysis' } },
+          { c: 'claude', a: 300 },
+          { o: '', a: 150 },
+          { o: CYN + '> undercover mode' + R + '\r\n', a: 400 },
+          { o: MAG + '[undercover-mode active]' + R, a: 200 },
+          { o: '  harness commit-template trailers:  ' + YEL + 'SUPPRESSED' + R },
+          { o: '  prose-fingerprint scrubbing:        ' + GRN + 'ON' + R },
+          { o: '  code-marker scrubbing:              ' + GRN + 'ON' + R + '\r\n', a: 350 },
+          { o: 'Ready. All subsequent output follows undercover rules.\r\n', a: 400 },
+          { o: CYN + '> Write a commit message for these changes.' + R + '\r\n', a: 400 },
+          { p: { path: '~/work/my-analysis' } },
+          { c: 'git diff --stat', a: 300 },
+          { o: ' analysis/event_loop.py        | 14 +++++++++++---' },
+          { o: ' config/channels.py            |  2 +-' },
+          { o: ' tests/test_event_loop.py      |  8 ++++++++\r\n', a: 250 },
+          { o: MAG + '[draft commit message]' + R + '\r\n', a: 300 },
+          { o: WHT + 'fix(event_loop): handle empty RDataFrame after trigger cut' + R + '\r\n', a: 250 },
+          { o: 'A trigger that vetoes all events produced an RDataFrame whose' },
+          { o: '.Histo1D() raised on .GetValue(). Guard with a .Count() check before' },
+          { o: 'histogramming.\r\n' },
+          { o: 'Closes #142\r\n', a: 350 },
+          { o: MAG + '[no Co-Authored-By: Claude trailer added]' + R, a: 200 },
+          { o: MAG + '[no Generated-with-Claude-Code line added]' + R + '\r\n', a: 400 },
+          { o: CYN + '> Now audit the diff to confirm.' + R + '\r\n', a: 400 },
+          { p: { path: '~/work/my-analysis' } },
+          { c: 'python -m scripts.audit --diff', a: 350 },
+          { o: GRN + 'no hits.' + R + '\r\n', a: 350 },
+          { p: { path: '~/work/my-analysis' } },
+          { c: 'git commit -F /tmp/msg.txt' },
+          { o: '[main ' + YEL + 'a1b2c3d' + R + '] fix(event_loop): handle empty RDataFrame after trigger cut' },
+          { o: ' 3 files changed, 18 insertions(+), 2 deletions(-)\r\n', a: 300 },
+          { o: DIM + '# the commit landed clean. no AI attribution anywhere.' + R }
+        ]
+      }
+    ];
+
+    function sleep(ms) {
+      return new Promise(function (r) { setTimeout(r, ms); });
+    }
+
+    var token = 0;
+    var typeMs = 22;
+
+    async function play(idx) {
+      var myToken = ++token;
+      var demo = demos[idx];
+      titleEl.textContent = 'user@ATrain · ' + demo.title;
+      term.reset();
+      term.write('\r\n');
+      for (var i = 0; i < demo.events.length; i++) {
+        if (myToken !== token) return;
+        var ev = demo.events[i];
+        if (ev.p) {
+          term.write(PS(ev.p.env, ev.p.path));
+        } else if (ev.c !== undefined) {
+          var ms = reduced ? 0 : typeMs;
+          for (var j = 0; j < ev.c.length; j++) {
+            if (myToken !== token) return;
+            term.write(WHT + ev.c[j] + R);
+            if (ms) await sleep(ms);
+          }
+          term.write('\r\n');
+          if (!reduced && ev.a) await sleep(ev.a);
+        } else if (ev.o !== undefined) {
+          term.write(ev.o);
+          if (!/[\r\n]$/.test(ev.o)) term.write('\r\n');
+          if (!reduced && ev.a) await sleep(ev.a);
+        }
+      }
+    }
+
+    function activate(idx) {
+      tabs.forEach(function (t, i) {
+        var on = (i === idx);
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      play(idx);
+    }
+
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        activate(parseInt(t.dataset.demo, 10));
+      });
+    });
+
+    if (replayBtn) {
+      replayBtn.addEventListener('click', function () {
+        var active = document.querySelector('.term-tab.active');
+        activate(active ? parseInt(active.dataset.demo, 10) : 0);
+      });
+    }
+
+    // Autoplay first demo when terminal scrolls into view
+    var played = false;
+    var section = document.getElementById('atrain-terminal');
+    if (section && 'IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !played) {
+            played = true;
+            setTimeout(function () { activate(0); }, 200);
+            obs.disconnect();
+          }
+        });
+      }, { threshold: 0.25 });
+      obs.observe(section);
+    } else {
+      // Fallback for ancient browsers
+      activate(0);
+    }
+  }
+})();
 </script>
 
 </body>
