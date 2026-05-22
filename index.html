@@ -293,10 +293,23 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <!-- =========== SKILL LIBRARY =========== -->
 <section id="skills" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-2xl">
+    <div class="mb-14 max-w-3xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 02</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The skill library</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">11 skills. Cron-curated nightly. Branched per contributor.</p>
+      <p class="serif-italic text-xl mb-8" style="color: var(--dim);">A common place for every prompt, convention, and pattern the lab uses with AI.</p>
+
+      <div class="space-y-5 fade-in" style="line-height: 1.75;">
+        <p style="color: var(--dim);">
+          ATrain exists because AI assistants now produce more code per session than a human reviewer can read line by line. A graduate student running Claude Code all afternoon can ship a thousand lines of analysis code, with hundreds of edge-case decisions baked into how the prompt was phrased. If every contributor in the lab invents their own prompts, their own file layouts, their own commit conventions, the lab ends up with a pile of AI-generated work that nobody else can pick up.
+        </p>
+        <p style="color: var(--dim);">
+          The skill library is how we fix that. Everyone clones the same <span class="mono text-text">~/.claude/skills</span> directory, so every contributor invokes the same <span class="mono text-text">/analysis-scaffold</span>, the same <span class="mono text-text">/paper-pdf-writing</span>, the same <span class="mono text-text">/undercover-mode</span>. The <a href="#harness" class="inline-link">harness blueprint</a> gives every spawned analysis the same file tree and the same anti-hallucination contract. When you hand a project off to the next student, or join an analysis someone else started, the conventions are already shared. AI-assisted physics stays reviewable, transferable, and contributable.
+        </p>
+      </div>
+
+      <p class="mt-8 mono text-xs uppercase tracking-widest" style="color: var(--faint);">
+        11 skills &middot; cron-curated nightly &middot; branched per contributor
+      </p>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
