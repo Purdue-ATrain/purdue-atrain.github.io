@@ -223,6 +223,18 @@ tailwind.config = {
 
 <div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== CINEMATIC COVER BANNER (interstitial) =========== -->
+<section id="banner" class="relative overflow-hidden" style="height: 70vh; min-height: 480px; max-height: 720px;" aria-hidden="true">
+  <div class="absolute inset-0">
+    <img id="cinematic-cover" src="assets/cover.png" alt="" class="w-full h-full object-cover" style="will-change: transform;" />
+  </div>
+  <!-- top + bottom gradient overlays for soft blend into the page bg -->
+  <div class="absolute inset-x-0 top-0 h-32 pointer-events-none" style="background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);"></div>
+  <div class="absolute inset-x-0 bottom-0 h-32 pointer-events-none" style="background: linear-gradient(0deg, var(--bg) 0%, transparent 100%);"></div>
+  <!-- subtle brand-color radial glow -->
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(63,169,245,.10), transparent 65%);"></div>
+</section>
+
 <!-- =========== AI-GUIDED TOUR (step 00) =========== -->
 <section id="ai-tour" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
@@ -569,13 +581,9 @@ git push origin users/&lt;handle&gt;
   </div>
 </section>
 
-<!-- =========== COVER BANNER + GET INVOLVED =========== -->
-<section id="get-involved" class="relative overflow-hidden">
-  <div class="cover-mask absolute inset-x-0 top-0 h-72 md:h-96" style="z-index: 0;">
-    <img src="assets/cover.png" alt="" class="w-full h-full object-cover opacity-50" />
-  </div>
-
-  <div class="relative max-w-5xl mx-auto px-6 pt-72 md:pt-[28rem] pb-28" style="z-index: 1;">
+<!-- =========== GET INVOLVED =========== -->
+<section id="get-involved" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
@@ -719,15 +727,18 @@ git push origin users/&lt;handle&gt;
     });
   })();
 
-  // ---- GSAP fade-in-on-scroll ----
+  // ---- GSAP fade-in-on-scroll + cinematic banner parallax ----
   window.addEventListener('load', function () {
     if (!window.gsap || !window.ScrollTrigger) return;
     gsap.registerPlugin(ScrollTrigger);
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     gsap.utils.toArray('.fade-in').forEach(function (el) {
       gsap.to(el, {
         opacity: 1,
         y: 0,
-        duration: 0.7,
+        duration: reduced ? 0 : 0.7,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: el,
@@ -736,6 +747,28 @@ git push origin users/&lt;handle&gt;
         },
       });
     });
+
+    // Cinematic banner parallax: image drifts slower than the page as you scroll.
+    // Respect prefers-reduced-motion — skip the transform entirely.
+    if (!reduced) {
+      var cover = document.getElementById('cinematic-cover');
+      var banner = document.getElementById('banner');
+      if (cover && banner) {
+        gsap.fromTo(cover,
+          { yPercent: 8 },
+          {
+            yPercent: -10,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: banner,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
+          }
+        );
+      }
+    }
   });
 </script>
 
