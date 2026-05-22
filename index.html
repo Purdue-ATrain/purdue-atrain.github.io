@@ -152,7 +152,10 @@ tailwind.config = {
   .nav-bar.visible { transform: translateY(0); }
   .fade-in {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(12px);
+  }
+  @media (max-width: 768px) {
+    .fade-in { transform: translateY(8px); }
   }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -738,15 +741,22 @@ git push origin users/&lt;handle&gt;
       gsap.to(el, {
         opacity: 1,
         y: 0,
-        duration: reduced ? 0 : 0.7,
+        duration: reduced ? 0 : 0.5,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
+          start: 'top 92%',
+          once: true,
         },
       });
     });
+
+    // Recompute trigger positions after layout settles. Fonts, images, and
+    // late CSS shifts can move elements after initial trigger setup; this
+    // catches those cases (especially on mobile where viewport metrics
+    // jitter during the URL-bar collapse).
+    setTimeout(function () { ScrollTrigger.refresh(); }, 300);
+    window.addEventListener('resize', function () { ScrollTrigger.refresh(); }, { passive: true });
 
     // Cinematic banner parallax: image drifts slower than the page as you scroll.
     // Respect prefers-reduced-motion: skip the transform entirely.
