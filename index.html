@@ -172,7 +172,8 @@ tailwind.config = {
       <img src="assets/logo.png" alt="" class="h-7 w-7 rounded-md" />
       <span class="hl text-sm tracking-tight">Purdue-ATrain</span>
     </a>
-    <div class="hidden md:flex items-center gap-7 mono text-xs" style="color: var(--dim);">
+    <div class="hidden md:flex items-center gap-6 mono text-xs" style="color: var(--dim);">
+      <a href="#ai-tour" class="hover:text-primary transition-colors">ai-tour</a>
       <a href="#quick-start" class="hover:text-primary transition-colors">quick-start</a>
       <a href="#skills" class="hover:text-primary transition-colors">skills</a>
       <a href="#harness" class="hover:text-primary transition-colors">harness</a>
@@ -201,25 +202,38 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- =========== QUICK START =========== -->
-<section id="quick-start" class="py-28 px-6">
+<!-- =========== WHAT IS ATRAIN (thesis preamble) =========== -->
+<section id="why" class="py-24 px-6">
+  <div class="max-w-3xl mx-auto">
+    <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// what is ATrain</span>
+    <h2 class="hl text-4xl mt-3 mb-6 fade-in">A standardised AI workflow for a physics lab.</h2>
+    <div class="space-y-5 fade-in" style="line-height: 1.75; color: var(--dim);">
+      <p>
+        ATrain exists because AI assistants now produce more code per session than a human reviewer can read line by line. A graduate student running Claude Code all afternoon can ship a thousand lines of analysis code, with hundreds of edge-case decisions baked into how the prompt was phrased. If every contributor in the lab invents their own prompts, their own file layouts, their own commit conventions, the lab ends up with a pile of AI-generated work that nobody else can pick up.
+      </p>
+      <p>
+        ATrain is how we keep that tractable. Everyone clones the same <span class="mono text-text">~/.claude/skills</span> directory, so every contributor invokes the same <span class="mono text-text">/analysis-scaffold</span>, the same <span class="mono text-text">/paper-pdf-writing</span>, the same <span class="mono text-text">/undercover-mode</span>. The <a href="#harness" class="inline-link">harness blueprint</a> gives every spawned analysis the same file tree and the same anti-hallucination contract. When you hand a project off to the next student, or join an analysis someone else started, or contribute to a sibling project across the lab, the conventions are already shared. AI-assisted physics stays reviewable, transferable, and contributable.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-5xl mx-auto"></div>
+
+<!-- =========== AI-GUIDED TOUR (step 00) =========== -->
+<section id="ai-tour" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 01</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Quick start</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Three commands to a working analysis &mdash; or one prompt for a guided tour.</p>
+    <div class="mb-12 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 00</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">AI-guided tour</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Skip the manual setup. Paste one prompt into any LLM chat and get walked through onboarding.</p>
     </div>
 
-    <!-- ===== Step 00: AI-guided tour ===== -->
-    <div class="step-card rounded-lg p-6 mb-8 fade-in" style="border-color: rgba(124,58,237,0.35); background: rgba(124, 58, 237, 0.05);">
+    <div class="step-card rounded-lg p-6 fade-in" style="border-color: rgba(124,58,237,0.35); background: rgba(124, 58, 237, 0.05);">
       <div class="flex flex-wrap items-baseline justify-between gap-3 mb-3">
-        <div class="flex items-baseline gap-3">
-          <span class="hl text-3xl" style="color: var(--accent2);">00</span>
-          <h3 class="font-semibold text-lg">Prefer an AI-guided tour?</h3>
-        </div>
         <span class="mono text-xs" style="color: var(--dim);">paste into Claude &middot; ChatGPT &middot; Gemini &middot; Cursor &middot; or any LLM chat</span>
       </div>
-      <p class="text-sm mb-4" style="color: var(--dim);">Drop this prompt into your favourite chat assistant. It walks you through getting set up, one step at a time, asking your GitHub handle first.</p>
+      <p class="text-sm mb-4" style="color: var(--dim);">Drop this prompt into your favourite chat assistant. It asks your GitHub handle first, then walks you through the nine onboarding steps one at a time.</p>
 
       <div class="relative">
         <button id="copy-tour-prompt" class="absolute top-3 right-3 mono text-xs px-3 py-1.5 rounded transition-colors" style="background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35); color: var(--accent2);" aria-label="Copy prompt to clipboard">
@@ -243,8 +257,21 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       </div>
 
       <p class="mt-4 mono text-xs" style="color: var(--faint);">
-        Or read the manual setup → continue to steps 01, 02, 03 below ↓
+        Prefer the manual setup? <a href="#quick-start" class="inline-link">Jump to Quick start ↓</a>
       </p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-5xl mx-auto"></div>
+
+<!-- =========== QUICK START =========== -->
+<section id="quick-start" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-14 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 01</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Quick start</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Three commands to a working analysis.</p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6">
@@ -293,23 +320,10 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <!-- =========== SKILL LIBRARY =========== -->
 <section id="skills" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-3xl">
+    <div class="mb-14 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 02</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The skill library</h2>
-      <p class="serif-italic text-xl mb-8" style="color: var(--dim);">A common place for every prompt, convention, and pattern the lab uses with AI.</p>
-
-      <div class="space-y-5 fade-in" style="line-height: 1.75;">
-        <p style="color: var(--dim);">
-          ATrain exists because AI assistants now produce more code per session than a human reviewer can read line by line. A graduate student running Claude Code all afternoon can ship a thousand lines of analysis code, with hundreds of edge-case decisions baked into how the prompt was phrased. If every contributor in the lab invents their own prompts, their own file layouts, their own commit conventions, the lab ends up with a pile of AI-generated work that nobody else can pick up.
-        </p>
-        <p style="color: var(--dim);">
-          The skill library is how we fix that. Everyone clones the same <span class="mono text-text">~/.claude/skills</span> directory, so every contributor invokes the same <span class="mono text-text">/analysis-scaffold</span>, the same <span class="mono text-text">/paper-pdf-writing</span>, the same <span class="mono text-text">/undercover-mode</span>. The <a href="#harness" class="inline-link">harness blueprint</a> gives every spawned analysis the same file tree and the same anti-hallucination contract. When you hand a project off to the next student, or join an analysis someone else started, the conventions are already shared. AI-assisted physics stays reviewable, transferable, and contributable.
-        </p>
-      </div>
-
-      <p class="mt-8 mono text-xs uppercase tracking-widest" style="color: var(--faint);">
-        11 skills &middot; cron-curated nightly &middot; branched per contributor
-      </p>
+      <p class="serif-italic text-xl" style="color: var(--dim);">11 skills. Cron-curated nightly. Branched per contributor.</p>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -393,36 +407,81 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     <div class="mb-14 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 04</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">How skills evolve</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Cron-curated. Two-layer audited. Branch-discipline enforced.</p>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
     </div>
 
-    <div class="step-card rounded-lg p-6 mb-8 fade-in">
+    <div class="step-card rounded-lg p-6 mb-10 fade-in">
       <div class="mermaid">
 flowchart LR
-  U["users/&lt;handle&gt;"] --> A["cron audit"]
-  A --> R["layer-1<br/>regex"]
-  A --> C["layer-2<br/>Claude"]
-  R --> N["nightly"]
-  C --> N
-  N --> P["PR review"]
-  P --> M["main"]
+  subgraph PATH_A ["Path A · Direct PR (explicit changes)"]
+    direction LR
+    T["topic branch<br/>add/&lt;name&gt;<br/>fix/&lt;scope&gt;"] --> P1["open PR<br/>vs main"]
+    P1 --> R1["maintainer<br/>review"]
+  end
+
+  subgraph PATH_B ["Path B · Organic + cron-curated"]
+    direction LR
+    U["users/&lt;handle&gt;<br/>(your daily branch)"] --> C["nightly cron<br/>layer-1 regex<br/>layer-2 Claude"]
+    C --> N["nightly<br/>(synthesised)"]
+    N --> P2["maintainer<br/>PR review"]
+  end
+
+  R1 --> M["main"]
+  P2 --> M
 
   classDef branch fill:#1E293B,stroke:#3FA9F5,color:#E2E8F0
   classDef audit fill:#1E293B,stroke:#F59E0B,color:#FBBF24
-  classDef sink fill:#1E293B,stroke:#7C3AED,color:#A855F7
-  class U,N,M,P branch
-  class A,R,C audit
+  classDef sink fill:#1E293B,stroke:#22D3EE,color:#22D3EE
+  class T,U,N branch
+  class C,P1,P2,R1 audit
+  class M sink
       </div>
     </div>
 
-    <p class="text-base max-w-3xl mb-6 fade-in" style="color: var(--dim); line-height: 1.7;">
-      Each contributor lives on a long-lived <span class="mono text-text">users/&lt;handle&gt;</span> branch. A nightly cron walks every branch, audits each skill contribution with a regex layer-1 forbidden-pattern scan plus a layer-2 Claude semantic check, then synthesises a best-of-breed evolved <span class="mono text-text">SKILL.md</span> onto a <span class="mono text-text">nightly</span> branch. The maintainer reviews and PRs <span class="mono text-text">nightly → main</span>.
+    <div class="grid md:grid-cols-2 gap-6 fade-in">
+      <div class="step-card rounded-lg p-6">
+        <div class="mb-3">
+          <span class="mono text-xs pill px-2 py-0.5 rounded">Path A</span>
+        </div>
+        <h3 class="hl text-2xl mb-3">Direct PR</h3>
+        <p class="text-sm mb-4" style="color: var(--dim); line-height: 1.65;">
+          Standard GitHub flow. Cut a topic branch off <span class="mono text-text">main</span> (verbs: <span class="mono text-text">add/</span>, <span class="mono text-text">fix/</span>, <span class="mono text-text">sharpen/</span>, <span class="mono text-text">evolve/</span>, <span class="mono text-text">remove/</span>), commit the change, push, open a PR against <span class="mono text-text">main</span>. Maintainer reviews and merges. Best for deliberate fixes, new skills, or anything where you want the change reviewed as one coherent diff.
+        </p>
+        <div class="code-block rounded p-3 mono text-xs" style="color: var(--cyan); line-height: 1.6;">
+git checkout -b add/&lt;skill-name&gt;
+# edit, commit
+git push -u origin add/&lt;skill-name&gt;
+gh pr create --base main --fill
+        </div>
+      </div>
+
+      <div class="step-card rounded-lg p-6">
+        <div class="mb-3">
+          <span class="mono text-xs pill amber px-2 py-0.5 rounded">Path B</span>
+        </div>
+        <h3 class="hl text-2xl mb-3">Organic + cron-curated</h3>
+        <p class="text-sm mb-4" style="color: var(--dim); line-height: 1.65;">
+          Live on a long-lived <span class="mono text-text">users/&lt;handle&gt;</span> branch. Edit skills as you use them, commit when you like, push when convenient. A nightly cron walks every branch, audits each contribution (regex layer-1 forbidden-pattern scan plus layer-2 Claude semantic check), and synthesises a best-of-breed evolved <span class="mono text-text">SKILL.md</span> onto <span class="mono text-text">nightly</span>. Maintainer PRs <span class="mono text-text">nightly → main</span>. Best for organic evolution where interrupting your work to open a PR per tweak is friction.
+        </p>
+        <div class="code-block rounded p-3 mono text-xs" style="color: var(--cyan); line-height: 1.6;">
+git checkout users/&lt;handle&gt;
+# edit, commit, edit, commit
+git push origin users/&lt;handle&gt;
+# cron picks it up nightly
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-8 text-sm max-w-3xl fade-in" style="color: var(--dim);">
+      Both paths converge at <span class="mono text-text">main</span>. The forbidden-pattern scan runs on the cron path; for direct PRs the equivalent safety check happens in maintainer review. Use whichever flow fits the change.
     </p>
 
-    <p class="mono text-xs" style="color: var(--faint);">
-      Runbook → <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/evolve-skill/SKILL.md" class="inline-link">evolve-skill/SKILL.md</a>
-      &nbsp;·&nbsp;
-      Forbidden patterns → <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/tools/forbidden-patterns.txt" class="inline-link">tools/forbidden-patterns.txt</a>
+    <p class="mt-6 mono text-xs" style="color: var(--faint);">
+      Runbook &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/evolve-skill/SKILL.md" class="inline-link">evolve-skill/SKILL.md</a>
+      &nbsp;&middot;&nbsp;
+      Forbidden patterns &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/tools/forbidden-patterns.txt" class="inline-link">tools/forbidden-patterns.txt</a>
+      &nbsp;&middot;&nbsp;
+      Contributing &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/CONTRIBUTING.md" class="inline-link">CONTRIBUTING.md</a>
     </p>
   </div>
 </section>
