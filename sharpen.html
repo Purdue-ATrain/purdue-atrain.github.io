@@ -53,56 +53,55 @@ tailwind.config = {
 </script>
 
 <style>
-  /* Palette: Tokyo Night Storm (dark) + Tokyo Night Day (light) */
   :root {
-    --bg: #1a1b26;
-    --surface: #24283b;
-    --surface-strong: rgba(36, 40, 59, 0.55);
-    --code-bg: rgba(15, 16, 28, 0.55);
-    --primary: #7aa2f7;
-    --accent: #bb9af7;
-    --accent2: #c5a9ff;
-    --amber: #ff9e64;
-    --amber2: #e0af68;
-    --cyan: #7dcfff;
-    --text: #c0caf5;
-    --dim: #a9b1d6;
-    --faint: #565f89;
-    --border: rgba(122, 162, 247, 0.16);
-    --divider: rgba(122, 162, 247, 0.26);
-    --link-bd: rgba(125, 207, 255, 0.32);
-    --pill-blue-bg: rgba(122, 162, 247, 0.10);
-    --pill-blue-bd: rgba(122, 162, 247, 0.24);
-    --pill-amber-bg: rgba(255, 158, 100, 0.10);
-    --pill-amber-bd: rgba(255, 158, 100, 0.26);
-    --card-hover: rgba(122, 162, 247, 0.45);
-    --card-shadow: rgba(122, 162, 247, 0.10);
-    --mermaid-bg: #1a1b26;
+    --bg: #0e0f13;
+    --surface: #181a21;
+    --surface-strong: rgba(24, 26, 33, 0.7);
+    --code-bg: rgba(8, 9, 13, 0.55);
+    --primary: #5b8df0;
+    --accent: #d4924c;
+    --accent2: #b87a3e;
+    --amber: #d4924c;
+    --amber2: #b87a3e;
+    --cyan: #6db8e8;
+    --text: #ebebed;
+    --dim: #9c9ea4;
+    --faint: #5e6068;
+    --border: rgba(235, 235, 237, 0.10);
+    --divider: rgba(235, 235, 237, 0.16);
+    --link-bd: rgba(109, 184, 232, 0.32);
+    --pill-blue-bg: rgba(91, 141, 240, 0.10);
+    --pill-blue-bd: rgba(91, 141, 240, 0.26);
+    --pill-amber-bg: rgba(212, 146, 76, 0.10);
+    --pill-amber-bd: rgba(212, 146, 76, 0.28);
+    --card-hover: rgba(91, 141, 240, 0.45);
+    --card-shadow: rgba(0, 0, 0, 0.40);
+    --mermaid-bg: #0e0f13;
   }
   :root[data-theme="light"] {
-    --bg: #f1f3f7;
-    --surface: #dde2ea;
-    --surface-strong: #dde2ea;
-    --code-bg: #cdd4de;
-    --primary: #1f6ad8;
-    --accent: #7c3aed;
-    --accent2: #6d28d9;
-    --amber: #b15c00;
-    --amber2: #d97706;
-    --cyan: #006a8e;
-    --text: #0f172a;
-    --dim: #334155;
-    --faint: #475569;
-    --border: rgba(15, 23, 42, 0.14);
-    --divider: rgba(15, 23, 42, 0.22);
-    --link-bd: rgba(0, 106, 142, 0.42);
-    --pill-blue-bg: rgba(31, 106, 216, 0.10);
-    --pill-blue-bd: rgba(31, 106, 216, 0.32);
-    --pill-amber-bg: rgba(177, 92, 0, 0.10);
-    --pill-amber-bd: rgba(177, 92, 0, 0.32);
-    --card-hover: rgba(31, 106, 216, 0.5);
-    --card-shadow: rgba(15, 23, 42, 0.12);
-    --mermaid-bg: #f1f3f7;
+    --bg: #f6f5f1;
+    --surface: #ebe9e1;
+    --surface-strong: #ebe9e1;
+    --code-bg: #d8d5c8;
+    --primary: #1f4fcb;
+    --accent: #b5722a;
+    --accent2: #97601e;
+    --amber: #b5722a;
+    --amber2: #97601e;
+    --cyan: #126b87;
+    --text: #16181d;
+    --dim: #2d3035;
+    --faint: #5a5d65;
+    --border: rgba(22, 24, 29, 0.14);
+    --divider: rgba(22, 24, 29, 0.22);
+    --link-bd: rgba(18, 107, 135, 0.42);
+    --pill-blue-bg: rgba(31, 79, 203, 0.10);
+    --pill-blue-bd: rgba(31, 79, 203, 0.32);
+    --pill-amber-bg: rgba(181, 114, 42, 0.10);
+    --pill-amber-bd: rgba(181, 114, 42, 0.32);
+    --card-hover: rgba(31, 79, 203, 0.55);
+    --card-shadow: rgba(22, 24, 29, 0.18);
+    --mermaid-bg: #f6f5f1;
   }
   html, body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; transition: background-color .3s ease, color .3s ease; }
   .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; color: var(--text); }
@@ -294,24 +293,24 @@ git push origin users/&lt;handle&gt;
       startOnLoad: false,
       theme: isLight ? 'default' : 'dark',
       themeVariables: isLight ? {
-        background: '#f1f3f7',
-        primaryColor: '#dde2ea',
-        primaryTextColor: '#0f172a',
-        primaryBorderColor: '#1f6ad8',
-        lineColor: '#7c3aed',
-        secondaryColor: '#ffffff',
-        tertiaryColor: '#ffffff',
+        background: '#f6f5f1',
+        primaryColor: '#ebe9e1',
+        primaryTextColor: '#16181d',
+        primaryBorderColor: '#1f4fcb',
+        lineColor: '#b5722a',
+        secondaryColor: '#ebe9e1',
+        tertiaryColor: '#ebe9e1',
         fontSize: '14px',
         fontFamily: 'JetBrains Mono, ui-monospace, monospace',
       } : {
         darkMode: true,
-        background: '#1a1b26',
-        primaryColor: '#24283b',
-        primaryTextColor: '#c0caf5',
-        primaryBorderColor: '#7aa2f7',
-        lineColor: '#bb9af7',
-        secondaryColor: '#24283b',
-        tertiaryColor: '#24283b',
+        background: '#0e0f13',
+        primaryColor: '#181a21',
+        primaryTextColor: '#ebebed',
+        primaryBorderColor: '#5b8df0',
+        lineColor: '#d4924c',
+        secondaryColor: '#181a21',
+        tertiaryColor: '#181a21',
         fontSize: '14px',
         fontFamily: 'JetBrains Mono, ui-monospace, monospace',
       },
