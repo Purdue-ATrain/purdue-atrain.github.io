@@ -184,10 +184,6 @@ tailwind.config = {
   @media (max-width: 768px) {
     .hero-visual { max-width: 240px; margin: 0 auto; }
   }
-  /* Cover banner light-theme treatment: invert lightness, preserve hues */
-  :root[data-theme="light"] #cinematic-cover {
-    filter: invert(1) hue-rotate(180deg) brightness(0.95);
-  }
   .section-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--divider), transparent);
