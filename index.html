@@ -273,6 +273,107 @@ tailwind.config = {
   @media (prefers-reduced-motion: reduce) {
     .io-pair .io-line { opacity: 1; transform: none; transition: none; }
   }
+  /* Journey timeline */
+  .journey-track {
+    position: relative;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 20px 0 40px;
+  }
+  .journey-rail, .journey-rail-fill {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .journey-rail { background: var(--border); }
+  .journey-rail-fill {
+    background: linear-gradient(180deg, var(--primary), var(--accent));
+    transform-origin: top;
+    transform: translateX(-50%) scaleY(0);
+  }
+  .journey-stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .journey-stage.in { opacity: 1; transform: translateY(0); }
+  .journey-stage:last-child { margin-bottom: 0; }
+  .journey-node {
+    grid-column: 2;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 1;
+    position: relative;
+  }
+  .journey-stage.in .journey-node {
+    box-shadow: 0 0 0 6px var(--pill-blue-bg);
+    transition: box-shadow .4s ease .3s;
+  }
+  .journey-card {
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-strong);
+    backdrop-filter: blur(8px);
+  }
+  .journey-card .journey-kicker {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .journey-card h3 {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .journey-card p {
+    font-size: 13.5px;
+    color: var(--dim);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .journey-card .journey-meta {
+    margin-top: 10px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--faint);
+  }
+  .journey-stage.right .journey-card { grid-column: 3; }
+  .journey-stage.left  .journey-card { grid-column: 1; text-align: right; }
+  @media (max-width: 768px) {
+    .journey-rail, .journey-rail-fill { left: 18px; transform: none; }
+    .journey-rail-fill { transform: scaleY(0); }
+    .journey-stage { grid-template-columns: 36px 1fr; gap: 20px; }
+    .journey-node { grid-column: 1; }
+    .journey-stage.left .journey-card,
+    .journey-stage.right .journey-card { grid-column: 2; text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .journey-stage { opacity: 1; transform: none; transition: none; }
+    .journey-rail-fill { transform: translateX(-50%) scaleY(1); }
+    @media (max-width: 768px) { .journey-rail-fill { transform: scaleY(1); } }
+  }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -297,6 +398,7 @@ tailwind.config = {
       <a href="#skills" class="hover:text-primary transition-colors">skills</a>
       <a href="#demos" class="hover:text-primary transition-colors">demos</a>
       <a href="#harness" class="hover:text-primary transition-colors">harness</a>
+      <a href="#journey" class="hover:text-primary transition-colors">journey</a>
       <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
       <a href="#refs" class="hover:text-primary transition-colors">refs</a>
@@ -717,11 +819,83 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
 <div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== JOURNEY · FROM SCAFFOLD TO PAPER =========== -->
+<section id="journey" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-14 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 05</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">From scaffold to paper</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">How an analysis grows on the harness.</p>
+    </div>
+
+    <p class="text-base max-w-3xl mb-12 fade-in" style="color: var(--dim); line-height: 1.7;">
+      The harness is not a one-shot scaffold. It is the substrate every step of the analysis builds on, from the first plot a newcomer makes to the final paper draft. Each stage adds artifacts under the same tree.
+    </p>
+
+    <div class="journey-track">
+      <div class="journey-rail"></div>
+      <div class="journey-rail-fill" id="journey-fill"></div>
+
+      <article class="journey-stage right" data-stage="1">
+        <div class="journey-node"><span>1</span></div>
+        <div class="journey-card">
+          <span class="journey-kicker">newcomer</span>
+          <h3>Joins the lab</h3>
+          <p>Maintainer adds them to the org. They clone <span class="mono" style="color: var(--text);">atrain-skills</span> into <span class="mono" style="color: var(--text);">~/.claude/skills</span> and cut their own <span class="mono" style="color: var(--text);">users/&lt;handle&gt;</span> branch.</p>
+          <div class="journey-meta">git clone &middot; users/&lt;handle&gt;</div>
+        </div>
+      </article>
+
+      <article class="journey-stage left" data-stage="2">
+        <div class="journey-node"><span>2</span></div>
+        <div class="journey-card">
+          <span class="journey-kicker">first plot</span>
+          <h3>Scaffold + a kinematic</h3>
+          <p>They invoke <span class="mono" style="color: var(--text);">/analysis-scaffold</span> with a freeform description. The harness materialises. First kinematic plot lands in <span class="mono" style="color: var(--text);">z_prelims/&lt;topic&gt;/</span>.</p>
+          <div class="journey-meta">/analysis-scaffold &middot; z_prelims/</div>
+        </div>
+      </article>
+
+      <article class="journey-stage right" data-stage="3">
+        <div class="journey-node"><span>3</span></div>
+        <div class="journey-card">
+          <span class="journey-kicker">classifier trained</span>
+          <h3>BDT on the same tree</h3>
+          <p>Features are defined in <span class="mono" style="color: var(--text);">analysis/variables.py</span>. A retrain script under <span class="mono" style="color: var(--text);">bin/</span> writes the model + ROC curve into <span class="mono" style="color: var(--text);">ml/</span>. Same harness, no parallel codebase.</p>
+          <div class="journey-meta">retrain_bdt_*.py &middot; ml/ artifacts</div>
+        </div>
+      </article>
+
+      <article class="journey-stage left" data-stage="4">
+        <div class="journey-node"><span>4</span></div>
+        <div class="journey-card">
+          <span class="journey-kicker">AN draft</span>
+          <h3>The note writes itself</h3>
+          <p><span class="mono" style="color: var(--text);">/paper-pdf-writing</span> walks the 8-phase state machine. LaTeX sources land in <span class="mono" style="color: var(--text);">draft/</span>, figures get pulled from <span class="mono" style="color: var(--text);">output/plots/</span>, and <span class="mono" style="color: var(--text);">tools/make_pdf.py</span> compiles it.</p>
+          <div class="journey-meta">/paper-pdf-writing &middot; draft/an.tex</div>
+        </div>
+      </article>
+
+      <article class="journey-stage right" data-stage="5">
+        <div class="journey-node"><span>5</span></div>
+        <div class="journey-card">
+          <span class="journey-kicker">paper</span>
+          <h3>Methodology + result</h3>
+          <p>Clean-room engineering surfaces the comparison with prior AI-assisted analyses. The methodology paper lives next to the physics result, and the artifacts (skill cards, model weights) ship to HuggingFace.</p>
+          <div class="journey-meta">clean-room &middot; HF release</div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-5xl mx-auto"></div>
+
 <!-- =========== SYNTHESIS FLOW =========== -->
 <section id="synthesis" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 05</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Sharpen your skills</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
     </div>
@@ -979,7 +1153,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="benchmarks" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Pick up to three models, put them side by side.</p>
     </div>
@@ -1027,7 +1201,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="refs" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Reference analyses</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two working CMS analyses built on the harness. Read the code.</p>
     </div>
@@ -1062,7 +1236,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="get-involved" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 09</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Membership is closed for v0. Open an issue to request access.</p>
     </div>
@@ -1344,6 +1518,37 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         );
       }
     }
+
+    // Journey timeline: scrub the rail-fill as you scroll past the track,
+    // and one-shot reveal each stage when it enters viewport.
+    var track = document.querySelector('.journey-track');
+    var fill = document.getElementById('journey-fill');
+    if (track && fill && !reduced) {
+      gsap.to(fill, {
+        scaleY: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: track,
+          start: 'top 70%',
+          end: 'bottom 50%',
+          scrub: true,
+        },
+      });
+    }
+    gsap.utils.toArray('.journey-stage').forEach(function (stage) {
+      gsap.to(stage, {
+        opacity: 1,
+        y: 0,
+        duration: reduced ? 0 : 0.55,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: stage,
+          start: 'top 80%',
+          once: true,
+          toggleClass: { targets: stage, className: 'in' },
+        },
+      });
+    });
   });
 </script>
 
