@@ -723,7 +723,9 @@ function pillClass(pct) {
   if (pct >= 40) return 'pill-mix';
   return 'pill-fail';
 }
-Object.entries(DATA.skill_cards || {}).forEach(([skill, card]) => {
+Object.entries(DATA.skill_cards || {})
+  .sort(([, a], [, b]) => (b.mean_score || 0) - (a.mean_score || 0))
+  .forEach(([skill, card]) => {
   const discPct = (card.discovery.rate * 100).toFixed(0);
   const compPct = card.completion.n ? (card.completion.rate * 100).toFixed(0) : "—";
   const modelRows = Object.entries(card.per_model).sort().map(([m, d]) => {
@@ -783,7 +785,9 @@ Object.entries(DATA.skill_cards || {}).forEach(([skill, card]) => {
 
 // Model cards
 const cardsRoot = document.getElementById("model-cards");
-Object.entries(DATA.model_cards).forEach(([m, card]) => {
+Object.entries(DATA.model_cards)
+  .sort(([, a], [, b]) => (b.overall_score || 0) - (a.overall_score || 0))
+  .forEach(([m, card]) => {
   const tierRows = ["micro","mid","complex"].map(t => {
     const ts = card.tier_summary[t];
     if (!ts) {
