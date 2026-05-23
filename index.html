@@ -1574,8 +1574,8 @@ git push origin users/&lt;handle&gt;
   var state = { slots: [null, null, null], activeSlot: null };
 
   function init() {
-    var section = document.getElementById('compare');
-    if (!section) return;
+    var slots = document.getElementById('cmp-slots');
+    if (!slots) return;
     document.querySelectorAll('#cmp-slots .cmp-slot').forEach(function (el) {
       el.addEventListener('click', function (e) {
         if (el.classList.contains('cmp-empty')) {
