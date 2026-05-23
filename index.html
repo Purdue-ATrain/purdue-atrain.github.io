@@ -1114,6 +1114,65 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   #benchmarks .cmp-skill-name { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   #benchmarks .cmp-skill-score { color: var(--amber2); flex-shrink: 0; margin-left: 8px; }
   #benchmarks .cmp-skill-score.cmp-bad { color: #EF4444; }
+  /* External baselines: SWE+GPQA above an Arena ELO sub-section of category mini-cards */
+  #benchmarks .cmp-ext-section { margin-top: 14px; }
+  #benchmarks .cmp-ext-section h4 {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    margin: 0 0 6px;
+  }
+  #benchmarks .cmp-ext-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  #benchmarks .cmp-ext-arena-label {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+  #benchmarks .cmp-ext-mini {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    min-width: 56px;
+    flex: 1 1 56px;
+    text-align: center;
+  }
+  #benchmarks .cmp-ext-mini-label {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9px;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  #benchmarks .cmp-ext-mini-value {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 2px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  #benchmarks .cmp-ext-mini-empty {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--faint);
+    margin-top: 2px;
+    line-height: 1.1;
+  }
   /* Picker modal (fixed-position) */
   .cmp-picker-backdrop {
     position: fixed;
@@ -2100,7 +2159,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <!-- =========== COMPARE MODELS engine =========== -->
 <script>
 (function () {
-  var DATA = {"models":["haiku","opus41","opus45","opus46","opus","sonnet40","sonnet45","sonnet"],"model_cards":{"haiku":{"model":"haiku","n_cells":78,"overall_score":90.22525252525251,"tier_summary":{"micro":{"n":18,"passes":17,"pass_rate":0.9444444444444444,"mean_score":94.44444444444444,"mean_cost":0.04947515555555557,"weight":1},"mid":{"n":60,"passes":49,"pass_rate":0.8166666666666667,"mean_score":89.80333333333333,"mean_cost":0.142766655,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"discover-ralph-loop","score":0.0},{"skill":"analysis-scaffold","score":52.0},{"skill":"an-readiness-check","score":68.05833333333334}],"total_cost":9.456552099999998,"cost_per_score":0.10481048082800622,"median_wall":20.689999999999998,"external":{"HumanEval":null,"MBPP":null}},"opus41":{"model":"opus41","n_cells":48,"overall_score":98.1405,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.11733706249999999,"weight":1},"mid":{"n":36,"passes":33,"pass_rate":0.9166666666666666,"mean_score":97.93388888888889,"mean_cost":0.24135052083333333,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":84.0},{"skill":"curate-tests","score":98.89999999999999},{"skill":"an-readiness-check","score":99.175}],"total_cost":10.0966635,"cost_per_score":0.10287968269980283,"median_wall":15.02,"external":{}},"opus45":{"model":"opus45","n_cells":48,"overall_score":99.37391666666667,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.15792416666666667,"weight":1},"mid":{"n":36,"passes":35,"pass_rate":0.9722222222222222,"mean_score":99.30435185185186,"mean_cost":0.2320151361111111,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"curate-tests","score":97.21666666666667},{"skill":"graphify","score":98.66},{"skill":"analysis-scaffold","score":99.0}],"total_cost":10.2476349,"cost_per_score":0.10312197852052055,"median_wall":34.775,"external":{}},"opus46":{"model":"opus46","n_cells":48,"overall_score":98.91716666666667,"tier_summary":{"micro":{"n":12,"passes":10,"pass_rate":0.8333333333333334,"mean_score":100.0,"mean_cost":0.17881366666666665,"weight":1},"mid":{"n":36,"passes":35,"pass_rate":0.9722222222222222,"mean_score":98.79685185185186,"mean_cost":0.2957873958333333,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"grill-me","score":94.44444444444444},{"skill":"curate-tests","score":98.89999999999999},{"skill":"graphify","score":99.33}],"total_cost":12.794110249999996,"cost_per_score":0.12934165707671227,"median_wall":38.68,"external":{}},"opus":{"model":"opus","n_cells":78,"overall_score":99.6092929292929,"tier_summary":{"micro":{"n":18,"passes":18,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.11774880555555556,"weight":1},"mid":{"n":60,"passes":55,"pass_rate":0.9166666666666666,"mean_score":99.5702222222222,"mean_cost":0.25270959583333336,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"curate-tests","score":98.52222222222223},{"skill":"graphify","score":98.66000000000001},{"skill":"an-readiness-check","score":99.175}],"total_cost":17.28205425,"cost_per_score":0.17349841306741903,"median_wall":19.785,"external":{"HumanEval":null,"MBPP":null}},"sonnet40":{"model":"sonnet40","n_cells":48,"overall_score":94.74500000000002,"tier_summary":{"micro":{"n":12,"passes":11,"pass_rate":0.9166666666666666,"mean_score":100.0,"mean_cost":0.116244825,"weight":1},"mid":{"n":36,"passes":32,"pass_rate":0.8888888888888888,"mean_score":94.16111111111111,"mean_cost":0.25502383749999996,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":60.0},{"skill":"graphify","score":90.0},{"skill":"an-readiness-check","score":99.00999999999999}],"total_cost":10.57579605,"cost_per_score":0.11162379070135624,"median_wall":45.24,"external":{}},"sonnet45":{"model":"sonnet45","n_cells":48,"overall_score":95.33624999999999,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.08305002916666666,"weight":1},"mid":{"n":36,"passes":33,"pass_rate":0.9166666666666666,"mean_score":94.81805555555555,"mean_cost":0.18235068055555553,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":59.5},{"skill":"graphify","score":95.0},{"skill":"an-readiness-check","score":99.175}],"total_cost":7.561224849999997,"cost_per_score":0.07931112090102135,"median_wall":34.44,"external":{}},"sonnet":{"model":"sonnet","n_cells":78,"overall_score":97.96257575757575,"tier_summary":{"micro":{"n":18,"passes":15,"pass_rate":0.8333333333333334,"mean_score":100.0,"mean_cost":0.1346799027777778,"weight":1},"mid":{"n":60,"passes":58,"pass_rate":0.9666666666666667,"mean_score":97.75883333333333,"mean_cost":0.18115291249999999,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":79.0},{"skill":"an-readiness-check","score":99.175},{"skill":"grill-me","score":99.8}],"total_cost":13.293413000000001,"cost_per_score":0.1356988921248529,"median_wall":39.83,"external":{"HumanEval":null,"MBPP":null}}},"tests":["agent-bounded-tool-budget","agent-cross-file-rename","agent-find-bug-in-tree","agent-handle-tool-error","agent-multi-step-plan","agent-recover-from-error","agent-self-verify-impl","agent-stop-on-success","an-readiness-on-fixture","analysis-scaffold-from-prompt","curate-tests-on-pipeline","discover-an-readiness-check","discover-analysis-scaffold","discover-curate-tests","discover-deep-copy","discover-evolve-skill","discover-graphify","discover-grill-me","discover-paper-pdf-writing","discover-ralph-loop","evolve-skill-dryrun","graphify-small-repo","grill-me-basic","paper-pdf-writing-intro-section"],"tier_weights":{"micro":1,"mid":3,"complex":5},"generated_from":"skill-bench/results/full-v06/report.html"};
+  var DATA = {"models":["haiku","opus","opus41","opus45","opus46","sonnet","sonnet40","sonnet45"],"model_cards":{"haiku":{"model":"haiku","n_cells":86,"overall_score":83.77282913165264,"tier_summary":{"micro":{"n":18,"passes":17,"pass_rate":0.9444444444444444,"mean_score":94.44444444444444,"mean_cost":0.04947515555555557,"weight":1},"mid":{"n":60,"passes":49,"pass_rate":0.8166666666666667,"mean_score":89.80333333333333,"mean_cost":0.142766655,"weight":3},"complex":{"n":8,"passes":4,"pass_rate":0.5,"mean_score":51.833333333333336,"mean_cost":0.126712825,"weight":5}},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"discover-ralph-loop","score":0.0},{"skill":"analysis-scaffold","score":39.833333333333336},{"skill":"an-readiness-check","score":68.05833333333334}],"total_cost":10.470254699999998,"cost_per_score":0.12498389762563154,"median_wall":20.705,"external":{"SWE-Bench Verified":73.3,"GPQA Diamond":67.2,"Arena Text":1378,"Arena Code":null,"Arena Search":null,"Arena Vision":null,"Arena Document":null}},"opus41":{"model":"opus41","n_cells":48,"overall_score":98.1405,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.11733706249999999,"weight":1},"mid":{"n":36,"passes":33,"pass_rate":0.9166666666666666,"mean_score":97.93388888888889,"mean_cost":0.24135052083333333,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":84.0},{"skill":"curate-tests","score":98.89999999999999},{"skill":"an-readiness-check","score":99.175}],"total_cost":10.0966635,"cost_per_score":0.10287968269980283,"median_wall":15.02,"external":{"SWE-Bench Verified":null,"GPQA Diamond":null,"Arena Text":1419,"Arena Code":null,"Arena Search":null,"Arena Vision":null,"Arena Document":null}},"opus45":{"model":"opus45","n_cells":48,"overall_score":99.37391666666667,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.15792416666666667,"weight":1},"mid":{"n":36,"passes":35,"pass_rate":0.9722222222222222,"mean_score":99.30435185185186,"mean_cost":0.2320151361111111,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"curate-tests","score":97.21666666666667},{"skill":"graphify","score":98.66},{"skill":"analysis-scaffold","score":99.0}],"total_cost":10.2476349,"cost_per_score":0.10312197852052055,"median_wall":34.775,"external":{"SWE-Bench Verified":80.9,"GPQA Diamond":87.0,"Arena Text":1462,"Arena Code":null,"Arena Search":null,"Arena Vision":null,"Arena Document":1466}},"opus46":{"model":"opus46","n_cells":48,"overall_score":98.91716666666667,"tier_summary":{"micro":{"n":12,"passes":10,"pass_rate":0.8333333333333334,"mean_score":100.0,"mean_cost":0.17881366666666665,"weight":1},"mid":{"n":36,"passes":35,"pass_rate":0.9722222222222222,"mean_score":98.79685185185186,"mean_cost":0.2957873958333333,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"grill-me","score":94.44444444444444},{"skill":"curate-tests","score":98.89999999999999},{"skill":"graphify","score":99.33}],"total_cost":12.794110249999996,"cost_per_score":0.12934165707671227,"median_wall":38.68,"external":{"SWE-Bench Verified":80.84,"GPQA Diamond":91.3,"Arena Text":1490,"Arena Code":1540,"Arena Search":null,"Arena Vision":1293,"Arena Document":1513}},"opus":{"model":"opus","n_cells":86,"overall_score":97.62313725490195,"tier_summary":{"micro":{"n":18,"passes":18,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.11774880555555556,"weight":1},"mid":{"n":60,"passes":55,"pass_rate":0.9166666666666666,"mean_score":99.5702222222222,"mean_cost":0.25270959583333336,"weight":3},"complex":{"n":8,"passes":7,"pass_rate":0.875,"mean_score":87.79166666666667,"mean_cost":0.7343725625,"weight":5}},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"grill-me","score":90.4},{"skill":"graphify","score":98.66000000000001},{"skill":"curate-tests","score":98.73333333333333}],"total_cost":23.15703475,"cost_per_score":0.23720846718473204,"median_wall":23.29,"external":{"SWE-Bench Verified":87.6,"GPQA Diamond":94.2,"Arena Text":1503,"Arena Code":1560,"Arena Search":1237,"Arena Vision":1304,"Arena Document":1510}},"sonnet40":{"model":"sonnet40","n_cells":48,"overall_score":94.74500000000002,"tier_summary":{"micro":{"n":12,"passes":11,"pass_rate":0.9166666666666666,"mean_score":100.0,"mean_cost":0.116244825,"weight":1},"mid":{"n":36,"passes":32,"pass_rate":0.8888888888888888,"mean_score":94.16111111111111,"mean_cost":0.25502383749999996,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":60.0},{"skill":"graphify","score":90.0},{"skill":"an-readiness-check","score":99.00999999999999}],"total_cost":10.57579605,"cost_per_score":0.11162379070135624,"median_wall":45.24,"external":{"SWE-Bench Verified":null,"GPQA Diamond":null,"Arena Text":1351,"Arena Code":null,"Arena Search":null,"Arena Vision":null,"Arena Document":null}},"sonnet45":{"model":"sonnet45","n_cells":48,"overall_score":95.33624999999999,"tier_summary":{"micro":{"n":12,"passes":12,"pass_rate":1.0,"mean_score":100.0,"mean_cost":0.08305002916666666,"weight":1},"mid":{"n":36,"passes":33,"pass_rate":0.9166666666666666,"mean_score":94.81805555555555,"mean_cost":0.18235068055555553,"weight":3},"complex":null},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":59.5},{"skill":"graphify","score":95.0},{"skill":"an-readiness-check","score":99.175}],"total_cost":7.561224849999997,"cost_per_score":0.07931112090102135,"median_wall":34.44,"external":{"SWE-Bench Verified":77.2,"GPQA Diamond":83.4,"Arena Text":1420,"Arena Code":null,"Arena Search":null,"Arena Vision":null,"Arena Document":null}},"sonnet":{"model":"sonnet","n_cells":86,"overall_score":94.16634453781512,"tier_summary":{"micro":{"n":18,"passes":15,"pass_rate":0.8333333333333334,"mean_score":100.0,"mean_cost":0.1346799027777778,"weight":1},"mid":{"n":60,"passes":58,"pass_rate":0.9666666666666667,"mean_score":97.75883333333333,"mean_cost":0.18115291249999999,"weight":3},"complex":{"n":8,"passes":6,"pass_rate":0.75,"mean_score":75.375,"mean_cost":0.2685858125,"weight":5}},"top_skills":[{"skill":"agent-bounded-tool-budget","score":100.0},{"skill":"agent-cross-file-rename","score":100.0},{"skill":"agent-find-bug-in-tree","score":100.0}],"bot_skills":[{"skill":"analysis-scaffold","score":83.625},{"skill":"grill-me","score":85.06153846153846},{"skill":"an-readiness-check","score":98.75625}],"total_cost":15.442099500000005,"cost_per_score":0.16398745831955705,"median_wall":43.67,"external":{"SWE-Bench Verified":79.6,"GPQA Diamond":89.9,"Arena Text":1460,"Arena Code":1524,"Arena Search":1219,"Arena Vision":null,"Arena Document":1495}}},"tests":["agent-bounded-tool-budget","agent-cross-file-rename","agent-find-bug-in-tree","agent-handle-tool-error","agent-multi-step-plan","agent-recover-from-error","agent-self-verify-impl","agent-stop-on-success","an-readiness-on-fixture","analysis-scaffold-from-prompt","complex-debug-multi-file","complex-mini-analysis-e2e","complex-paper-full-build","complex-skill-chain","curate-tests-on-pipeline","discover-an-readiness-check","discover-analysis-scaffold","discover-curate-tests","discover-deep-copy","discover-evolve-skill","discover-graphify","discover-grill-me","discover-paper-pdf-writing","discover-ralph-loop","evolve-skill-dryrun","graphify-small-repo","grill-me-basic","paper-pdf-writing-intro-section"],"tier_weights":{"micro":1,"mid":3,"complex":5},"generated_from":"skill-bench/results/full-v06/report.html"};
 
   function fmt2(n) { return (Math.round(n * 100) / 100).toFixed(2); }
   function fmtScore(n) { return n == null ? '·' : fmt2(n); }
@@ -2240,6 +2299,48 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       '</tbody></table>';
   }
 
+  function extMini(label, value, suffix) {
+    var inner = (value == null)
+      ? '<div class="cmp-ext-mini-empty">—</div>'
+      : '<div class="cmp-ext-mini-value">' + value + (suffix || '') + '</div>';
+    return '<div class="cmp-ext-mini">' +
+      '<div class="cmp-ext-mini-label">' + escapeHtml(label) + '</div>' +
+      inner +
+    '</div>';
+  }
+
+  function renderExternalBaselines(external) {
+    if (!external) return '';
+    var entries = Object.keys(external).filter(function (k) { return k.charAt(0) !== '_'; });
+    var academic = [];
+    var arena = [];
+    entries.forEach(function (k) {
+      if (k.indexOf('Arena ') === 0) arena.push(k);
+      else academic.push(k);
+    });
+    if (!academic.length && !arena.length) return '';
+
+    var html = '<div class="cmp-ext-section"><h4>external baselines</h4>';
+    if (academic.length) {
+      html += '<div class="cmp-ext-row">';
+      academic.forEach(function (k) {
+        var label = (k === 'SWE-Bench Verified') ? 'SWE' : (k === 'GPQA Diamond') ? 'GPQA' : k;
+        html += extMini(label, external[k], '%');
+      });
+      html += '</div>';
+    }
+    if (arena.length) {
+      html += '<div class="cmp-ext-arena-label">Arena ELO</div><div class="cmp-ext-row">';
+      arena.forEach(function (k) {
+        var label = k.replace('Arena ', '');
+        html += extMini(label, external[k], '');
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   function renderSlot(slotIdx) {
     var modelName = state.slots[slotIdx];
     var el = document.querySelector('#cmp-slots .cmp-slot[data-slot="' + slotIdx + '"]');
@@ -2250,6 +2351,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     var bot = (c.bot_skills || []).slice(0, 4);
     var hasExt = c.external && Object.keys(c.external).some(function (k) { return c.external[k] != null; });
     var ext = hasExt ? '<span class="cmp-ext-badge">has external baseline</span>' : '';
+    var extBlockHtml = renderExternalBaselines(c.external);
     el.className = 'cmp-slot cmp-filled';
     el.innerHTML =
       '<div class="cmp-header">' +
@@ -2268,7 +2370,8 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         '</div>' : '') +
       (bot.length ? '<div class="cmp-skills-block"><h4>weakest skills</h4>' +
         bot.map(function (s) { return '<div class="cmp-skill-line"><span class="cmp-skill-name">' + escapeHtml(s.skill) + '</span><span class="cmp-skill-score cmp-bad">' + fmtScore(s.score) + '</span></div>'; }).join('') +
-        '</div>' : '');
+        '</div>' : '') +
+      extBlockHtml;
     el.querySelector('.cmp-slot-close').addEventListener('click', function (e) {
       e.stopPropagation(); clearSlot(slotIdx);
     });
