@@ -209,7 +209,7 @@ tailwind.config = {
     <div class="step-card rounded-lg p-6 mb-10">
       <div class="mermaid">
 flowchart LR
-  subgraph PATH_A ["Path A &middot; Direct PR (explicit changes)"]
+  subgraph PATH_A ["Path A &middot; Direct PR"]
     direction LR
     T["topic branch<br/>add/&lt;name&gt;<br/>fix/&lt;scope&gt;"] --> P1["open PR<br/>vs main"]
     P1 --> R1["maintainer<br/>review"]
@@ -217,8 +217,8 @@ flowchart LR
 
   subgraph PATH_B ["Path B &middot; Organic + cron-curated"]
     direction LR
-    U["users/&lt;handle&gt;<br/>(your daily branch)"] --> C["nightly cron<br/>layer-1 regex<br/>layer-2 Claude"]
-    C --> N["nightly<br/>(synthesised)"]
+    U["users/&lt;handle&gt;<br/>daily branch"] --> C["nightly cron<br/>layer-1 regex<br/>layer-2 Claude"]
+    C --> N["nightly<br/>synthesised"]
     N --> P2["maintainer<br/>PR review"]
   end
 
