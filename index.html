@@ -303,6 +303,16 @@ tailwind.config = {
     transition: opacity .55s ease, transform .55s ease;
   }
   .journey-step.in { opacity: 1; transform: translateY(0); }
+  .journey-step {
+    cursor: default;
+  }
+  .journey-step:hover {
+    border-color: var(--card-hover);
+    box-shadow: 0 8px 24px var(--card-shadow);
+    transform: translateY(-2px);
+    transition: opacity .55s ease, transform .25s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .journey-step:hover .journey-num { opacity: 0.32; transition: opacity .25s ease; }
   .journey-step.analyst {
     background: linear-gradient(180deg, var(--pill-blue-bg), var(--surface-strong));
     border-color: var(--pill-blue-bd);
@@ -479,7 +489,7 @@ tailwind.config = {
 <!-- =========== HERO =========== -->
 <section id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient grid-bg">
   <div class="max-w-3xl mx-auto px-6 text-center py-24">
-    <img src="assets/logo.png" alt="Purdue-ATrain logo" width="240" height="240" class="mx-auto rounded-2xl shadow-2xl mb-10" style="box-shadow: 0 16px 64px rgba(63,169,245,.18), 0 0 0 1px var(--border);" />
+    <img src="assets/logo.png" alt="Purdue-ATrain logo" width="240" height="240" class="mx-auto rounded-2xl shadow-2xl mb-10" style="box-shadow: 0 16px 64px rgba(122, 162, 247,.18), 0 0 0 1px var(--border);" />
     <h1 class="hl text-6xl md:text-7xl font-semibold mb-5">Purdue-ATrain</h1>
     <p class="serif-italic text-2xl md:text-3xl mb-3" style="color: var(--dim);">AI-augmented HEP analysis at Purdue.</p>
     <p class="text-base md:text-lg mb-10" style="color: var(--dim); max-width: 36rem; margin-left:auto; margin-right:auto;">Clone the skill library. Spawn a new analysis. Train forever.</p>
@@ -520,7 +530,7 @@ tailwind.config = {
   <div class="absolute inset-x-0 top-0 h-32 pointer-events-none" style="background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);"></div>
   <div class="absolute inset-x-0 bottom-0 h-32 pointer-events-none" style="background: linear-gradient(0deg, var(--bg) 0%, transparent 100%);"></div>
   <!-- subtle brand-color radial glow -->
-  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(63,169,245,.10), transparent 65%);"></div>
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(122, 162, 247,.10), transparent 65%);"></div>
 </section>
 
 <!-- =========== AI-GUIDED TOUR (step 00) =========== -->
@@ -532,14 +542,14 @@ tailwind.config = {
       <p class="serif-italic text-xl" style="color: var(--dim);">Skip the manual setup. Get AI-guidances.</p>
     </div>
 
-    <div class="step-card rounded-lg p-6 fade-in" style="border-color: rgba(124,58,237,0.35); background: rgba(124, 58, 237, 0.05);">
+    <div class="step-card rounded-lg p-6 fade-in" style="border-color: rgba(187, 154, 247,0.35); background: rgba(187, 154, 247, 0.05);">
       <div class="flex flex-wrap items-baseline justify-between gap-3 mb-3">
         <span class="mono text-xs" style="color: var(--dim);">paste into Claude &middot; ChatGPT &middot; Gemini &middot; Cursor &middot; or any LLM chat</span>
       </div>
       <p class="text-sm mb-4" style="color: var(--dim);">Drop this prompt into your favourite chat assistant. It asks your GitHub handle first, then walks you through the onboarding steps.</p>
 
       <div class="relative">
-        <button id="copy-tour-prompt" class="absolute top-3 right-3 mono text-xs px-3 py-1.5 rounded transition-colors" style="background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35); color: var(--accent2);" aria-label="Copy prompt to clipboard">
+        <button id="copy-tour-prompt" class="absolute top-3 right-3 mono text-xs px-3 py-1.5 rounded transition-colors" style="background: rgba(187, 154, 247,0.15); border: 1px solid rgba(187, 154, 247,0.35); color: var(--accent2);" aria-label="Copy prompt to clipboard">
           <span data-copy-label>copy ⧉</span>
         </button>
 <pre id="tour-prompt" class="code-block rounded p-4 pr-24 mono text-xs overflow-x-auto whitespace-pre-wrap" style="border-left-color: var(--accent); color: var(--text); line-height: 1.6;">I want to start using Purdue-ATrain, an AI-augmented HEP analysis lab at Purdue. The org lives at https://github.com/Purdue-ATrain and the landing page is https://purdue-atrain.github.io. I am a new contributor.
@@ -722,7 +732,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>.<br><a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
     </p>
 
-    <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(245, 158, 11, 0.06); border-left: 3px solid var(--amber);">
+    <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(255, 158, 100, 0.06); border-left: 3px solid var(--amber);">
       <span class="mono text-xs uppercase tracking-widest block mb-2" style="color: var(--amber);">// good practice</span>
       <h3 class="hl text-xl mb-3" style="color: var(--text);">Sharpen tools for everyone.</h3>
       <p class="text-sm mb-3" style="color: var(--dim); line-height: 1.7;">
@@ -742,18 +752,24 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     border-radius: 12px;
     overflow: hidden;
     background: #1a1b26;
-    border: 1px solid rgba(63,169,245,.15);
+    border: 1px solid var(--border);
     box-shadow: 0 14px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.02) inset;
+    transition: border-color .25s ease, box-shadow .25s ease;
   }
+  .terminal-window:hover {
+    border-color: var(--primary);
+    box-shadow: 0 18px 56px rgba(0,0,0,.55), 0 0 0 1px rgba(122, 162, 247,.20) inset;
+  }
+  .terminal-pane, .terminal-pane * { cursor: text; }
   .terminal-tabs {
     display: flex;
     overflow-x: auto;
     background: rgba(15,23,42,.7);
-    border-bottom: 1px solid rgba(63,169,245,.1);
+    border-bottom: 1px solid rgba(122, 162, 247,.1);
     scrollbar-width: thin;
   }
   .terminal-tabs::-webkit-scrollbar { height: 4px; }
-  .terminal-tabs::-webkit-scrollbar-thumb { background: rgba(63,169,245,.2); border-radius: 2px; }
+  .terminal-tabs::-webkit-scrollbar-thumb { background: rgba(122, 162, 247,.2); border-radius: 2px; }
   .term-tab {
     flex-shrink: 0;
     padding: 10px 16px;
@@ -762,15 +778,15 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     color: var(--dim);
     background: transparent;
     border: 0;
-    border-right: 1px solid rgba(63,169,245,.06);
+    border-right: 1px solid rgba(122, 162, 247,.06);
     cursor: pointer;
     transition: background .15s, color .15s;
     white-space: nowrap;
   }
-  .term-tab:hover { background: rgba(63,169,245,.05); color: var(--text); }
+  .term-tab:hover { background: rgba(122, 162, 247,.05); color: var(--text); }
   .term-tab.active {
     color: var(--cyan);
-    background: rgba(122,162,247,.08);
+    background: rgba(122, 162, 247,.08);
     box-shadow: inset 0 -2px 0 0 var(--cyan);
   }
   .terminal-chrome {
@@ -778,7 +794,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     align-items: center;
     padding: 9px 14px;
     background: #161721;
-    border-bottom: 1px solid rgba(63,169,245,.06);
+    border-bottom: 1px solid rgba(122, 162, 247,.06);
     position: relative;
     min-height: 38px;
   }
@@ -806,7 +822,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   .chrome-replay {
     margin-left: auto;
     background: transparent;
-    border: 1px solid rgba(63,169,245,.2);
+    border: 1px solid rgba(122, 162, 247,.2);
     color: var(--dim);
     border-radius: 4px;
     padding: 3px 9px 4px;
@@ -817,7 +833,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     flex-shrink: 0;
   }
   .chrome-replay:hover {
-    background: rgba(63,169,245,.1);
+    background: rgba(122, 162, 247,.1);
     color: var(--cyan);
     border-color: var(--cyan);
   }
@@ -828,7 +844,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   }
   .terminal-pane .xterm-viewport::-webkit-scrollbar { width: 6px; }
   .terminal-pane .xterm-viewport::-webkit-scrollbar-thumb {
-    background: rgba(122,162,247,.2);
+    background: rgba(122, 162, 247,.2);
     border-radius: 3px;
   }
   @media (max-width: 768px) {
@@ -887,8 +903,8 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   }
   #benchmarks .cmp-slot.cmp-empty {
     border-style: dashed;
-    border-color: rgba(34, 211, 238, .35);
-    background: rgba(34, 211, 238, 0.03);
+    border-color: rgba(125, 207, 255, .35);
+    background: rgba(125, 207, 255, 0.03);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -898,11 +914,11 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   #benchmarks .cmp-slot.cmp-empty:hover {
     border-color: var(--cyan);
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(34, 211, 238, 0.12);
+    box-shadow: 0 8px 32px rgba(125, 207, 255, 0.12);
   }
   #benchmarks .cmp-plus {
     font-size: 64px;
-    color: rgba(34, 211, 238, .5);
+    color: rgba(125, 207, 255, .5);
     line-height: 1;
     font-weight: 200;
   }
@@ -931,7 +947,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   #benchmarks .cmp-model-name:hover { color: var(--amber2); }
   #benchmarks .cmp-slot-close {
     background: transparent;
-    border: 1px solid rgba(63,169,245,.2);
+    border: 1px solid rgba(122, 162, 247,.2);
     color: var(--dim);
     border-radius: 4px;
     padding: 2px 7px;
@@ -951,9 +967,9 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     font-size: 10px;
     padding: 2px 7px;
     border-radius: 99px;
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(255, 158, 100, 0.1);
     color: var(--amber);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    border: 1px solid rgba(255, 158, 100, 0.3);
     margin-left: 8px;
   }
   #benchmarks .cmp-stat-grid {
@@ -995,7 +1011,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   #benchmarks .cmp-tier-table td {
     padding: 5px 6px;
     text-align: right;
-    border-bottom: 1px solid rgba(63,169,245,.06);
+    border-bottom: 1px solid rgba(122, 162, 247,.06);
     font-variant-numeric: tabular-nums;
   }
   #benchmarks .cmp-tier-table th:first-child,
@@ -1097,7 +1113,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     margin-bottom: 4px;
     transition: background .12s, border-color .12s;
   }
-  .cmp-picker-item:hover { background: rgba(63,169,245,0.08); border-color: var(--border); }
+  .cmp-picker-item:hover { background: rgba(122, 162, 247,0.08); border-color: var(--border); }
   .cmp-picker-item.cmp-disabled { opacity: 0.4; cursor: not-allowed; }
   .cmp-picker-item.cmp-disabled:hover { background: transparent; border-color: transparent; }
   .cmp-picker-item .cmp-pi-name {
@@ -1206,7 +1222,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
       </div>
 
-      <div class="skill-card rounded-lg p-5 fade-in" style="background: rgba(124,58,237,0.05); border-color: rgba(124,58,237,0.18);">
+      <div class="skill-card rounded-lg p-5 fade-in" style="background: rgba(187, 154, 247,0.05); border-color: rgba(187, 154, 247,0.18);">
         <div class="mono text-sm mb-2" style="color: var(--accent2);">+ 6 more</div>
         <p class="text-sm mb-3" style="color: var(--dim);">an-readiness-check, curate-tests, deep-copy, evolve-skill, graphify, ralph-loop.</p>
         <a href="https://github.com/Purdue-ATrain/atrain-skills" class="mono text-xs inline-link">see all on GitHub →</a>
