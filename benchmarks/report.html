@@ -389,6 +389,15 @@
     line-height: 1.1;
   }
   .mc-mini .mc-mini-empty { color: var(--fg-faint); font-size: 14px; font-weight: 500; }
+  .mc-mini-sublabel {
+    font-size: 10px;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
   .mc-foot {
     border-top: 1px solid var(--border);
     padding-top: 10px;
@@ -860,12 +869,11 @@ Object.entries(DATA.model_cards)
   const botHtml = card.bot_skills.length > 0
     ? card.bot_skills.map(s => `<li><span class="dim">${s.skill}</span> <span class="num">${s.score.toFixed(0)}</span></li>`).join("")
     : "<li class='faint'>(no weaknesses surfaced)</li>";
-  // External baselines: render as flex row of mini-cards (one per metric).
-  // % suffix only for percentage-units (SWE-Bench, GPQA); raw integer for Arena.
+  // External baselines: two sub-sections — academic (SWE/GPQA) + Arena ELO categories.
   const extEntries = Object.entries(card.external || {});
-  const miniCards = extEntries.map(([k, v]) => {
+  const renderMini = ([k, v], stripArenaPrefix) => {
     let label = k;
-    if (k.startsWith("Arena ")) label = k.replace("Arena ", "");
+    if (stripArenaPrefix && k.startsWith("Arena ")) label = k.replace("Arena ", "");
     else if (k === "SWE-Bench Verified") label = "SWE";
     else if (k === "GPQA Diamond") label = "GPQA";
     const isArena = k.startsWith("Arena ");
@@ -876,9 +884,17 @@ Object.entries(DATA.model_cards)
       <div class="mc-mini-label">${label}</div>
       ${displayVal}
     </div>`;
-  }).join("");
-  const extHtml = miniCards
-    ? `<div class="mc-mini-row">${miniCards}</div>`
+  };
+  const academic = extEntries.filter(([k]) => !k.startsWith("Arena "));
+  const arena = extEntries.filter(([k]) => k.startsWith("Arena "));
+  const academicHtml = academic.length
+    ? `<div class="mc-mini-row">${academic.map(e => renderMini(e, false)).join("")}</div>`
+    : "";
+  const arenaHtml = arena.length
+    ? `<div class="mc-mini-sublabel">Arena ELO</div><div class="mc-mini-row">${arena.map(e => renderMini(e, true)).join("")}</div>`
+    : "";
+  const extHtml = (academicHtml || arenaHtml)
+    ? academicHtml + arenaHtml
     : '<div class="faint" style="font-size:11px">no data</div>';
   cardsRoot.innerHTML += `
     <div class="model-card" style="border-top: 3px solid ${COLORS[m] || '#888'};">
