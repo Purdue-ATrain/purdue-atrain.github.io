@@ -80,10 +80,10 @@ tailwind.config = {
     --mermaid-bg: #1a1b26;
   }
   :root[data-theme="light"] {
-    --bg: #e8eaef;
-    --surface: #ffffff;
-    --surface-strong: #ffffff;
-    --code-bg: #f1f5f9;
+    --bg: #f1f3f7;
+    --surface: #dde2ea;
+    --surface-strong: #dde2ea;
+    --code-bg: #cdd4de;
     --primary: #1f6ad8;
     --accent: #7c3aed;
     --accent2: #6d28d9;
@@ -102,10 +102,11 @@ tailwind.config = {
     --pill-amber-bd: rgba(177, 92, 0, 0.32);
     --card-hover: rgba(31, 106, 216, 0.5);
     --card-shadow: rgba(15, 23, 42, 0.12);
-    --mermaid-bg: #e8eaef;
+    --mermaid-bg: #f1f3f7;
   }
   html, body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; transition: background-color .3s ease, color .3s ease; }
-  .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; }
+  .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; color: var(--text); }
+  :root[data-theme="light"] .hl { font-weight: 700; }
   .serif-italic { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; }
   .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
   .text-text { color: var(--text); }
@@ -293,8 +294,8 @@ git push origin users/&lt;handle&gt;
       startOnLoad: false,
       theme: isLight ? 'default' : 'dark',
       themeVariables: isLight ? {
-        background: '#e8eaef',
-        primaryColor: '#ffffff',
+        background: '#f1f3f7',
+        primaryColor: '#dde2ea',
         primaryTextColor: '#0f172a',
         primaryBorderColor: '#1f6ad8',
         lineColor: '#7c3aed',
