@@ -1105,19 +1105,33 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   #benchmarks .cmp-stat-value.cmp-amber { color: var(--amber2); }
   #benchmarks .cmp-stat-value.cmp-green { color: #10B981; }
   #benchmarks .cmp-stat-value.cmp-cyan  { color: var(--cyan); }
-  #benchmarks .cmp-tier-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(63,169,245,.06);
+  #benchmarks .cmp-tier-table {
+    width: 100%;
+    border-collapse: collapse;
     font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 12px;
+    font-size: 11.5px;
   }
-  #benchmarks .cmp-tier-row:last-child { border-bottom: 0; }
-  #benchmarks .cmp-tier-name { color: var(--dim); }
-  #benchmarks .cmp-tier-stat { color: var(--text); }
-  #benchmarks .cmp-tier-cost { color: var(--faint); margin-left: 8px; }
+  #benchmarks .cmp-tier-table th,
+  #benchmarks .cmp-tier-table td {
+    padding: 5px 6px;
+    text-align: right;
+    border-bottom: 1px solid rgba(63,169,245,.06);
+    font-variant-numeric: tabular-nums;
+  }
+  #benchmarks .cmp-tier-table th:first-child,
+  #benchmarks .cmp-tier-table td:first-child { text-align: left; }
+  #benchmarks .cmp-tier-table thead th {
+    color: var(--faint);
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+  #benchmarks .cmp-tier-table tbody tr:last-child td { border-bottom: 0; }
+  #benchmarks .cmp-tier-table tbody td:first-child { color: var(--dim); }
+  #benchmarks .cmp-tier-table tbody td { color: var(--text); }
+  #benchmarks .cmp-tier-table td.cmp-tier-empty { color: var(--faint); }
   #benchmarks .cmp-skills-block { margin-top: 14px; }
   #benchmarks .cmp-skills-block h4 {
     font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -2116,16 +2130,33 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     updateURL();
   }
 
-  function renderTier(name, t) {
+  var DASH = '&mdash;';
+  function renderTierRow(name, t) {
     if (!t) {
-      return '<div class="cmp-tier-row"><span class="cmp-tier-name">' + name + '</span><span class="cmp-tier-stat" style="color: var(--faint);">no cells</span></div>';
+      return '<tr><td>' + name + '</td>' +
+        '<td class="cmp-tier-empty">' + DASH + '</td>' +
+        '<td class="cmp-tier-empty">' + DASH + '</td>' +
+        '<td class="cmp-tier-empty">' + DASH + '</td>' +
+        '<td class="cmp-tier-empty">' + DASH + '</td></tr>';
     }
-    var pr = (t.pass_rate != null) ? Math.round(t.pass_rate * 100) + '%' : '·';
-    var rb = (t.mean_score != null) ? fmt2(t.mean_score) : '·';
-    var cost = (t.mean_cost != null) ? fmtCost(t.mean_cost) : '·';
-    return '<div class="cmp-tier-row"><span class="cmp-tier-name">' + name +
-      ' <span style="color: var(--faint);">(' + (t.n || 0) + ' cells)</span></span>' +
-      '<span class="cmp-tier-stat">' + pr + ' pass &middot; ' + rb + ' rubric <span class="cmp-tier-cost">' + cost + '</span></span></div>';
+    var n = (t.n != null) ? t.n : 0;
+    var pr = (t.pass_rate != null) ? Math.round(t.pass_rate * 100) + '%' : DASH;
+    var sc = (t.mean_score != null) ? fmt2(t.mean_score) : DASH;
+    var co = (t.mean_cost != null) ? fmtCost(t.mean_cost) : DASH;
+    return '<tr><td>' + name + '</td>' +
+      '<td>' + n + '</td>' +
+      '<td>' + pr + '</td>' +
+      '<td>' + sc + '</td>' +
+      '<td>' + co + '</td></tr>';
+  }
+  function renderTierTable(tiers) {
+    return '<table class="cmp-tier-table">' +
+      '<thead><tr><th>tier</th><th>cells</th><th>pass</th><th>score</th><th>cost</th></tr></thead>' +
+      '<tbody>' +
+      renderTierRow('micro', tiers.micro) +
+      renderTierRow('mid', tiers.mid) +
+      renderTierRow('complex', tiers.complex) +
+      '</tbody></table>';
   }
 
   function renderSlot(slotIdx) {
@@ -2150,7 +2181,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         '<div class="cmp-stat"><div class="cmp-stat-label">avg cost / cell</div><div class="cmp-stat-value cmp-green">' + fmtCostFine(avgCost(c)) + '</div></div>' +
         '<div class="cmp-stat"><div class="cmp-stat-label">median wall</div><div class="cmp-stat-value cmp-cyan">' + fmtWall(c.median_wall) + '</div></div>' +
       '</div>' +
-      '<div>' + renderTier('micro', tiers.micro) + renderTier('mid', tiers.mid) + renderTier('complex', tiers.complex) + '</div>' +
+      renderTierTable(tiers) +
       (top.length ? '<div class="cmp-skills-block"><h4>top skills</h4>' +
         top.map(function (s) { return '<div class="cmp-skill-line"><span class="cmp-skill-name">' + escapeHtml(s.skill) + '</span><span class="cmp-skill-score">' + fmtScore(s.score) + '</span></div>'; }).join('') +
         '</div>' : '') +

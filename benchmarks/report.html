@@ -335,7 +335,13 @@
     font-variant-numeric: tabular-nums;
   }
   .mc-score-label { font-size: 10px; color: var(--fg-faint); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px; }
-  .mc-tiers { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .mc-tiers-tbl { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .mc-tiers-tbl th, .mc-tiers-tbl td { padding: 5px 6px; text-align: right; border-bottom: 1px solid rgba(140,160,200,.08); }
+  .mc-tiers-tbl th:first-child, .mc-tiers-tbl td:first-child { text-align: left; }
+  .mc-tiers-tbl thead th { color: var(--fg-faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+  .mc-tiers-tbl tbody tr:last-child td { border-bottom: 0; }
+  .mc-tiers-tbl tbody td:first-child { color: var(--fg-dim); }
+  .mc-tiers-tbl td.ts-empty { color: var(--fg-faint); }
   .ts-label { font-size: 10px; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; margin-bottom: 4px; }
   .ts-num { font-size: 14px; }
   .ts-sub { font-size: 10px; color: var(--fg-dim); margin-top: 2px; font-variant-numeric: tabular-nums; }
@@ -693,17 +699,24 @@ new Chart(document.getElementById("chart-scatter"), {
 // Model cards
 const cardsRoot = document.getElementById("model-cards");
 Object.entries(DATA.model_cards).forEach(([m, card]) => {
-  const tierRow = ["micro","mid","complex"].map(t => {
+  const tierRows = ["micro","mid","complex"].map(t => {
     const ts = card.tier_summary[t];
-    if (!ts) return `<div><div class="ts-label">${t}</div><div class="ts-empty">—</div></div>`;
+    if (!ts) {
+      return `<tr><td>${t}</td><td class="ts-empty">—</td><td class="ts-empty">—</td><td class="ts-empty">—</td><td class="ts-empty">—</td></tr>`;
+    }
     const pct = (ts.pass_rate * 100).toFixed(0);
     const cls = pct >= 80 ? 'pill-pass' : pct >= 40 ? 'pill-mix' : 'pill-fail';
-    return `<div>
-      <div class="ts-label">${t} <span class="faint">×${ts.weight}</span></div>
-      <div class="ts-num"><span class="pill ${cls}">${ts.passes}/${ts.n}</span></div>
-      <div class="ts-sub">score ${ts.mean_score.toFixed(0)} · ${fmtCost(ts.mean_cost)}/cell</div>
-    </div>`;
+    return `<tr>
+      <td>${t} <span class="faint">×${ts.weight}</span></td>
+      <td>${ts.n}</td>
+      <td><span class="pill ${cls}">${pct}%</span></td>
+      <td>${ts.mean_score.toFixed(0)}</td>
+      <td>${fmtCost(ts.mean_cost)}</td>
+    </tr>`;
   }).join("");
+  const tierTable = `<table class="mc-tiers-tbl">
+    <thead><tr><th>tier</th><th>cells</th><th>pass</th><th>score</th><th>cost</th></tr></thead>
+    <tbody>${tierRows}</tbody></table>`;
   const topHtml = card.top_skills.map(s => `<li><span class="dim">${s.skill}</span> <span class="num">${s.score.toFixed(0)}</span></li>`).join("");
   const botHtml = card.bot_skills.length > 0
     ? card.bot_skills.map(s => `<li><span class="dim">${s.skill}</span> <span class="num">${s.score.toFixed(0)}</span></li>`).join("")
@@ -723,7 +736,7 @@ Object.entries(DATA.model_cards).forEach(([m, card]) => {
           <div class="mc-score-label">composite</div>
         </div>
       </div>
-      <div class="mc-tiers">${tierRow}</div>
+      <div class="mc-tiers">${tierTable}</div>
       <div class="mc-cols">
         <div>
           <div class="mc-coltitle">Strengths</div>
