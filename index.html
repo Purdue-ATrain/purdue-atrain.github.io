@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Purdue-ATrain // AI-augmented HEP analysis at Purdue</title>
 <meta name="description" content="A Purdue HEP lab building AI-augmented physics-analysis tooling. Shared Claude Code skills, a copier-driven analysis harness, cron-curated nightly synthesis, and reference CMS Run-3 analyses. Clone the skill library and spawn a new analysis in three commands." />
-<meta name="theme-color" content="#0F172A" />
+<meta name="theme-color" content="#1a1b26" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Purdue-ATrain // AI-augmented HEP analysis at Purdue" />
 <meta property="og:description" content="A Purdue HEP lab building AI-augmented physics-analysis tooling. Clone the skill library and spawn a new analysis in three commands." />
@@ -39,18 +39,18 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        bg:       '#0F172A',
-        surface:  '#1E293B',
-        primary:  '#3FA9F5',
-        primary2: '#1E90FF',
-        accent:   '#7C3AED',
-        accent2:  '#A855F7',
-        amber:    '#F59E0B',
-        amber2:   '#FBBF24',
-        cyan:     '#22D3EE',
-        text:     '#E2E8F0',
-        dim:      '#94A3B8',
-        faint:    '#64748B',
+        bg:       '#1a1b26',
+        surface:  '#24283b',
+        primary:  '#7aa2f7',
+        primary2: '#5d8aef',
+        accent:   '#bb9af7',
+        accent2:  '#c5a9ff',
+        amber:    '#ff9e64',
+        amber2:   '#e0af68',
+        cyan:     '#7dcfff',
+        text:     '#c0caf5',
+        dim:      '#a9b1d6',
+        faint:    '#565f89',
       },
       fontFamily: {
         display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
@@ -64,67 +64,70 @@ tailwind.config = {
 </script>
 
 <style>
+  /* Palette: Tokyo Night Storm (dark) + Tokyo Night Day (light)
+     Chosen for: harmonised saturation (~60-70%) across all accents, vetted
+     contrast ratios, and consistency with the xterm.js demos on this page. */
   :root {
-    --bg: #0F172A;
-    --surface: #1E293B;
-    --surface-strong: rgba(30, 41, 59, 0.5);
-    --code-bg: rgba(15, 23, 42, 0.6);
-    --card-hover: rgba(63, 169, 245, 0.4);
-    --card-shadow: rgba(63, 169, 245, 0.08);
-    --primary: #3FA9F5;
-    --accent: #7C3AED;
-    --accent2: #A855F7;
-    --amber: #F59E0B;
-    --amber2: #FBBF24;
-    --cyan: #22D3EE;
-    --text: #E2E8F0;
-    --dim: #94A3B8;
-    --faint: #64748B;
-    --border: rgba(63, 169, 245, 0.15);
-    --divider: rgba(63, 169, 245, 0.25);
-    --grid-line: rgba(63, 169, 245, 0.05);
-    --hero-violet: rgba(124, 58, 237, 0.18);
-    --hero-blue: rgba(63, 169, 245, 0.12);
-    --nav-bg: rgba(15, 23, 42, 0.75);
-    --pill-blue-bg: rgba(63, 169, 245, 0.08);
-    --pill-blue-bd: rgba(63, 169, 245, 0.2);
-    --pill-amber-bg: rgba(245, 158, 11, 0.08);
-    --pill-amber-bd: rgba(245, 158, 11, 0.25);
-    --pill-violet-bg: rgba(124, 58, 237, 0.08);
-    --pill-violet-bd: rgba(124, 58, 237, 0.25);
-    --link-bd: rgba(34, 211, 238, 0.3);
-    --btn-text: #0a0e1a;
+    --bg: #1a1b26;
+    --surface: #24283b;
+    --surface-strong: rgba(36, 40, 59, 0.55);
+    --code-bg: rgba(15, 16, 28, 0.55);
+    --card-hover: rgba(122, 162, 247, 0.45);
+    --card-shadow: rgba(122, 162, 247, 0.10);
+    --primary: #7aa2f7;
+    --accent: #bb9af7;
+    --accent2: #c5a9ff;
+    --amber: #ff9e64;
+    --amber2: #e0af68;
+    --cyan: #7dcfff;
+    --text: #c0caf5;
+    --dim: #a9b1d6;
+    --faint: #565f89;
+    --border: rgba(122, 162, 247, 0.16);
+    --divider: rgba(122, 162, 247, 0.26);
+    --grid-line: rgba(122, 162, 247, 0.05);
+    --hero-violet: rgba(187, 154, 247, 0.18);
+    --hero-blue: rgba(122, 162, 247, 0.14);
+    --nav-bg: rgba(26, 27, 38, 0.78);
+    --pill-blue-bg: rgba(122, 162, 247, 0.10);
+    --pill-blue-bd: rgba(122, 162, 247, 0.24);
+    --pill-amber-bg: rgba(255, 158, 100, 0.10);
+    --pill-amber-bd: rgba(255, 158, 100, 0.26);
+    --pill-violet-bg: rgba(187, 154, 247, 0.10);
+    --pill-violet-bd: rgba(187, 154, 247, 0.26);
+    --link-bd: rgba(125, 207, 255, 0.32);
+    --btn-text: #1a1b26;
   }
   :root[data-theme="light"] {
-    --bg: #FAFAF8;
-    --surface: #FFFFFF;
+    --bg: #e1e2e7;
+    --surface: #ffffff;
     --surface-strong: rgba(255, 255, 255, 0.7);
-    --code-bg: rgba(15, 23, 42, 0.04);
-    --card-hover: rgba(37, 99, 235, 0.45);
-    --card-shadow: rgba(15, 23, 42, 0.06);
-    --primary: #2563EB;
-    --accent: #6D28D9;
-    --accent2: #7C3AED;
-    --amber: #B45309;
-    --amber2: #B45309;
-    --cyan: #0891B2;
-    --text: #0F172A;
-    --dim: #475569;
-    --faint: #94A3B8;
-    --border: rgba(15, 23, 42, 0.08);
-    --divider: rgba(15, 23, 42, 0.12);
-    --grid-line: rgba(15, 23, 42, 0.04);
-    --hero-violet: rgba(124, 58, 237, 0.10);
-    --hero-blue: rgba(37, 99, 235, 0.08);
-    --nav-bg: rgba(250, 250, 248, 0.85);
-    --pill-blue-bg: rgba(37, 99, 235, 0.06);
-    --pill-blue-bd: rgba(37, 99, 235, 0.18);
-    --pill-amber-bg: rgba(180, 83, 9, 0.06);
-    --pill-amber-bd: rgba(180, 83, 9, 0.20);
-    --pill-violet-bg: rgba(109, 40, 217, 0.06);
-    --pill-violet-bd: rgba(109, 40, 217, 0.20);
-    --link-bd: rgba(8, 145, 178, 0.35);
-    --btn-text: #FFFFFF;
+    --code-bg: rgba(46, 125, 233, 0.06);
+    --card-hover: rgba(46, 125, 233, 0.45);
+    --card-shadow: rgba(55, 96, 191, 0.10);
+    --primary: #2e7de9;
+    --accent: #9854f1;
+    --accent2: #9854f1;
+    --amber: #b15c00;
+    --amber2: #8c6c3e;
+    --cyan: #007197;
+    --text: #3760bf;
+    --dim: #6172b0;
+    --faint: #848cb5;
+    --border: rgba(55, 96, 191, 0.16);
+    --divider: rgba(55, 96, 191, 0.22);
+    --grid-line: rgba(55, 96, 191, 0.05);
+    --hero-violet: rgba(152, 84, 241, 0.10);
+    --hero-blue: rgba(46, 125, 233, 0.10);
+    --nav-bg: rgba(225, 226, 231, 0.85);
+    --pill-blue-bg: rgba(46, 125, 233, 0.08);
+    --pill-blue-bd: rgba(46, 125, 233, 0.22);
+    --pill-amber-bg: rgba(177, 92, 0, 0.08);
+    --pill-amber-bd: rgba(177, 92, 0, 0.25);
+    --pill-violet-bg: rgba(152, 84, 241, 0.08);
+    --pill-violet-bd: rgba(152, 84, 241, 0.25);
+    --link-bd: rgba(0, 113, 151, 0.32);
+    --btn-text: #ffffff;
   }
   html, body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; }
   .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; }
@@ -1358,25 +1361,25 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
     <div class="flex items-center gap-2.5">
       <svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="24" cy="24" r="11" fill="none" stroke="#3FA9F5" stroke-width="0.4" opacity="0.18"/>
-        <line x1="24" y1="24" x2="10" y2="11" stroke="#22D3EE" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
-        <line x1="24" y1="24" x2="39" y2="14" stroke="#22D3EE" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
-        <line x1="24" y1="24" x2="38" y2="36" stroke="#22D3EE" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
-        <line x1="24" y1="24" x2="11" y2="37" stroke="#22D3EE" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
-        <line x1="10" y1="11" x2="39" y2="14" stroke="#3FA9F5" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
-        <line x1="39" y1="14" x2="38" y2="36" stroke="#3FA9F5" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
-        <line x1="38" y1="36" x2="11" y2="37" stroke="#3FA9F5" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
-        <line x1="11" y1="37" x2="10" y2="11" stroke="#3FA9F5" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
-        <circle cx="10" cy="11" r="2.6" fill="#0F172A" stroke="#3FA9F5" stroke-width="1.3"/>
-        <circle cx="10" cy="11" r="1.1" fill="#3FA9F5"/>
-        <circle cx="39" cy="14" r="2.6" fill="#0F172A" stroke="#3FA9F5" stroke-width="1.3"/>
-        <circle cx="39" cy="14" r="1.1" fill="#3FA9F5"/>
-        <circle cx="38" cy="36" r="2.8" fill="#0F172A" stroke="#F59E0B" stroke-width="1.3"/>
-        <circle cx="38" cy="36" r="1.25" fill="#F59E0B"/>
-        <circle cx="11" cy="37" r="2.6" fill="#0F172A" stroke="#3FA9F5" stroke-width="1.3"/>
-        <circle cx="11" cy="37" r="1.1" fill="#3FA9F5"/>
-        <circle cx="24" cy="24" r="4.4" fill="#0F172A" stroke="#22D3EE" stroke-width="1.6"/>
-        <circle cx="24" cy="24" r="1.8" fill="#22D3EE"/>
+        <circle cx="24" cy="24" r="11" fill="none" stroke="#7aa2f7" stroke-width="0.4" opacity="0.18"/>
+        <line x1="24" y1="24" x2="10" y2="11" stroke="#7dcfff" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+        <line x1="24" y1="24" x2="39" y2="14" stroke="#7dcfff" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+        <line x1="24" y1="24" x2="38" y2="36" stroke="#7dcfff" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+        <line x1="24" y1="24" x2="11" y2="37" stroke="#7dcfff" stroke-width="1.2" stroke-linecap="round" opacity="0.9"/>
+        <line x1="10" y1="11" x2="39" y2="14" stroke="#7aa2f7" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
+        <line x1="39" y1="14" x2="38" y2="36" stroke="#7aa2f7" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
+        <line x1="38" y1="36" x2="11" y2="37" stroke="#7aa2f7" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
+        <line x1="11" y1="37" x2="10" y2="11" stroke="#7aa2f7" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
+        <circle cx="10" cy="11" r="2.6" fill="#1a1b26" stroke="#7aa2f7" stroke-width="1.3"/>
+        <circle cx="10" cy="11" r="1.1" fill="#7aa2f7"/>
+        <circle cx="39" cy="14" r="2.6" fill="#1a1b26" stroke="#7aa2f7" stroke-width="1.3"/>
+        <circle cx="39" cy="14" r="1.1" fill="#7aa2f7"/>
+        <circle cx="38" cy="36" r="2.8" fill="#1a1b26" stroke="#ff9e64" stroke-width="1.3"/>
+        <circle cx="38" cy="36" r="1.25" fill="#ff9e64"/>
+        <circle cx="11" cy="37" r="2.6" fill="#1a1b26" stroke="#7aa2f7" stroke-width="1.3"/>
+        <circle cx="11" cy="37" r="1.1" fill="#7aa2f7"/>
+        <circle cx="24" cy="24" r="4.4" fill="#1a1b26" stroke="#7dcfff" stroke-width="1.6"/>
+        <circle cx="24" cy="24" r="1.8" fill="#7dcfff"/>
       </svg>
       <span class="mono text-xs" style="color: var(--dim);">purdue-atrain // ai-augmented hep at purdue</span>
     </div>
@@ -1398,13 +1401,13 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     theme: 'dark',
     themeVariables: {
       darkMode: true,
-      background: '#0F172A',
-      primaryColor: '#1E293B',
-      primaryTextColor: '#E2E8F0',
-      primaryBorderColor: '#3FA9F5',
-      lineColor: '#7C3AED',
-      secondaryColor: '#1E293B',
-      tertiaryColor: '#1E293B',
+      background: '#1a1b26',
+      primaryColor: '#24283b',
+      primaryTextColor: '#c0caf5',
+      primaryBorderColor: '#7aa2f7',
+      lineColor: '#bb9af7',
+      secondaryColor: '#24283b',
+      tertiaryColor: '#24283b',
       fontSize: '14px',
       fontFamily: 'JetBrains Mono, ui-monospace, monospace',
     },
@@ -1526,7 +1529,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       var done = function () {
         var prev = label.textContent;
         label.textContent = 'copied ✓';
-        btn.style.color = '#FBBF24';
+        btn.style.color = '#e0af68';
         setTimeout(function () {
           label.textContent = prev;
           btn.style.color = '';

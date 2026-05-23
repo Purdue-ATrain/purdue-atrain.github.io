@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Purdue-ATrain // Sharpen your skills: two contribution paths</title>
 <meta name="description" content="The two ways skills evolve in Purdue-ATrain: direct PR off main, or an organic users/&lt;handle&gt; branch that a nightly cron audits and synthesises onto nightly." />
-<meta name="theme-color" content="#0F172A" />
+<meta name="theme-color" content="#1a1b26" />
 <link rel="icon" type="image/png" href="assets/logo.png" />
 <link rel="apple-touch-icon" href="assets/logo.png" />
 
@@ -29,17 +29,17 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        bg:       '#0F172A',
-        surface:  '#1E293B',
-        primary:  '#3FA9F5',
-        accent:   '#7C3AED',
-        accent2:  '#A855F7',
-        amber:    '#F59E0B',
-        amber2:   '#FBBF24',
-        cyan:     '#22D3EE',
-        text:     '#E2E8F0',
-        dim:      '#94A3B8',
-        faint:    '#64748B',
+        bg:       '#1a1b26',
+        surface:  '#24283b',
+        primary:  '#7aa2f7',
+        accent:   '#bb9af7',
+        accent2:  '#c5a9ff',
+        amber:    '#ff9e64',
+        amber2:   '#e0af68',
+        cyan:     '#7dcfff',
+        text:     '#c0caf5',
+        dim:      '#a9b1d6',
+        faint:    '#565f89',
       },
       fontFamily: {
         display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
@@ -53,55 +53,56 @@ tailwind.config = {
 </script>
 
 <style>
+  /* Palette: Tokyo Night Storm (dark) + Tokyo Night Day (light) */
   :root {
-    --bg: #0F172A;
-    --surface: #1E293B;
-    --surface-strong: rgba(30, 41, 59, 0.5);
-    --code-bg: rgba(15, 23, 42, 0.6);
-    --primary: #3FA9F5;
-    --accent: #7C3AED;
-    --accent2: #A855F7;
-    --amber: #F59E0B;
-    --amber2: #FBBF24;
-    --cyan: #22D3EE;
-    --text: #E2E8F0;
-    --dim: #94A3B8;
-    --faint: #64748B;
-    --border: rgba(63, 169, 245, 0.15);
-    --divider: rgba(63, 169, 245, 0.25);
-    --link-bd: rgba(34, 211, 238, 0.3);
-    --pill-blue-bg: rgba(63, 169, 245, 0.08);
-    --pill-blue-bd: rgba(63, 169, 245, 0.2);
-    --pill-amber-bg: rgba(245, 158, 11, 0.08);
-    --pill-amber-bd: rgba(245, 158, 11, 0.25);
-    --card-hover: rgba(63, 169, 245, 0.4);
-    --card-shadow: rgba(63, 169, 245, 0.08);
-    --mermaid-bg: #0F172A;
+    --bg: #1a1b26;
+    --surface: #24283b;
+    --surface-strong: rgba(36, 40, 59, 0.55);
+    --code-bg: rgba(15, 16, 28, 0.55);
+    --primary: #7aa2f7;
+    --accent: #bb9af7;
+    --accent2: #c5a9ff;
+    --amber: #ff9e64;
+    --amber2: #e0af68;
+    --cyan: #7dcfff;
+    --text: #c0caf5;
+    --dim: #a9b1d6;
+    --faint: #565f89;
+    --border: rgba(122, 162, 247, 0.16);
+    --divider: rgba(122, 162, 247, 0.26);
+    --link-bd: rgba(125, 207, 255, 0.32);
+    --pill-blue-bg: rgba(122, 162, 247, 0.10);
+    --pill-blue-bd: rgba(122, 162, 247, 0.24);
+    --pill-amber-bg: rgba(255, 158, 100, 0.10);
+    --pill-amber-bd: rgba(255, 158, 100, 0.26);
+    --card-hover: rgba(122, 162, 247, 0.45);
+    --card-shadow: rgba(122, 162, 247, 0.10);
+    --mermaid-bg: #1a1b26;
   }
   :root[data-theme="light"] {
-    --bg: #FAFAF8;
-    --surface: #FFFFFF;
+    --bg: #e1e2e7;
+    --surface: #ffffff;
     --surface-strong: rgba(255, 255, 255, 0.7);
-    --code-bg: rgba(15, 23, 42, 0.04);
-    --primary: #2563EB;
-    --accent: #6D28D9;
-    --accent2: #7C3AED;
-    --amber: #B45309;
-    --amber2: #B45309;
-    --cyan: #0891B2;
-    --text: #0F172A;
-    --dim: #475569;
-    --faint: #94A3B8;
-    --border: rgba(15, 23, 42, 0.08);
-    --divider: rgba(15, 23, 42, 0.12);
-    --link-bd: rgba(8, 145, 178, 0.35);
-    --pill-blue-bg: rgba(37, 99, 235, 0.06);
-    --pill-blue-bd: rgba(37, 99, 235, 0.18);
-    --pill-amber-bg: rgba(180, 83, 9, 0.06);
-    --pill-amber-bd: rgba(180, 83, 9, 0.20);
-    --card-hover: rgba(37, 99, 235, 0.45);
-    --card-shadow: rgba(15, 23, 42, 0.06);
-    --mermaid-bg: #FAFAF8;
+    --code-bg: rgba(46, 125, 233, 0.06);
+    --primary: #2e7de9;
+    --accent: #9854f1;
+    --accent2: #9854f1;
+    --amber: #b15c00;
+    --amber2: #8c6c3e;
+    --cyan: #007197;
+    --text: #3760bf;
+    --dim: #6172b0;
+    --faint: #848cb5;
+    --border: rgba(55, 96, 191, 0.16);
+    --divider: rgba(55, 96, 191, 0.22);
+    --link-bd: rgba(0, 113, 151, 0.32);
+    --pill-blue-bg: rgba(46, 125, 233, 0.08);
+    --pill-blue-bd: rgba(46, 125, 233, 0.22);
+    --pill-amber-bg: rgba(177, 92, 0, 0.08);
+    --pill-amber-bd: rgba(177, 92, 0, 0.25);
+    --card-hover: rgba(46, 125, 233, 0.45);
+    --card-shadow: rgba(55, 96, 191, 0.10);
+    --mermaid-bg: #e1e2e7;
   }
   html, body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; transition: background-color .3s ease, color .3s ease; }
   .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; }
@@ -224,9 +225,9 @@ flowchart LR
   R1 --> M["main"]
   P2 --> M
 
-  classDef branch fill:#1E293B,stroke:#3FA9F5,color:#E2E8F0
-  classDef audit fill:#1E293B,stroke:#F59E0B,color:#FBBF24
-  classDef sink fill:#1E293B,stroke:#22D3EE,color:#22D3EE
+  classDef branch fill:#24283b,stroke:#7aa2f7,color:#c0caf5
+  classDef audit fill:#24283b,stroke:#ff9e64,color:#e0af68
+  classDef sink fill:#24283b,stroke:#7dcfff,color:#7dcfff
   class T,U,N branch
   class C,P1,P2,R1 audit
   class M sink
@@ -292,24 +293,24 @@ git push origin users/&lt;handle&gt;
       startOnLoad: false,
       theme: isLight ? 'default' : 'dark',
       themeVariables: isLight ? {
-        background: '#FAFAF8',
-        primaryColor: '#FFFFFF',
-        primaryTextColor: '#0F172A',
-        primaryBorderColor: '#2563EB',
-        lineColor: '#6D28D9',
-        secondaryColor: '#FFFFFF',
-        tertiaryColor: '#FFFFFF',
+        background: '#e1e2e7',
+        primaryColor: '#ffffff',
+        primaryTextColor: '#3760bf',
+        primaryBorderColor: '#2e7de9',
+        lineColor: '#9854f1',
+        secondaryColor: '#ffffff',
+        tertiaryColor: '#ffffff',
         fontSize: '14px',
         fontFamily: 'JetBrains Mono, ui-monospace, monospace',
       } : {
         darkMode: true,
-        background: '#0F172A',
-        primaryColor: '#1E293B',
-        primaryTextColor: '#E2E8F0',
-        primaryBorderColor: '#3FA9F5',
-        lineColor: '#7C3AED',
-        secondaryColor: '#1E293B',
-        tertiaryColor: '#1E293B',
+        background: '#1a1b26',
+        primaryColor: '#24283b',
+        primaryTextColor: '#c0caf5',
+        primaryBorderColor: '#7aa2f7',
+        lineColor: '#bb9af7',
+        secondaryColor: '#24283b',
+        tertiaryColor: '#24283b',
         fontSize: '14px',
         fontFamily: 'JetBrains Mono, ui-monospace, monospace',
       },
