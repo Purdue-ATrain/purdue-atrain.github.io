@@ -1129,6 +1129,23 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     flex-wrap: wrap;
     gap: 6px;
   }
+  #benchmarks .cmp-ext-row.cmp-ext-row-tight {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  #benchmarks .cmp-ext-row.cmp-ext-row-tight .cmp-ext-mini {
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 5px 4px;
+  }
+  #benchmarks .cmp-ext-row.cmp-ext-row-tight .cmp-ext-mini-label {
+    font-size: 8.5px;
+    letter-spacing: 0.03em;
+  }
+  #benchmarks .cmp-ext-row.cmp-ext-row-tight .cmp-ext-mini-value,
+  #benchmarks .cmp-ext-row.cmp-ext-row-tight .cmp-ext-mini-empty {
+    font-size: 13px;
+  }
   #benchmarks .cmp-ext-arena-label {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 10px;
@@ -2330,7 +2347,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       html += '</div>';
     }
     if (arena.length) {
-      html += '<div class="cmp-ext-arena-label">Arena ELO</div><div class="cmp-ext-row">';
+      html += '<div class="cmp-ext-arena-label">Arena ELO</div><div class="cmp-ext-row cmp-ext-row-tight">';
       arena.forEach(function (k) {
         var label = k.replace('Arena ', '');
         html += extMini(label, external[k], '');
