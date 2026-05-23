@@ -80,29 +80,29 @@ tailwind.config = {
     --mermaid-bg: #1a1b26;
   }
   :root[data-theme="light"] {
-    --bg: #e1e2e7;
+    --bg: #e8eaef;
     --surface: #ffffff;
-    --surface-strong: rgba(255, 255, 255, 0.7);
-    --code-bg: rgba(46, 125, 233, 0.06);
+    --surface-strong: #ffffff;
+    --code-bg: #f1f5f9;
     --primary: #1f6ad8;
-    --accent: #9854f1;
-    --accent2: #7847bb;
+    --accent: #7c3aed;
+    --accent2: #6d28d9;
     --amber: #b15c00;
     --amber2: #d97706;
-    --cyan: #007197;
-    --text: #2a4a99;
-    --dim: #4d588a;
-    --faint: #6a7396;
-    --border: rgba(31, 56, 121, 0.18);
-    --divider: rgba(31, 56, 121, 0.24);
-    --link-bd: rgba(0, 113, 151, 0.36);
-    --pill-blue-bg: rgba(31, 106, 216, 0.08);
-    --pill-blue-bd: rgba(31, 106, 216, 0.24);
-    --pill-amber-bg: rgba(177, 92, 0, 0.08);
-    --pill-amber-bd: rgba(177, 92, 0, 0.25);
-    --card-hover: rgba(31, 106, 216, 0.45);
-    --card-shadow: rgba(31, 56, 121, 0.12);
-    --mermaid-bg: #e1e2e7;
+    --cyan: #006a8e;
+    --text: #0f172a;
+    --dim: #334155;
+    --faint: #64748b;
+    --border: rgba(15, 23, 42, 0.14);
+    --divider: rgba(15, 23, 42, 0.22);
+    --link-bd: rgba(0, 106, 142, 0.42);
+    --pill-blue-bg: rgba(31, 106, 216, 0.10);
+    --pill-blue-bd: rgba(31, 106, 216, 0.32);
+    --pill-amber-bg: rgba(177, 92, 0, 0.10);
+    --pill-amber-bd: rgba(177, 92, 0, 0.32);
+    --card-hover: rgba(31, 106, 216, 0.5);
+    --card-shadow: rgba(15, 23, 42, 0.12);
+    --mermaid-bg: #e8eaef;
   }
   html, body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; transition: background-color .3s ease, color .3s ease; }
   .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; }
@@ -293,11 +293,11 @@ git push origin users/&lt;handle&gt;
       startOnLoad: false,
       theme: isLight ? 'default' : 'dark',
       themeVariables: isLight ? {
-        background: '#e1e2e7',
+        background: '#e8eaef',
         primaryColor: '#ffffff',
-        primaryTextColor: '#2a4a99',
+        primaryTextColor: '#0f172a',
         primaryBorderColor: '#1f6ad8',
-        lineColor: '#7847bb',
+        lineColor: '#7c3aed',
         secondaryColor: '#ffffff',
         tertiaryColor: '#ffffff',
         fontSize: '14px',
