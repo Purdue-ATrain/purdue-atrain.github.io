@@ -347,15 +347,16 @@ tailwind.config = {
   }
   .journey-bidi-arrow {
     color: var(--dim);
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 16px;
-    line-height: 1;
     background: var(--bg);
-    padding: 2px 4px;
+    padding: 4px 2px;
     border-radius: 4px;
     position: relative;
     z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
+  .journey-bidi-arrow svg { display: block; }
   .journey-card {
     width: 100%;
     padding: 14px 16px;
@@ -909,7 +910,13 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           </div>
           <div class="journey-bridge">
             <div class="journey-node"><span>1</span></div>
-            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+            <span class="journey-bidi-arrow" aria-hidden="true">
+              <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2 V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M2 6 L6 2 L10 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M2 16 L6 20 L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </span>
           </div>
           <div class="journey-card lab-card">
             <span class="journey-kicker">lab &middot; handed off</span>
@@ -928,7 +935,13 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           </div>
           <div class="journey-bridge">
             <div class="journey-node"><span>2</span></div>
-            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+            <span class="journey-bidi-arrow" aria-hidden="true">
+              <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2 V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M2 6 L6 2 L10 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M2 16 L6 20 L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </span>
           </div>
           <div class="journey-card lab-card">
             <span class="journey-kicker">lab &middot; adapt</span>
@@ -947,7 +960,13 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           </div>
           <div class="journey-bridge">
             <div class="journey-node"><span>3</span></div>
-            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+            <span class="journey-bidi-arrow" aria-hidden="true">
+              <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2 V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M2 6 L6 2 L10 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M2 16 L6 20 L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </span>
           </div>
           <div class="journey-card lab-card">
             <span class="journey-kicker">lab &middot; push back</span>
@@ -966,7 +985,13 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           </div>
           <div class="journey-bridge">
             <div class="journey-node"><span>4</span></div>
-            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+            <span class="journey-bidi-arrow" aria-hidden="true">
+              <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2 V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M2 6 L6 2 L10 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M2 16 L6 20 L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </span>
           </div>
           <div class="journey-card lab-card">
             <span class="journey-kicker">lab &middot; next inherits</span>
