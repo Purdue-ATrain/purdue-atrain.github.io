@@ -364,8 +364,18 @@
   }
   .mc-foot .num { color: var(--fg); font-weight: 600; }
 
+  /* Skill cards: fixed 3x3 grid on wide screens, collapses on narrow */
+  .skill-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
   @media (max-width: 1100px) {
     .grid { grid-template-columns: 1fr; }
+    .skill-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .skill-cards-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -418,21 +428,21 @@
 
   <section class="panel grid-full">
     <div class="panel-head">
-      <h2>Skill cards</h2>
-      <span class="panel-sub">per atrain skill: discovery accuracy (did the agent pick it?), completion success (did it complete?), per-model breakdown</span>
-    </div>
-    <div class="panel-body">
-      <div id="skill-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;"></div>
-    </div>
-  </section>
-
-  <section class="panel grid-full">
-    <div class="panel-head">
       <h2>Model cards</h2>
       <span class="panel-sub">tier-weighted composite (micro 1× · mid 3× · complex 5×); HumanEval / MBPP from Anthropic published</span>
     </div>
     <div class="panel-body">
       <div id="model-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 18px;"></div>
+    </div>
+  </section>
+
+  <section class="panel grid-full">
+    <div class="panel-head">
+      <h2>Skill cards</h2>
+      <span class="panel-sub">per atrain skill: discovery accuracy (did the agent pick it?), completion success (did it complete?), per-model breakdown</span>
+    </div>
+    <div class="panel-body">
+      <div id="skill-cards" class="skill-cards-grid"></div>
     </div>
   </section>
 
