@@ -437,7 +437,7 @@ tailwind.config = {
     <h2 class="hl text-4xl mt-3 mb-6 fade-in">A standardised AI workflow for High Energy Physics.</h2>
     <div class="space-y-5 fade-in" style="line-height: 1.75; color: var(--dim);">
       <p>
-        ATrain exists because AI assistants now produce more code per session than a human reviewer can read line by line. A graduate student running Claude Code all afternoon can ship a thousand lines of analysis code, with hundreds of edge-case decisions baked into how the prompt was phrased. If every HEP contributor invents their own prompts, their own file layouts, their own commit conventions, the group ends up with a pile of AI-generated work that nobody else can pick up. The problem repeats across handovers, across analyses, across collaborations.
+        ATrain exists because AI assistants have accelerated Physics developement tremendously. A graduate student running Claude Code all afternoon can ship a thousand lines of analysis code now, with hundreds of decisions baked into how the prompt was phrased. If every HEP contributor invents their own prompts, their own file layouts, their own commit conventions, the group ends up with a pile of AI-generated work that nobody else can pick up. The problem repeats across handovers, across analyses, across collaborations.
       </p>
       <p>
         ATrain is one answer. Everyone clones the same <span class="mono text-text">~/.claude/skills</span> directory, so every contributor invokes the same <span class="mono text-text">/analysis-scaffold</span> and the same <span class="mono text-text">/paper-pdf-writing</span>. The <a href="#harness" class="inline-link">harness blueprint</a> gives every spawned analysis the same file tree and the same anti-hallucination contract. When you hand a project off to the next student, join an analysis someone else started, or contribute to a sibling effort across HEP, the conventions are already shared. AI-assisted physics stays reviewable, transferable, and contributable.
@@ -469,14 +469,14 @@ tailwind.config = {
     <div class="mb-12 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 00</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">AI-guided tour</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Skip the manual setup. Paste one prompt into any LLM chat and get walked through onboarding.</p>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Skip the manual setup. Get AI-guidances.</p>
     </div>
 
     <div class="step-card rounded-lg p-6 fade-in" style="border-color: rgba(124,58,237,0.35); background: rgba(124, 58, 237, 0.05);">
       <div class="flex flex-wrap items-baseline justify-between gap-3 mb-3">
         <span class="mono text-xs" style="color: var(--dim);">paste into Claude &middot; ChatGPT &middot; Gemini &middot; Cursor &middot; or any LLM chat</span>
       </div>
-      <p class="text-sm mb-4" style="color: var(--dim);">Drop this prompt into your favourite chat assistant. It asks your GitHub handle first, then walks you through the nine onboarding steps one at a time.</p>
+      <p class="text-sm mb-4" style="color: var(--dim);">Drop this prompt into your favourite chat assistant. It asks your GitHub handle first, then walks you through the onboarding steps.</p>
 
       <div class="relative">
         <button id="copy-tour-prompt" class="absolute top-3 right-3 mono text-xs px-3 py-1.5 rounded transition-colors" style="background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35); color: var(--accent2);" aria-label="Copy prompt to clipboard">
@@ -901,7 +901,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     </div>
 
     <p class="text-base max-w-3xl fade-in" style="color: var(--dim); line-height: 1.75;">
-      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>. <a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
+      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>.<br><a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
     </p>
 
     <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(245, 158, 11, 0.06); border-left: 3px solid var(--amber);">
