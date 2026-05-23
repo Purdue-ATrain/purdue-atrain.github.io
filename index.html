@@ -2364,8 +2364,6 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     if (!modelName) { clearSlot(slotIdx); return; }
     var c = (DATA.model_cards || {})[modelName] || {};
     var tiers = c.tier_summary || {};
-    var top = (c.top_skills || []).slice(0, 4);
-    var bot = (c.bot_skills || []).slice(0, 4);
     var hasExt = c.external && Object.keys(c.external).some(function (k) { return c.external[k] != null; });
     var ext = hasExt ? '<span class="cmp-ext-badge">has external baseline</span>' : '';
     var extBlockHtml = renderExternalBaselines(c.external);
@@ -2382,12 +2380,6 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         '<div class="cmp-stat"><div class="cmp-stat-label">median wall</div><div class="cmp-stat-value cmp-cyan">' + fmtWall(c.median_wall) + '</div></div>' +
       '</div>' +
       renderTierTable(tiers) +
-      (top.length ? '<div class="cmp-skills-block"><h4>top skills</h4>' +
-        top.map(function (s) { return '<div class="cmp-skill-line"><span class="cmp-skill-name">' + escapeHtml(s.skill) + '</span><span class="cmp-skill-score">' + fmtScore(s.score) + '</span></div>'; }).join('') +
-        '</div>' : '') +
-      (bot.length ? '<div class="cmp-skills-block"><h4>weakest skills</h4>' +
-        bot.map(function (s) { return '<div class="cmp-skill-line"><span class="cmp-skill-name">' + escapeHtml(s.skill) + '</span><span class="cmp-skill-score cmp-bad">' + fmtScore(s.score) + '</span></div>'; }).join('') +
-        '</div>' : '') +
       extBlockHtml;
     el.querySelector('.cmp-slot-close').addEventListener('click', function (e) {
       e.stopPropagation(); clearSlot(slotIdx);
