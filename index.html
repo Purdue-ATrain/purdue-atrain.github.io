@@ -329,17 +329,17 @@ tailwind.config = {
   @media (prefers-reduced-motion: reduce) {
     .io-pair .io-line { opacity: 1; transform: none; transition: none; }
   }
-  /* Journey · numbered snake graph */
+  /* Journey · vertical 2+1+2 snake graph */
   .journey-graph {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto auto;
-    column-gap: 16px;
-    row-gap: 56px;
-    max-width: 1100px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    column-gap: 28px;
+    row-gap: 72px;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 8px 56px;
+    padding: 8px 64px;
   }
   .journey-step {
     position: relative;
@@ -423,41 +423,67 @@ tailwind.config = {
     font-size: 10.5px;
     color: var(--faint);
   }
-  /* Snake: row 1 left-to-right, row 2 right-to-left visually */
+  /* Vertical 2+1+2 snake: col 2 is the spine (02 -> 03 -> 04); 01 + 05 anchor col 1 at the corners */
   .journey-step[data-flow="1"] { grid-column: 1; grid-row: 1; }
   .journey-step[data-flow="2"] { grid-column: 2; grid-row: 1; }
-  .journey-step[data-flow="3"] { grid-column: 3; grid-row: 1; }
-  .journey-step[data-flow="4"] { grid-column: 4; grid-row: 1; }
-  .journey-step[data-flow="5"] { grid-column: 4; grid-row: 2; }
-  .journey-step[data-flow="6"] { grid-column: 3; grid-row: 2; }
-  .journey-step[data-flow="7"] { grid-column: 2; grid-row: 2; }
-  .journey-step[data-flow="8"] { grid-column: 1; grid-row: 2; }
-  /* Wrap-down arrow on the right edge (after card 4, into card 5) */
-  .journey-wrap-down {
+  .journey-step[data-flow="3"] { grid-column: 2; grid-row: 2; }
+  .journey-step[data-flow="4"] { grid-column: 2; grid-row: 3; }
+  .journey-step[data-flow="5"] { grid-column: 1; grid-row: 3; }
+  /* Spine: short down-arrows centered in col 2 (between 02->03 and 03->04) */
+  .journey-spine {
     position: absolute;
-    right: 8px;
     top: 0;
     bottom: 0;
-    width: 40px;
+    /* cover col 2 exactly: left edge of col 2 ... right padding boundary */
+    left: calc(50% + 14px);
+    right: 64px;
     pointer-events: none;
-    color: var(--primary);
+    color: var(--amber);
   }
-  /* Loop-back arrow on the left edge (after card 8, back to card 1) */
+  .journey-spine svg {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .journey-spine .arrow-1 { top: calc(33.33% - 28px); }
+  .journey-spine .arrow-2 { top: calc(66.66% - 28px); }
+  /* Loop-back: curved gradient-pulse arrow up the left margin from card 05 back to card 01 */
   .journey-loopback {
     position: absolute;
-    left: 8px;
+    left: 0;
     top: 0;
     bottom: 0;
-    width: 40px;
+    width: 56px;
     pointer-events: none;
     color: var(--accent);
   }
-  .journey-wrap-down svg,
   .journey-loopback svg {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .journey-loopback path.track {
+    fill: none;
+    stroke: var(--accent);
+    stroke-opacity: 0.18;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+  .journey-loopback path.flow {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 14 220;
+    animation: journey-pulse 4.2s linear infinite;
+  }
+  .journey-loopback .arrowhead { fill: var(--accent); }
+  @keyframes journey-pulse {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -234; }
   }
   .journey-loopback-label {
     position: absolute;
@@ -474,7 +500,7 @@ tailwind.config = {
   @media (max-width: 768px) {
     .journey-graph {
       grid-template-columns: 1fr;
-      grid-template-rows: repeat(8, auto);
+      grid-template-rows: repeat(5, auto);
       row-gap: 18px;
       padding: 8px 16px;
     }
@@ -482,20 +508,18 @@ tailwind.config = {
     .journey-step[data-flow="2"],
     .journey-step[data-flow="3"],
     .journey-step[data-flow="4"],
-    .journey-step[data-flow="5"],
-    .journey-step[data-flow="6"],
-    .journey-step[data-flow="7"],
-    .journey-step[data-flow="8"] {
+    .journey-step[data-flow="5"] {
       grid-column: 1;
       grid-row: auto;
     }
     .journey-step { padding: 12px 14px; min-height: 110px; }
     .journey-step h3 { font-size: 15px; }
     .journey-step .journey-num { font-size: 32px; }
-    .journey-wrap-down, .journey-loopback { display: none; }
+    .journey-spine, .journey-loopback { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .journey-step { opacity: 1; transform: none; transition: none; }
+    .journey-loopback path.flow { animation: none; stroke-dasharray: 4 4; }
   }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -740,38 +764,22 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         <p>AI walks the paper state machine to a complete draft.</p>
         <div class="journey-meta">draft + figures</div>
       </article>
-      <article class="journey-step lab" data-flow="6">
-        <span class="journey-num">06</span>
-        <span class="journey-kicker">lab &middot; push back</span>
-        <h3>Share</h3>
-        <p>Cron syncs your changes back, or open a direct PR.</p>
-        <div class="journey-meta">cron &middot; PR</div>
-      </article>
-      <article class="journey-step analyst" data-flow="7">
-        <span class="journey-num">07</span>
-        <span class="journey-kicker">analyst &middot; publish</span>
-        <h3>Publish</h3>
-        <p>Methodology, physics result, model weights ship together.</p>
-        <div class="journey-meta">arxiv &middot; HF</div>
-      </article>
-      <article class="journey-step lab" data-flow="8">
-        <span class="journey-num">08</span>
-        <span class="journey-kicker">lab &middot; next inherits</span>
-        <h3>Loop</h3>
-        <p>Next analyst starts on the harness you sharpened.</p>
-        <div class="journey-meta">next analyst</div>
-      </article>
 
-      <div class="journey-wrap-down" aria-hidden="true">
-        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 20 4 V 92" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <path d="M 14 86 L 20 94 L 26 86" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <div class="journey-spine" aria-hidden="true">
+        <svg class="arrow-1" width="20" height="56" viewBox="0 0 20 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 10 4 V 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M 4 40 L 10 50 L 16 40" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <svg class="arrow-2" width="20" height="56" viewBox="0 0 20 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 10 4 V 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M 4 40 L 10 50 L 16 40" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         </svg>
       </div>
       <div class="journey-loopback" aria-hidden="true">
-        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 20 92 V 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4" fill="none"/>
-          <path d="M 14 14 L 20 6 L 26 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <svg viewBox="0 0 56 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="track" d="M 50 555 Q 28 555 28 530 L 28 70 Q 28 45 50 45"/>
+          <path class="flow"  d="M 50 555 Q 28 555 28 530 L 28 70 Q 28 45 50 45"/>
+          <polygon class="arrowhead" points="45,38 53,45 45,52"/>
         </svg>
         <span class="journey-loopback-label">loops back</span>
       </div>
