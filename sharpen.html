@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Purdue-ATrain // Sharpen your skills: two contribution paths</title>
+<meta name="description" content="The two ways skills evolve in Purdue-ATrain: direct PR off main, or an organic users/&lt;handle&gt; branch that a nightly cron audits and synthesises onto nightly." />
+<meta name="theme-color" content="#0F172A" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="apple-touch-icon" href="assets/logo.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        bg:       '#0F172A',
+        surface:  '#1E293B',
+        primary:  '#3FA9F5',
+        accent:   '#7C3AED',
+        accent2:  '#A855F7',
+        amber:    '#F59E0B',
+        amber2:   '#FBBF24',
+        cyan:     '#22D3EE',
+        text:     '#E2E8F0',
+        dim:      '#94A3B8',
+        faint:    '#64748B',
+      },
+      fontFamily: {
+        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+        serif:   ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+      },
+    },
+  },
+};
+</script>
+
+<style>
+  :root {
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --primary: #3FA9F5;
+    --accent: #7C3AED;
+    --accent2: #A855F7;
+    --amber: #F59E0B;
+    --amber2: #FBBF24;
+    --cyan: #22D3EE;
+    --text: #E2E8F0;
+    --dim: #94A3B8;
+    --faint: #64748B;
+    --border: rgba(63, 169, 245, 0.15);
+  }
+  html, body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; }
+  .hl { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.05; }
+  .serif-italic { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .text-text { color: var(--text); }
+  .step-card {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .step-card:hover {
+    border-color: rgba(63, 169, 245, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(63, 169, 245, 0.08);
+  }
+  .pill {
+    background: rgba(63, 169, 245, 0.08);
+    border: 1px solid rgba(63, 169, 245, 0.2);
+    color: var(--primary);
+  }
+  .pill.amber {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.25);
+    color: var(--amber);
+  }
+  .code-block {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+  }
+  a.inline-link {
+    color: var(--cyan);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.3);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  a.inline-link:hover {
+    color: var(--amber2);
+    border-color: var(--amber2);
+  }
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(63,169,245,.25), transparent);
+  }
+  .mermaid svg { background: transparent !important; }
+</style>
+</head>
+
+<body class="font-sans antialiased text-text">
+
+<header class="border-b" style="border-color: var(--border);">
+  <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 group">
+      <img src="assets/logo.png" alt="" width="28" height="28" class="rounded-sm" />
+      <span class="mono text-sm" style="color: var(--dim);">purdue-atrain</span>
+    </a>
+    <a href="index.html#synthesis" class="mono text-xs inline-link">&larr; back to landing</a>
+  </div>
+</header>
+
+<section class="py-16 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-12 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// synthesis</span>
+      <h1 class="hl text-5xl mt-3 mb-4">Sharpen your skills</h1>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
+    </div>
+
+    <div class="step-card rounded-lg p-6 mb-10">
+      <div class="mermaid">
+flowchart LR
+  subgraph PATH_A ["Path A &middot; Direct PR (explicit changes)"]
+    direction LR
+    T["topic branch<br/>add/&lt;name&gt;<br/>fix/&lt;scope&gt;"] --> P1["open PR<br/>vs main"]
+    P1 --> R1["maintainer<br/>review"]
+  end
+
+  subgraph PATH_B ["Path B &middot; Organic + cron-curated"]
+    direction LR
+    U["users/&lt;handle&gt;<br/>(your daily branch)"] --> C["nightly cron<br/>layer-1 regex<br/>layer-2 Claude"]
+    C --> N["nightly<br/>(synthesised)"]
+    N --> P2["maintainer<br/>PR review"]
+  end
+
+  R1 --> M["main"]
+  P2 --> M
+
+  classDef branch fill:#1E293B,stroke:#3FA9F5,color:#E2E8F0
+  classDef audit fill:#1E293B,stroke:#F59E0B,color:#FBBF24
+  classDef sink fill:#1E293B,stroke:#22D3EE,color:#22D3EE
+  class T,U,N branch
+  class C,P1,P2,R1 audit
+  class M sink
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="step-card rounded-lg p-6">
+        <div class="mb-3">
+          <span class="mono text-xs pill px-2 py-0.5 rounded">Path A</span>
+        </div>
+        <h2 class="hl text-2xl mb-3">Direct PR</h2>
+        <p class="text-sm mb-4" style="color: var(--dim); line-height: 1.65;">
+          Standard GitHub flow. Cut a topic branch off <span class="mono text-text">main</span> (verbs: <span class="mono text-text">add/</span>, <span class="mono text-text">fix/</span>, <span class="mono text-text">sharpen/</span>, <span class="mono text-text">evolve/</span>, <span class="mono text-text">remove/</span>), commit the change, push, open a PR against <span class="mono text-text">main</span>. Maintainer reviews and merges. Best for deliberate fixes, new skills, or anything where you want the change reviewed as one coherent diff.
+        </p>
+        <div class="code-block rounded p-3 mono text-xs" style="color: var(--cyan); line-height: 1.6;">
+git checkout -b add/&lt;skill-name&gt;
+# edit, commit
+git push -u origin add/&lt;skill-name&gt;
+gh pr create --base main --fill
+        </div>
+      </div>
+
+      <div class="step-card rounded-lg p-6">
+        <div class="mb-3">
+          <span class="mono text-xs pill amber px-2 py-0.5 rounded">Path B</span>
+        </div>
+        <h2 class="hl text-2xl mb-3">Organic + cron-curated</h2>
+        <p class="text-sm mb-4" style="color: var(--dim); line-height: 1.65;">
+          Live on a long-lived <span class="mono text-text">users/&lt;handle&gt;</span> branch. Edit skills as you use them, commit when you like, push when convenient. A nightly cron walks every branch, audits each contribution (regex layer-1 forbidden-pattern scan plus layer-2 Claude semantic check), and synthesises a best-of-breed evolved <span class="mono text-text">SKILL.md</span> onto <span class="mono text-text">nightly</span>. Maintainer PRs <span class="mono text-text">nightly &rarr; main</span>. Best for organic evolution where interrupting your work to open a PR per tweak is friction.
+        </p>
+        <div class="code-block rounded p-3 mono text-xs" style="color: var(--cyan); line-height: 1.6;">
+git checkout users/&lt;handle&gt;
+# edit, commit, edit, commit
+git push origin users/&lt;handle&gt;
+# cron picks it up nightly
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-10 text-sm max-w-3xl" style="color: var(--dim); line-height: 1.7;">
+      Both paths converge at <span class="mono text-text">main</span>. The forbidden-pattern scan runs on the cron path; for direct PRs the equivalent safety check happens in maintainer review. Use whichever flow fits the change.
+    </p>
+
+    <p class="mt-6 mono text-xs" style="color: var(--faint);">
+      Runbook &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/evolve-skill/SKILL.md" class="inline-link">evolve-skill/SKILL.md</a>
+      &nbsp;&middot;&nbsp;
+      Forbidden patterns &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/tools/forbidden-patterns.txt" class="inline-link">tools/forbidden-patterns.txt</a>
+      &nbsp;&middot;&nbsp;
+      Contributing &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/CONTRIBUTING.md" class="inline-link">CONTRIBUTING.md</a>
+    </p>
+
+    <div class="section-divider mt-16 mb-8"></div>
+    <a href="index.html#synthesis" class="mono text-xs inline-link">&larr; back to landing</a>
+  </div>
+</section>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#0F172A',
+      primaryColor: '#1E293B',
+      primaryTextColor: '#E2E8F0',
+      primaryBorderColor: '#3FA9F5',
+      lineColor: '#7C3AED',
+      secondaryColor: '#1E293B',
+      tertiaryColor: '#1E293B',
+      fontSize: '14px',
+      fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+    },
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+  });
+</script>
+
+</body>
+</html>

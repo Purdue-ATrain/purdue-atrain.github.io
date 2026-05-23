@@ -571,67 +571,9 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
     </div>
 
-    <div class="step-card rounded-lg p-6 mb-10 fade-in">
-      <div class="mermaid">
-flowchart LR
-  subgraph PATH_A ["Path A · Direct PR (explicit changes)"]
-    direction LR
-    T["topic branch<br/>add/&lt;name&gt;<br/>fix/&lt;scope&gt;"] --> P1["open PR<br/>vs main"]
-    P1 --> R1["maintainer<br/>review"]
-  end
-
-  subgraph PATH_B ["Path B · Organic + cron-curated"]
-    direction LR
-    U["users/&lt;handle&gt;<br/>(your daily branch)"] --> C["nightly cron<br/>layer-1 regex<br/>layer-2 Claude"]
-    C --> N["nightly<br/>(synthesised)"]
-    N --> P2["maintainer<br/>PR review"]
-  end
-
-  R1 --> M["main"]
-  P2 --> M
-
-  classDef branch fill:#1E293B,stroke:#3FA9F5,color:#E2E8F0
-  classDef audit fill:#1E293B,stroke:#F59E0B,color:#FBBF24
-  classDef sink fill:#1E293B,stroke:#22D3EE,color:#22D3EE
-  class T,U,N branch
-  class C,P1,P2,R1 audit
-  class M sink
-      </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-6 fade-in">
-      <div class="step-card rounded-lg p-6">
-        <div class="mb-3">
-          <span class="mono text-xs pill px-2 py-0.5 rounded">Path A</span>
-        </div>
-        <h3 class="hl text-2xl mb-3">Direct PR</h3>
-        <p class="text-sm mb-4" style="color: var(--dim); line-height: 1.65;">
-          Standard GitHub flow. Cut a topic branch off <span class="mono text-text">main</span> (verbs: <span class="mono text-text">add/</span>, <span class="mono text-text">fix/</span>, <span class="mono text-text">sharpen/</span>, <span class="mono text-text">evolve/</span>, <span class="mono text-text">remove/</span>), commit the change, push, open a PR against <span class="mono text-text">main</span>. Maintainer reviews and merges. Best for deliberate fixes, new skills, or anything where you want the change reviewed as one coherent diff.
-        </p>
-        <div class="code-block rounded p-3 mono text-xs" style="color: var(--cyan); line-height: 1.6;">
-git checkout -b add/&lt;skill-name&gt;
-# edit, commit
-git push -u origin add/&lt;skill-name&gt;
-gh pr create --base main --fill
-        </div>
-      </div>
-
-      <div class="step-card rounded-lg p-6">
-        <div class="mb-3">
-          <span class="mono text-xs pill amber px-2 py-0.5 rounded">Path B</span>
-        </div>
-        <h3 class="hl text-2xl mb-3">Organic + cron-curated</h3>
-        <p class="text-sm mb-4" style="color: var(--dim); line-height: 1.65;">
-          Live on a long-lived <span class="mono text-text">users/&lt;handle&gt;</span> branch. Edit skills as you use them, commit when you like, push when convenient. A nightly cron walks every branch, audits each contribution (regex layer-1 forbidden-pattern scan plus layer-2 Claude semantic check), and synthesises a best-of-breed evolved <span class="mono text-text">SKILL.md</span> onto <span class="mono text-text">nightly</span>. Maintainer PRs <span class="mono text-text">nightly → main</span>. Best for organic evolution where interrupting your work to open a PR per tweak is friction.
-        </p>
-        <div class="code-block rounded p-3 mono text-xs" style="color: var(--cyan); line-height: 1.6;">
-git checkout users/&lt;handle&gt;
-# edit, commit, edit, commit
-git push origin users/&lt;handle&gt;
-# cron picks it up nightly
-        </div>
-      </div>
-    </div>
+    <p class="text-base max-w-3xl fade-in" style="color: var(--dim); line-height: 1.75;">
+      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>. <a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
+    </p>
 
     <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(245, 158, 11, 0.06); border-left: 3px solid var(--amber);">
       <span class="mono text-xs uppercase tracking-widest block mb-2" style="color: var(--amber);">// good practice</span>
@@ -640,18 +582,6 @@ git push origin users/&lt;handle&gt;
         Skills are shared. When you improve a skill, you're improving it for the whole group. Don't keep your sharpening private. Push your <span class="mono text-text">users/&lt;handle&gt;</span> branch so the cron picks it up, or open a direct PR for a deliberate change.
       </p>
     </div>
-
-    <p class="mt-8 text-sm max-w-3xl fade-in" style="color: var(--dim);">
-      Both paths converge at <span class="mono text-text">main</span>. The forbidden-pattern scan runs on the cron path; for direct PRs the equivalent safety check happens in maintainer review. Use whichever flow fits the change.
-    </p>
-
-    <p class="mt-6 mono text-xs" style="color: var(--faint);">
-      Runbook &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/evolve-skill/SKILL.md" class="inline-link">evolve-skill/SKILL.md</a>
-      &nbsp;&middot;&nbsp;
-      Forbidden patterns &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/tools/forbidden-patterns.txt" class="inline-link">tools/forbidden-patterns.txt</a>
-      &nbsp;&middot;&nbsp;
-      Contributing &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skills/blob/main/CONTRIBUTING.md" class="inline-link">CONTRIBUTING.md</a>
-    </p>
   </div>
 </section>
 
