@@ -479,17 +479,19 @@ tailwind.config = {
     pointer-events: none;
   }
   .journey-edges-label.iterate {
-    /* sit in the empty col-1 / row-2 cell between the 3<->5 arcs */
-    top: 47%;
-    left: 22%;
+    /* sit in the empty col-1 / row-2 cell, above the 5->3 back-edge arc */
+    top: 42%;
+    left: 30%;
     color: var(--primary);
     opacity: 0.85;
   }
   .journey-edges-label.handoff {
-    /* upper-left, hugging the handoff curve as it lands on card 01 */
-    top: 7%;
-    left: 4%;
+    /* rotated vertical alongside the 5->1 loop-back on the left margin */
+    top: 50%;
+    left: 6px;
     color: var(--accent);
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
   }
   @media (max-width: 768px) {
     .journey-graph {
@@ -781,19 +783,14 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           <path class="flow fwd delay-4" d="M 394 602 L 376 602"/>
           <polygon class="head-fwd" points="382,597 372,602 382,607"/>
 
-          <!-- 3 -> 5 iterate (forward feedback, lower arc through row-gap 2) -->
-          <path class="track itr" d="M 394 425 Q 220 470 220 510"/>
-          <path class="flow itr delay-5" d="M 394 425 Q 220 470 220 510"/>
-          <polygon class="head-itr" points="215,504 220,514 225,504"/>
-
-          <!-- 5 -> 3 iterate (back-edge, upper arc through empty col-1/row-2) -->
+          <!-- 5 -> 3 iterate (back-edge, arc through empty col-1/row-2 cell) -->
           <path class="track itr" d="M 320 510 Q 260 370 386 370"/>
-          <path class="flow itr delay-6" d="M 320 510 Q 260 370 386 370"/>
+          <path class="flow itr delay-5" d="M 320 510 Q 260 370 386 370"/>
           <polygon class="head-itr" points="386,365 394,370 386,375"/>
 
-          <!-- 4 -> 1 handoff (sharpened skills loop back into next analyst's setup) -->
-          <path class="track hdf" d="M 405 510 C 200 460 -20 100 60 100"/>
-          <path class="flow hdf delay-2" d="M 405 510 C 200 460 -20 100 60 100"/>
+          <!-- 5 -> 1 handoff (loop-back: this analyst's run feeds the next analyst's setup) -->
+          <path class="track hdf" d="M 60 600 C 0 500 0 100 60 100"/>
+          <path class="flow hdf delay-6" d="M 60 600 C 0 500 0 100 60 100"/>
           <polygon class="head-hdf" points="52,95 62,100 52,105"/>
         </svg>
         <span class="journey-edges-label iterate">iterate</span>
