@@ -21,7 +21,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.css" />
 <script defer src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/@xyflow/react@12/dist/style.css" />
 
 <script>
   // Theme boot: runs before Tailwind so the first paint matches the stored preference
@@ -330,39 +329,18 @@ tailwind.config = {
   @media (prefers-reduced-motion: reduce) {
     .io-pair .io-line { opacity: 1; transform: none; transition: none; }
   }
-  /* Journey · React-Flow-driven node graph.
-     Card-interior styles (.journey-step.*) live here; layout + edges are
-     owned by React Flow inside #journey-rf. */
-  #journey-rf {
+  /* Journey · vertical 2+1+2 snake graph */
+  .journey-graph {
     position: relative;
-    width: 100%;
-    height: 560px;
-    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    column-gap: 28px;
+    row-gap: 72px;
+    max-width: 760px;
     margin: 0 auto;
+    padding: 8px 64px;
   }
-  #journey-rf.in { opacity: 1; transform: translateY(0); }
-  #journey-rf {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity .6s ease, transform .6s ease;
-  }
-  /* React Flow chrome overrides: hide connect handles, dim attribution,
-     let our card own its background/borders inside a custom node. */
-  .react-flow__handle { opacity: 0; pointer-events: none; }
-  .react-flow__attribution { font-size: 9px; opacity: 0.35; background: transparent; }
-  .react-flow__attribution a { color: var(--faint); }
-  .react-flow__node-step {
-    background: transparent;
-    padding: 0;
-    border: 0;
-    width: 280px;
-  }
-  .react-flow__node-step.selectable:focus,
-  .react-flow__node-step.selectable:focus-visible { outline: none; box-shadow: none; }
-  /* Edge label styling: small monospace pill */
-  .react-flow__edge-textbg { fill: var(--surface-strong); opacity: 0.85; }
-  .react-flow__edge-text { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: 0.05em; }
-  /* The journey-step card itself — same look as before. */
   .journey-step {
     position: relative;
     padding: 14px 16px;
@@ -373,13 +351,19 @@ tailwind.config = {
     min-height: 130px;
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .journey-step.in { opacity: 1; transform: translateY(0); }
+  .journey-step {
     cursor: default;
-    transition: transform .25s ease, border-color .2s ease, box-shadow .2s ease;
   }
   .journey-step:hover {
     border-color: var(--card-hover);
     box-shadow: 0 8px 24px var(--card-shadow);
     transform: translateY(-2px);
+    transition: opacity .55s ease, transform .25s ease, border-color .2s ease, box-shadow .2s ease;
   }
   .journey-step:hover .journey-num { opacity: 0.32; transition: opacity .25s ease; }
   .journey-step.analyst {
@@ -439,15 +423,99 @@ tailwind.config = {
     font-size: 10.5px;
     color: var(--faint);
   }
+  /* Vertical 2+1+2 snake: col 2 is the spine (02 -> 03 -> 04); 01 + 05 anchor col 1 at the corners */
+  .journey-step[data-flow="1"] { grid-column: 1; grid-row: 1; }
+  .journey-step[data-flow="2"] { grid-column: 2; grid-row: 1; }
+  .journey-step[data-flow="3"] { grid-column: 2; grid-row: 2; }
+  .journey-step[data-flow="4"] { grid-column: 2; grid-row: 3; }
+  .journey-step[data-flow="5"] { grid-column: 1; grid-row: 3; }
+  /* Edges overlay: every inter-card arrow lives in one SVG layered over the grid.
+     viewBox is 760x700 (= journey-graph's natural aspect) and preserveAspectRatio="none",
+     so card positions and arrow endpoints track each other through window resizes.
+     Three color buckets: fwd (amber, linear flow 1->2->3->4->5), itr (primary, 3<->5
+     iterate pair), hdf (accent, 4->1 handoff loop-back via Sharpening). */
+  .journey-edges {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .journey-edges svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .journey-edges path { fill: none; stroke-linecap: round; }
+  .journey-edges path.track { stroke-opacity: 0.18; stroke-width: 1.5; }
+  .journey-edges path.flow {
+    stroke-width: 2;
+    stroke-dasharray: 14 220;
+    animation: journey-pulse 4.2s linear infinite;
+  }
+  .journey-edges path.fwd { stroke: var(--amber); }
+  .journey-edges path.itr { stroke: var(--primary); }
+  .journey-edges path.hdf { stroke: var(--accent); }
+  .journey-edges polygon.head-fwd { fill: var(--amber); }
+  .journey-edges polygon.head-itr { fill: var(--primary); }
+  .journey-edges polygon.head-hdf { fill: var(--accent); }
+  /* phase offsets so pulses don't tick in lockstep */
+  .journey-edges path.flow.delay-1 { animation-delay: -0.6s; }
+  .journey-edges path.flow.delay-2 { animation-delay: -1.2s; }
+  .journey-edges path.flow.delay-3 { animation-delay: -1.8s; }
+  .journey-edges path.flow.delay-4 { animation-delay: -2.4s; }
+  .journey-edges path.flow.delay-5 { animation-delay: -3.0s; }
+  .journey-edges path.flow.delay-6 { animation-delay: -3.6s; }
+  @keyframes journey-pulse {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -234; }
+  }
+  .journey-edges-label {
+    position: absolute;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .journey-edges-label.iterate {
+    /* sit in the empty col-1 / row-2 cell, above the 5->3 back-edge arc */
+    top: 42%;
+    left: 30%;
+    color: var(--primary);
+    opacity: 0.85;
+  }
+  .journey-edges-label.handoff {
+    /* rotated vertical alongside the 5->1 loop-back on the left margin */
+    top: 50%;
+    left: 6px;
+    color: var(--accent);
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+  }
   @media (max-width: 768px) {
-    #journey-rf { height: 420px; }
-    .react-flow__node-step { width: 220px; }
+    .journey-graph {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(5, auto);
+      row-gap: 18px;
+      padding: 8px 16px;
+    }
+    .journey-step[data-flow="1"],
+    .journey-step[data-flow="2"],
+    .journey-step[data-flow="3"],
+    .journey-step[data-flow="4"],
+    .journey-step[data-flow="5"] {
+      grid-column: 1;
+      grid-row: auto;
+    }
     .journey-step { padding: 12px 14px; min-height: 110px; }
     .journey-step h3 { font-size: 15px; }
     .journey-step .journey-num { font-size: 32px; }
+    .journey-edges { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    #journey-rf { opacity: 1; transform: none; transition: none; }
+    .journey-step { opacity: 1; transform: none; transition: none; }
+    .journey-edges path.flow { animation: none; stroke-dasharray: 4 4; }
   }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -656,7 +724,79 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       The harness is the lab's collective substrate: each analyst adapts it, ships their physics on it, and hands it back richer for the next person.
     </p>
 
-    <div id="journey-rf"></div>
+    <div class="journey-graph">
+      <article class="journey-step analyst" data-flow="1">
+        <span class="journey-num">01</span>
+        <span class="journey-kicker">analyst &middot; receive</span>
+        <h3>Set up</h3>
+        <p>Clone the skills, scaffold the harness, start your work.</p>
+        <div class="journey-meta">clone &middot; scaffold</div>
+      </article>
+      <article class="journey-step lab" data-flow="2">
+        <span class="journey-num">02</span>
+        <span class="journey-kicker">lab &middot; handed off</span>
+        <h3>Inherit</h3>
+        <p>Skills, harness, conventions handed down from the analysts before you.</p>
+        <div class="journey-meta">lab repos</div>
+      </article>
+      <article class="journey-step analyst" data-flow="3">
+        <span class="journey-num">03</span>
+        <span class="journey-kicker">analyst &middot; analyze</span>
+        <h3>Morphing</h3>
+        <p>Data/MCMC handling, observables, compute, ML, all on the same tree.</p>
+        <div class="journey-meta">data/MC &middot; ML</div>
+      </article>
+      <article class="journey-step lab" data-flow="4">
+        <span class="journey-num">04</span>
+        <span class="journey-kicker">lab &middot; adapt</span>
+        <h3>Sharpening</h3>
+        <p>Edit skills and Harness as you build.</p>
+        <div class="journey-meta">users/&lt;handle&gt;</div>
+      </article>
+      <article class="journey-step analyst" data-flow="5">
+        <span class="journey-num">05</span>
+        <span class="journey-kicker">analyst &middot; draft</span>
+        <h3>Physics</h3>
+        <p>Produce Results: AI walks the paper writing to complete draft.</p>
+        <div class="journey-meta">draft + figures</div>
+      </article>
+
+      <div class="journey-edges" aria-hidden="true">
+        <svg viewBox="0 0 760 700" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 1 -> 2 forward (top row) -->
+          <path class="track fwd" d="M 366 98 L 384 98"/>
+          <path class="flow fwd delay-1" d="M 366 98 L 384 98"/>
+          <polygon class="head-fwd" points="378,93 388,98 378,103"/>
+
+          <!-- 2 -> 3 forward (down spine) -->
+          <path class="track fwd" d="M 545 188 L 545 250"/>
+          <path class="flow fwd delay-2" d="M 545 188 L 545 250"/>
+          <polygon class="head-fwd" points="540,244 545,254 550,244"/>
+
+          <!-- 3 -> 4 forward (down spine) -->
+          <path class="track fwd" d="M 545 440 L 545 502"/>
+          <path class="flow fwd delay-3" d="M 545 440 L 545 502"/>
+          <polygon class="head-fwd" points="540,496 545,506 550,496"/>
+
+          <!-- 4 -> 5 forward (bottom row, reversed direction) -->
+          <path class="track fwd" d="M 394 602 L 376 602"/>
+          <path class="flow fwd delay-4" d="M 394 602 L 376 602"/>
+          <polygon class="head-fwd" points="382,597 372,602 382,607"/>
+
+          <!-- 5 -> 3 iterate (back-edge: middle-top of card 5 -> left-middle of card 3) -->
+          <path class="track itr" d="M 215 512 Q 215 350 394 350"/>
+          <path class="flow itr delay-5" d="M 215 512 Q 215 350 394 350"/>
+          <polygon class="head-itr" points="386,345 394,350 386,355"/>
+
+          <!-- 5 -> 1 handoff (loop-back: this analyst's run feeds the next analyst's setup) -->
+          <path class="track hdf" d="M 60 600 C 0 500 0 100 60 100"/>
+          <path class="flow hdf delay-6" d="M 60 600 C 0 500 0 100 60 100"/>
+          <polygon class="head-hdf" points="52,95 62,100 52,105"/>
+        </svg>
+        <span class="journey-edges-label iterate">iterate</span>
+        <span class="journey-edges-label handoff">loops back</span>
+      </div>
+    </div>
   </div>
 </section>
 <div class="section-divider max-w-5xl mx-auto"></div>
@@ -1646,22 +1786,25 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       }
     }
 
-    // Journey graph: the diagram is rendered by React Flow inside #journey-rf.
-    // Fade the whole canvas in as one unit when the section enters the viewport.
+    // Journey graph: stagger-reveal each numbered step in flow order when the section enters viewport.
     var journeySection = document.getElementById('journey');
-    var journeyRF = document.getElementById('journey-rf');
-    if (journeyRF && journeySection) {
-      gsap.to(journeyRF, {
+    var steps = gsap.utils.toArray('.journey-step');
+    if (steps.length && journeySection) {
+      steps.sort(function (a, b) {
+        return parseInt(a.dataset.flow, 10) - parseInt(b.dataset.flow, 10);
+      });
+      gsap.to(steps, {
         opacity: 1,
         y: 0,
-        duration: reduced ? 0 : 0.6,
+        duration: reduced ? 0 : 0.5,
         ease: 'power2.out',
+        stagger: reduced ? 0 : 0.08,
         scrollTrigger: {
           trigger: journeySection,
           start: 'top 75%',
           once: true,
         },
-        onStart: function () { journeyRF.classList.add('in'); },
+        onStart: function () { steps.forEach(function (s) { s.classList.add('in'); }); },
       });
     }
   });
@@ -2305,122 +2448,6 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 })();
 </script>
 
-<!-- =========== JOURNEY GRAPH · React Flow renderer =========== -->
-<script type="module">
-import React from "https://esm.sh/react@18";
-import { createRoot } from "https://esm.sh/react-dom@18/client";
-import { ReactFlow, Handle, Position } from "https://esm.sh/@xyflow/react@12?deps=react@18,react-dom@18";
-
-var h = React.createElement;
-var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var animated = !reduced;
-
-function StepNode(props) {
-  var d = props.data;
-  return h('article', { className: 'journey-step ' + d.side },
-    (d.handles || []).map(function (handle, i) {
-      return h(Handle, Object.assign({ key: 'hdl-' + i, isConnectable: false }, handle));
-    }),
-    h('span', { className: 'journey-num' }, d.num),
-    h('span', { className: 'journey-kicker' }, d.kicker),
-    h('h3', null, d.title),
-    h('p', null, d.desc),
-    h('div', { className: 'journey-meta' }, d.meta)
-  );
-}
-var nodeTypes = { step: StepNode };
-
-// Handcrafted 2+1+2 positions. React Flow uses top-left x/y for nodes.
-var NODE_W = 280;
-var nodes = [
-  { id:'1', type:'step', position:{ x: 0,   y: 0   }, data:{
-      num:'01', kicker:'analyst · receive', title:'Set up',
-      desc:'Clone the skills, scaffold the harness, start your work.',
-      meta:'clone · scaffold', side:'analyst',
-      handles:[
-        { type:'source', position: Position.Right, id:'r' },
-        { type:'target', position: Position.Left,  id:'l' },
-      ] }},
-  { id:'2', type:'step', position:{ x: 420, y: 0   }, data:{
-      num:'02', kicker:'lab · handed off', title:'Inherit',
-      desc:'Skills, harness, conventions handed down from the analysts before you.',
-      meta:'lab repos', side:'lab',
-      handles:[
-        { type:'target', position: Position.Left,   id:'l' },
-        { type:'source', position: Position.Bottom, id:'b' },
-      ] }},
-  { id:'3', type:'step', position:{ x: 420, y: 280 }, data:{
-      num:'03', kicker:'analyst · analyze', title:'Morphing',
-      desc:'Data/MCMC handling, observables, compute, ML, all on the same tree.',
-      meta:'data/MC · ML', side:'analyst',
-      handles:[
-        { type:'target', position: Position.Top,    id:'t' },
-        { type:'source', position: Position.Bottom, id:'b' },
-        { type:'target', position: Position.Left,   id:'l' },
-      ] }},
-  { id:'4', type:'step', position:{ x: 420, y: 560 }, data:{
-      num:'04', kicker:'lab · adapt', title:'Sharpening',
-      desc:'Edit skills and Harness as you build.',
-      meta:'users/<handle>', side:'lab',
-      handles:[
-        { type:'target', position: Position.Top,  id:'t' },
-        { type:'source', position: Position.Left, id:'l' },
-      ] }},
-  { id:'5', type:'step', position:{ x: 0,   y: 560 }, data:{
-      num:'05', kicker:'analyst · draft', title:'Physics',
-      desc:'Produce Results: AI walks the paper writing to complete draft.',
-      meta:'draft + figures', side:'analyst',
-      handles:[
-        { type:'target', position: Position.Right,  id:'r' },
-        { type:'source', position: Position.Top,    id:'t'  },
-        { type:'source', position: Position.Left,   id:'lb' },
-      ] }},
-];
-
-function fwdEdge(id, source, sourceHandle, target, targetHandle) {
-  return { id:id, source:source, sourceHandle:sourceHandle, target:target, targetHandle:targetHandle,
-           animated:animated, style:{ stroke:'var(--amber)', strokeWidth:2 } };
-}
-var edges = [
-  fwdEdge('1-2', '1', 'r', '2', 'l'),
-  fwdEdge('2-3', '2', 'b', '3', 't'),
-  fwdEdge('3-4', '3', 'b', '4', 't'),
-  fwdEdge('4-5', '4', 'l', '5', 'r'),
-  { id:'5-3', source:'5', sourceHandle:'t', target:'3', targetHandle:'l',
-    animated:animated, label:'iterate',
-    style:{ stroke:'var(--primary)', strokeWidth:2, strokeDasharray:'5 5' },
-    labelStyle:{ fill:'var(--primary)', fontFamily:'JetBrains Mono, ui-monospace, monospace', fontSize:10 },
-    labelBgStyle:{ fill:'var(--surface-strong)', fillOpacity:0.85 },
-    labelBgPadding:[4,2], labelBgBorderRadius:4 },
-  { id:'5-1', source:'5', sourceHandle:'lb', target:'1', targetHandle:'l',
-    animated:animated, label:'loops back',
-    style:{ stroke:'var(--accent)', strokeWidth:2 },
-    labelStyle:{ fill:'var(--accent)', fontFamily:'JetBrains Mono, ui-monospace, monospace', fontSize:10 },
-    labelBgStyle:{ fill:'var(--surface-strong)', fillOpacity:0.85 },
-    labelBgPadding:[4,2], labelBgBorderRadius:4 },
-];
-
-var container = document.getElementById('journey-rf');
-if (container) {
-  createRoot(container).render(
-    h(ReactFlow, {
-      nodes: nodes, edges: edges, nodeTypes: nodeTypes,
-      fitView: true,
-      fitViewOptions: { padding: 0.15 },
-      nodesDraggable: false,
-      nodesConnectable: false,
-      elementsSelectable: false,
-      panOnDrag: false,
-      panOnScroll: false,
-      zoomOnScroll: false,
-      zoomOnPinch: false,
-      zoomOnDoubleClick: false,
-      preventScrolling: false,
-      proOptions: { hideAttribution: false },
-    })
-  );
-}
-</script>
 
 </body>
 </html>
