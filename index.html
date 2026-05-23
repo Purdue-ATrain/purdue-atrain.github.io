@@ -242,6 +242,22 @@ tailwind.config = {
   @media (max-width: 768px) {
     .fade-in { transform: translateY(8px); }
   }
+  /* Word-by-word reveal on section headings + subheads */
+  .reveal-words .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .55s ease, transform .55s ease;
+    transition-delay: calc(var(--i, 0) * 40ms);
+    will-change: opacity, transform;
+  }
+  .reveal-words.in .word {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-words .word { opacity: 1; transform: none; transition: none; }
+  }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -1097,6 +1113,72 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     }
     window.addEventListener('scroll', update, { passive: true });
     update();
+  })();
+
+  // ---- Word-by-word reveal on section headings + subheads + hero ----
+  (function () {
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function splitWords(el) {
+      if (el.dataset.split === '1') return;
+      el.dataset.split = '1';
+      var nodes = Array.prototype.slice.call(el.childNodes);
+      var idx = 0;
+      el.innerHTML = '';
+      nodes.forEach(function (node) {
+        if (node.nodeType === 3) {
+          var parts = node.textContent.split(/(\s+)/);
+          parts.forEach(function (p) {
+            if (!p) return;
+            if (/^\s+$/.test(p)) {
+              el.appendChild(document.createTextNode(p));
+            } else {
+              var s = document.createElement('span');
+              s.className = 'word';
+              s.style.setProperty('--i', String(idx++));
+              s.textContent = p;
+              el.appendChild(s);
+            }
+          });
+        } else if (node.nodeType === 1) {
+          var w = document.createElement('span');
+          w.className = 'word';
+          w.style.setProperty('--i', String(idx++));
+          w.appendChild(node);
+          el.appendChild(w);
+        }
+      });
+    }
+    var targets = [];
+    document.querySelectorAll('section h2.hl').forEach(function (h2) {
+      targets.push(h2);
+      var sib = h2.nextElementSibling;
+      if (sib && sib.tagName === 'P' && sib.classList.contains('serif-italic')) targets.push(sib);
+    });
+    targets.forEach(function (el) {
+      splitWords(el);
+      el.classList.add('reveal-words');
+    });
+    if (reduced || !('IntersectionObserver' in window)) {
+      targets.forEach(function (el) { el.classList.add('in'); });
+    } else {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.25 });
+      targets.forEach(function (el) { obs.observe(el); });
+    }
+    // Hero H1: one-shot on load
+    var heroH1 = document.querySelector('#hero h1.hl');
+    if (heroH1) {
+      splitWords(heroH1);
+      heroH1.classList.add('reveal-words');
+      if (reduced) heroH1.classList.add('in');
+      else setTimeout(function () { heroH1.classList.add('in'); }, 150);
+    }
   })();
 
   // ---- Theme toggle ----
