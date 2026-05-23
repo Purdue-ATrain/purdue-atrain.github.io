@@ -310,10 +310,10 @@ tailwind.config = {
     min-width: min-content;
   }
   .journey-col {
-    flex: 0 0 340px;
+    flex: 0 0 260px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
     scroll-snap-align: start;
     opacity: 0;
     transform: translateY(20px);
@@ -358,12 +358,12 @@ tailwind.config = {
   }
   .journey-card {
     width: 100%;
-    padding: 16px 18px;
+    padding: 14px 16px;
     border: 1px solid var(--border);
     border-radius: 10px;
     background: var(--surface-strong);
     backdrop-filter: blur(8px);
-    min-height: 200px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
   }
@@ -387,16 +387,16 @@ tailwind.config = {
   }
   .journey-card h3 {
     font-family: "Bricolage Grotesque", system-ui, sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     letter-spacing: -0.02em;
     color: var(--text);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     line-height: 1.2;
   }
   .journey-card p {
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--dim);
-    line-height: 1.6;
+    line-height: 1.55;
     margin: 0;
     flex: 1;
   }
@@ -426,20 +426,12 @@ tailwind.config = {
     text-align: center;
     line-height: 1.4;
   }
-  .journey-track-hint {
-    margin-top: 14px;
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: var(--faint);
-    text-align: right;
-    padding-right: 8px;
-  }
   @media (max-width: 768px) {
-    .journey-col { flex: 0 0 220px; }
-    .journey-card { padding: 14px 14px; min-height: 180px; }
-    .journey-card h3 { font-size: 16px; }
+    .journey-col { flex: 0 0 210px; }
+    .journey-card { padding: 12px 14px; min-height: 130px; }
+    .journey-card h3 { font-size: 15px; }
     .journey-card p { font-size: 12px; }
-    .journey-loop { flex: 0 0 88px; }
+    .journey-loop { flex: 0 0 84px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .journey-col { opacity: 1; transform: none; transition: none; }
@@ -930,9 +922,9 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         <article class="journey-col" data-col="2">
           <div class="journey-card analyst-card">
             <span class="journey-kicker">analyst &middot; analyze</span>
-            <h3>Plots, then a classifier</h3>
-            <p>Kinematics, cuts, BDT &mdash; all on the same tree.</p>
-            <div class="journey-meta">plots &middot; models</div>
+            <h3>From data to ML</h3>
+            <p>Data/MC handling, observables, compute, ML, all on the same tree.</p>
+            <div class="journey-meta">data/MC &middot; ML</div>
           </div>
           <div class="journey-bridge">
             <div class="journey-node"><span>2</span></div>
@@ -993,7 +985,6 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         </div>
       </div>
     </div>
-    <p class="journey-track-hint">&larr; scroll horizontally &rarr;</p>
   </div>
 </section>
 
