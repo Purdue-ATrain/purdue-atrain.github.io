@@ -258,6 +258,21 @@ tailwind.config = {
   @media (prefers-reduced-motion: reduce) {
     .reveal-words .word { opacity: 1; transform: none; transition: none; }
   }
+  /* Harness side-by-side line-by-line build-up */
+  .io-pair .io-line {
+    display: block;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity .45s ease, transform .45s ease;
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+  .io-pair.in .io-line {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .io-pair .io-line { opacity: 1; transform: none; transition: none; }
+  }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -650,7 +665,43 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       copier copy gh:Purdue-ATrain/harness-blueprint ./my-analysis
     </div>
 
-    <div class="flex flex-wrap gap-3 mt-6">
+    <div class="grid md:grid-cols-2 gap-6 mt-10 io-pair fade-in">
+      <div class="step-card rounded-lg p-5">
+        <div class="flex items-center justify-between mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
+          <span class="mono text-xs uppercase tracking-widest" style="color: var(--primary);">// inputs · copier.yml</span>
+          <span class="mono text-xs" style="color: var(--faint);">what you describe</span>
+        </div>
+        <pre class="mono text-xs" style="line-height: 1.8; color: var(--text);"><span class="io-line" style="--i: 0"><span style="color: var(--primary);">analysis_name</span>: hh-vbf-bbww</span>
+<span class="io-line" style="--i: 1"><span style="color: var(--primary);">analysis_title</span>: VBF HH&rarr;bbWW (sl)</span>
+<span class="io-line" style="--i: 2"><span style="color: var(--primary);">channels</span>: emu, mumu, ee</span>
+<span class="io-line" style="--i: 3"><span style="color: var(--primary);">primary_trigger</span>: DST_HLT_PFJet120</span>
+<span class="io-line" style="--i: 4"><span style="color: var(--primary);">physics_process</span>: HH_bbww</span>
+<span class="io-line" style="--i: 5"><span style="color: var(--primary);">lead_author_name</span>: J. Doe</span>
+<span class="io-line" style="--i: 6"><span style="color: var(--primary);">lead_author_github</span>: jdoe</span>
+<span class="io-line" style="--i: 7"><span style="color: var(--primary);">motivation</span>: |</span>
+<span class="io-line" style="--i: 8">  search for VBF-produced di-Higgs</span>
+<span class="io-line" style="--i: 9">  decaying to bb + WW (semileptonic)</span></pre>
+      </div>
+
+      <div class="step-card rounded-lg p-5">
+        <div class="flex items-center justify-between mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
+          <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// outputs · template/</span>
+          <span class="mono text-xs" style="color: var(--faint);">what you get</span>
+        </div>
+        <pre class="mono text-xs" style="line-height: 1.8; color: var(--text);"><span class="io-line" style="--i: 0">hh-vbf-bbww/</span>
+<span class="io-line" style="--i: 1">&boxvr;&boxh; README.md</span>
+<span class="io-line" style="--i: 2">&boxvr;&boxh; CLAUDE.md            <span style="color: var(--faint);"># anti-halluc.</span></span>
+<span class="io-line" style="--i: 3">&boxvr;&boxh; pixi.toml + pixi.lock</span>
+<span class="io-line" style="--i: 4">&boxvr;&boxh; bin/                 <span style="color: var(--faint);"># entry scripts</span></span>
+<span class="io-line" style="--i: 5">&boxvr;&boxh; analysis/            <span style="color: var(--faint);"># runner, defs</span></span>
+<span class="io-line" style="--i: 6">&boxvr;&boxh; config/              <span style="color: var(--faint);"># channels.py</span></span>
+<span class="io-line" style="--i: 7">&boxvr;&boxh; utils/, elements/</span>
+<span class="io-line" style="--i: 8">&boxvr;&boxh; ml/, inference/, tests/</span>
+<span class="io-line" style="--i: 9">&boxur;&boxh; draft/, docs/, tools/</span></pre>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mt-8">
       <span class="mono text-xs pill px-3 py-1 rounded-full">pixi-managed env</span>
       <span class="mono text-xs pill amber px-3 py-1 rounded-full">LaTeX paper scaffold</span>
       <span class="mono text-xs pill violet px-3 py-1 rounded-full">anti-hallucination CLAUDE.md</span>
@@ -1179,6 +1230,17 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       if (reduced) heroH1.classList.add('in');
       else setTimeout(function () { heroH1.classList.add('in'); }, 150);
     }
+
+    // Harness side-by-side line-by-line build-up
+    document.querySelectorAll('.io-pair').forEach(function (pair) {
+      if (reduced || !('IntersectionObserver' in window)) { pair.classList.add('in'); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.2 });
+      io.observe(pair);
+    });
   })();
 
   // ---- Theme toggle ----
