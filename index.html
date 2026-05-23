@@ -273,11 +273,11 @@ tailwind.config = {
   @media (prefers-reduced-motion: reduce) {
     .io-pair .io-line { opacity: 1; transform: none; transition: none; }
   }
-  /* Journey timeline · horizontal */
+  /* Journey · parallel rails (analyst + lab) */
   .journey-track {
     position: relative;
     margin: 0 -8px;
-    padding: 70px 8px 16px;
+    padding: 8px 8px 16px;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x proximity;
@@ -288,36 +288,46 @@ tailwind.config = {
   .journey-track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   .journey-rail, .journey-rail-fill {
     position: absolute;
-    top: 88px;
+    top: 50%;
     left: 24px; right: 24px;
     height: 2px;
+    transform: translateY(-1px);
     pointer-events: none;
   }
   .journey-rail { background: var(--border); }
   .journey-rail-fill {
     background: linear-gradient(90deg, var(--primary), var(--accent));
     transform-origin: left center;
-    transform: scaleX(0);
+    transform: translateY(-1px) scaleX(0);
   }
   .journey-strip {
     display: flex;
+    align-items: center;
     gap: 24px;
     position: relative;
     z-index: 1;
     padding: 0 16px;
     min-width: min-content;
   }
-  .journey-stage {
-    flex: 0 0 280px;
+  .journey-col {
+    flex: 0 0 340px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 14px;
     scroll-snap-align: start;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity .55s ease, transform .55s ease;
   }
-  .journey-stage.in { opacity: 1; transform: translateY(0); }
+  .journey-col.in { opacity: 1; transform: translateY(0); }
+  .journey-bridge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    height: 36px;
+  }
   .journey-node {
     width: 36px; height: 36px;
     border-radius: 50%;
@@ -328,30 +338,50 @@ tailwind.config = {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 13px;
     font-weight: 500;
-    margin-bottom: 28px;
     position: relative;
+    z-index: 1;
   }
-  .journey-stage.in .journey-node {
+  .journey-col.in .journey-node {
     box-shadow: 0 0 0 6px var(--pill-blue-bg);
     transition: box-shadow .4s ease .3s;
   }
+  .journey-bidi-arrow {
+    color: var(--dim);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 16px;
+    line-height: 1;
+    background: var(--bg);
+    padding: 2px 4px;
+    border-radius: 4px;
+    position: relative;
+    z-index: 1;
+  }
   .journey-card {
     width: 100%;
-    padding: 18px 20px;
+    padding: 16px 18px;
     border: 1px solid var(--border);
     border-radius: 10px;
     background: var(--surface-strong);
     backdrop-filter: blur(8px);
-    min-height: 220px;
+    min-height: 200px;
     display: flex;
     flex-direction: column;
   }
+  .journey-card.analyst-card {
+    background: linear-gradient(180deg, var(--pill-blue-bg), var(--surface-strong));
+    border-color: var(--pill-blue-bd);
+  }
+  .journey-card.lab-card {
+    background: linear-gradient(0deg, var(--pill-amber-bg), var(--surface-strong));
+    border-color: var(--pill-amber-bd);
+  }
+  .journey-card.analyst-card .journey-kicker { color: var(--primary); }
+  .journey-card.lab-card .journey-kicker { color: var(--amber); }
   .journey-card .journey-kicker {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--amber);
     display: block;
     margin-bottom: 6px;
   }
@@ -378,6 +408,24 @@ tailwind.config = {
     font-size: 10.5px;
     color: var(--faint);
   }
+  .journey-loop {
+    flex: 0 0 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .journey-loop svg { display: block; }
+  .journey-loop-label {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1.4;
+  }
   .journey-track-hint {
     margin-top: 14px;
     font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -387,11 +435,15 @@ tailwind.config = {
     padding-right: 8px;
   }
   @media (max-width: 768px) {
-    .journey-stage { flex: 0 0 260px; }
+    .journey-col { flex: 0 0 220px; }
+    .journey-card { padding: 14px 14px; min-height: 180px; }
+    .journey-card h3 { font-size: 16px; }
+    .journey-card p { font-size: 12px; }
+    .journey-loop { flex: 0 0 88px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .journey-stage { opacity: 1; transform: none; transition: none; }
-    .journey-rail-fill { transform: scaleX(1); }
+    .journey-col { opacity: 1; transform: none; transition: none; }
+    .journey-rail-fill { transform: translateY(-1px) scaleX(1); }
   }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -848,7 +900,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     </div>
 
     <p class="text-base max-w-3xl mb-10 fade-in" style="color: var(--dim); line-height: 1.7;">
-      The harness is not a one-shot scaffold. It is the substrate every step of the analysis builds on, from the first plot a newcomer makes to the final paper draft. Each stage adds artifacts under the same tree.
+      The harness is the lab's collective substrate: each analyst adapts it, ships their physics on it, and hands it back richer for the next person.
     </p>
 
     <div class="journey-track">
@@ -856,55 +908,89 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       <div class="journey-rail-fill" id="journey-fill"></div>
 
       <div class="journey-strip">
-        <article class="journey-stage" data-stage="1">
-          <div class="journey-node"><span>1</span></div>
-          <div class="journey-card">
-            <span class="journey-kicker">newcomer</span>
-            <h3>Joins the lab</h3>
-            <p>Maintainer adds them to the org. They clone <span class="mono" style="color: var(--text);">atrain-skills</span> into <span class="mono" style="color: var(--text);">~/.claude/skills</span> and cut their own <span class="mono" style="color: var(--text);">users/&lt;handle&gt;</span> branch.</p>
-            <div class="journey-meta">git clone &middot; users/&lt;handle&gt;</div>
+        <article class="journey-col" data-col="1">
+          <div class="journey-card analyst-card">
+            <span class="journey-kicker">analyst &middot; receive</span>
+            <h3>Scaffolded in three commands</h3>
+            <p>Join the org, clone <span class="mono" style="color: var(--text);">atrain-skills</span> into <span class="mono" style="color: var(--text);">~/.claude/skills</span>, cut your <span class="mono" style="color: var(--text);">users/&lt;handle&gt;</span> branch. <span class="mono" style="color: var(--text);">/analysis-scaffold</span> materialises the harness for your physics.</p>
+            <div class="journey-meta">clone &middot; /analysis-scaffold</div>
+          </div>
+          <div class="journey-bridge">
+            <div class="journey-node"><span>1</span></div>
+            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+          </div>
+          <div class="journey-card lab-card">
+            <span class="journey-kicker">lab &middot; handed off</span>
+            <h3>What you inherit</h3>
+            <p><span class="mono" style="color: var(--text);">harness-blueprint</span>, the cron-curated skill library on <span class="mono" style="color: var(--text);">main</span>, the reference scouting analysis, the lab's conventions. All of it is the prior contributors' work, ready for you.</p>
+            <div class="journey-meta">harness-blueprint &middot; 11 skills</div>
           </div>
         </article>
 
-        <article class="journey-stage" data-stage="2">
-          <div class="journey-node"><span>2</span></div>
-          <div class="journey-card">
-            <span class="journey-kicker">first plot</span>
-            <h3>Scaffold + a kinematic</h3>
-            <p>They invoke <span class="mono" style="color: var(--text);">/analysis-scaffold</span> with a freeform description. The harness materialises. First kinematic plot lands in <span class="mono" style="color: var(--text);">z_prelims/&lt;topic&gt;/</span>.</p>
-            <div class="journey-meta">/analysis-scaffold &middot; z_prelims/</div>
+        <article class="journey-col" data-col="2">
+          <div class="journey-card analyst-card">
+            <span class="journey-kicker">analyst &middot; analyze</span>
+            <h3>First plots, then a classifier</h3>
+            <p>Define features in <span class="mono" style="color: var(--text);">analysis/variables.py</span>. Cutflow + kinematic plots land in <span class="mono" style="color: var(--text);">z_prelims/</span>. The retrain script writes the BDT model + ROC into <span class="mono" style="color: var(--text);">ml/</span>. Same tree all the way.</p>
+            <div class="journey-meta">z_prelims/ &middot; ml/</div>
+          </div>
+          <div class="journey-bridge">
+            <div class="journey-node"><span>2</span></div>
+            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+          </div>
+          <div class="journey-card lab-card">
+            <span class="journey-kicker">lab &middot; adapt</span>
+            <h3>You sharpen for your physics</h3>
+            <p>Edit skills on <span class="mono" style="color: var(--text);">users/&lt;handle&gt;</span> as you use them. Add a new skill when a pattern recurs in your work. The shared library accretes detail under each analyst's branch.</p>
+            <div class="journey-meta">users/&lt;handle&gt; &middot; new skill</div>
           </div>
         </article>
 
-        <article class="journey-stage" data-stage="3">
-          <div class="journey-node"><span>3</span></div>
-          <div class="journey-card">
-            <span class="journey-kicker">classifier trained</span>
-            <h3>BDT on the same tree</h3>
-            <p>Features are defined in <span class="mono" style="color: var(--text);">analysis/variables.py</span>. A retrain script under <span class="mono" style="color: var(--text);">bin/</span> writes the model + ROC curve into <span class="mono" style="color: var(--text);">ml/</span>. Same harness, no parallel codebase.</p>
-            <div class="journey-meta">retrain_bdt_*.py &middot; ml/ artifacts</div>
-          </div>
-        </article>
-
-        <article class="journey-stage" data-stage="4">
-          <div class="journey-node"><span>4</span></div>
-          <div class="journey-card">
-            <span class="journey-kicker">AN draft</span>
+        <article class="journey-col" data-col="3">
+          <div class="journey-card analyst-card">
+            <span class="journey-kicker">analyst &middot; draft</span>
             <h3>The note writes itself</h3>
-            <p><span class="mono" style="color: var(--text);">/paper-pdf-writing</span> walks the 8-phase state machine. LaTeX sources land in <span class="mono" style="color: var(--text);">draft/</span>, figures get pulled from <span class="mono" style="color: var(--text);">output/plots/</span>, and <span class="mono" style="color: var(--text);">tools/make_pdf.py</span> compiles it.</p>
+            <p><span class="mono" style="color: var(--text);">/paper-pdf-writing</span> walks the 8-phase state machine. LaTeX sources land in <span class="mono" style="color: var(--text);">draft/</span>, figures pull from <span class="mono" style="color: var(--text);">output/plots/</span>, <span class="mono" style="color: var(--text);">tools/make_pdf.py</span> compiles it.</p>
             <div class="journey-meta">/paper-pdf-writing &middot; draft/an.tex</div>
           </div>
-        </article>
-
-        <article class="journey-stage" data-stage="5">
-          <div class="journey-node"><span>5</span></div>
-          <div class="journey-card">
-            <span class="journey-kicker">paper</span>
-            <h3>Methodology + result</h3>
-            <p>Clean-room engineering surfaces the comparison with prior AI-assisted analyses. The methodology paper lives next to the physics result, and the artifacts (skill cards, model weights) ship to HuggingFace.</p>
-            <div class="journey-meta">clean-room &middot; HF release</div>
+          <div class="journey-bridge">
+            <div class="journey-node"><span>3</span></div>
+            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+          </div>
+          <div class="journey-card lab-card">
+            <span class="journey-kicker">lab &middot; push back + collaborate</span>
+            <h3>Your improvements reach everyone</h3>
+            <p>Nightly cron synthesises your branch onto <span class="mono" style="color: var(--text);">nightly</span> after a layer-1 regex + layer-2 Claude audit. Or open a direct PR for a deliberate change. Maintainer reviews. You review others'.</p>
+            <div class="journey-meta">cron @ 06:00 ET &middot; gh pr review</div>
           </div>
         </article>
+
+        <article class="journey-col" data-col="4">
+          <div class="journey-card analyst-card">
+            <span class="journey-kicker">analyst &middot; publish</span>
+            <h3>Paper + result + talks</h3>
+            <p>Methodology paper alongside the physics result. Skill cards, model weights, and per-analysis artifacts ship to HuggingFace. Talks land at the relevant conferences.</p>
+            <div class="journey-meta">arxiv &middot; HF release</div>
+          </div>
+          <div class="journey-bridge">
+            <div class="journey-node"><span>4</span></div>
+            <span class="journey-bidi-arrow" aria-hidden="true">&updownarrow;</span>
+          </div>
+          <div class="journey-card lab-card">
+            <span class="journey-kicker">lab &middot; next inherits</span>
+            <h3>The loop starts again</h3>
+            <p>Your adapted skills, your sharpened conventions, the scaffold variations you introduced: they become the default starting point for the analyst who joins next month.</p>
+            <div class="journey-meta">users/&lt;new-handle&gt;</div>
+          </div>
+        </article>
+
+        <div class="journey-loop" aria-hidden="true">
+          <svg width="80" height="120" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 4 90 C 4 110, 76 110, 76 60 C 76 10, 4 10, 4 30" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none" stroke-dasharray="4 4" />
+            <path d="M 4 30 L 0 22 M 4 30 L 10 26" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none" />
+          </svg>
+          <span class="journey-loop-label">loops to start</span>
+        </div>
       </div>
     </div>
     <p class="journey-track-hint">&larr; scroll horizontally &rarr;</p>
@@ -1559,9 +1645,9 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         },
       });
     }
-    var stages = gsap.utils.toArray('.journey-stage');
-    if (stages.length && journeySection) {
-      gsap.to(stages, {
+    var cols = gsap.utils.toArray('.journey-col');
+    if (cols.length && journeySection) {
+      gsap.to(cols, {
         opacity: 1,
         y: 0,
         duration: reduced ? 0 : 0.55,
@@ -1572,7 +1658,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           start: 'top 75%',
           once: true,
         },
-        onStart: function () { stages.forEach(function (s) { s.classList.add('in'); }); },
+        onStart: function () { cols.forEach(function (c) { c.classList.add('in'); }); },
       });
     }
   });
