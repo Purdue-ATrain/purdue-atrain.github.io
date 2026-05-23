@@ -452,12 +452,12 @@ tailwind.config = {
     <div class="hidden md:flex items-center gap-6 mono text-xs" style="color: var(--dim);">
       <a href="#ai-tour" class="hover:text-primary transition-colors">ai-tour</a>
       <a href="#quick-start" class="hover:text-primary transition-colors">quick-start</a>
-      <a href="#skills" class="hover:text-primary transition-colors">skills</a>
-      <a href="#demos" class="hover:text-primary transition-colors">demos</a>
-      <a href="#harness" class="hover:text-primary transition-colors">harness</a>
       <a href="#journey" class="hover:text-primary transition-colors">journey</a>
       <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
+      <a href="#demos" class="hover:text-primary transition-colors">demos</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
+      <a href="#skills" class="hover:text-primary transition-colors">skills</a>
+      <a href="#harness" class="hover:text-primary transition-colors">harness</a>
       <a href="#refs" class="hover:text-primary transition-colors">refs</a>
       <a href="#get-involved" class="hover:text-primary transition-colors">get-involved</a>
     </div>
@@ -617,55 +617,120 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
 <div class="section-divider max-w-5xl mx-auto"></div>
 
-<!-- =========== SKILL LIBRARY =========== -->
-<section id="skills" class="py-28 px-6">
+<!-- =========== JOURNEY · FROM SCAFFOLD TO PAPER =========== -->
+<section id="journey" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
       <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 02</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">The skill library</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">11 skills. Cron-curated nightly. Branched per contributor.</p>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">AI Guided Physics workflow</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">How an analysis grows on the harness.</p>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <div class="skill-card rounded-lg p-5 fade-in">
-        <div class="mono text-sm mb-2" style="color: var(--primary);">/analysis-scaffold</div>
-        <p class="text-sm mb-3" style="color: var(--dim);">Spawn a new HEP analysis from a freeform description. Drives the harness-blueprint copier template.</p>
-        <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
-      </div>
+    <p class="text-base max-w-3xl mb-10 fade-in" style="color: var(--dim); line-height: 1.7;">
+      The harness is the lab's collective substrate: each analyst adapts it, ships their physics on it, and hands it back richer for the next person.
+    </p>
 
-      <div class="skill-card rounded-lg p-5 fade-in">
-        <div class="mono text-sm mb-2" style="color: var(--primary);">/paper-pdf-writing</div>
-        <p class="text-sm mb-3" style="color: var(--dim);">Eight-phase LaTeX paper-writing state machine. Outline → sections → bibliography → build → audit.</p>
-        <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
-      </div>
+    <div class="journey-graph">
+      <article class="journey-step analyst" data-flow="1">
+        <span class="journey-num">01</span>
+        <span class="journey-kicker">analyst &middot; receive</span>
+        <h3>Set up in minutes</h3>
+        <p>Clone the skills, scaffold the harness, start your work.</p>
+        <div class="journey-meta">clone &middot; scaffold</div>
+      </article>
+      <article class="journey-step lab" data-flow="2">
+        <span class="journey-num">02</span>
+        <span class="journey-kicker">lab &middot; handed off</span>
+        <h3>What you inherit</h3>
+        <p>Skills, harness, conventions handed down from the analysts before you.</p>
+        <div class="journey-meta">lab repos</div>
+      </article>
+      <article class="journey-step analyst" data-flow="3">
+        <span class="journey-num">03</span>
+        <span class="journey-kicker">analyst &middot; analyze</span>
+        <h3>Morphing</h3>
+        <p>Data/MCMC handling, observables, compute, ML, all on the same tree.</p>
+        <div class="journey-meta">data/MC &middot; ML</div>
+      </article>
+      <article class="journey-step lab" data-flow="4">
+        <span class="journey-num">04</span>
+        <span class="journey-kicker">lab &middot; adapt</span>
+        <h3>Sharpen for your physics</h3>
+        <p>Edit skills on your branch as you use them.</p>
+        <div class="journey-meta">users/&lt;handle&gt;</div>
+      </article>
+      <article class="journey-step analyst" data-flow="5">
+        <span class="journey-num">05</span>
+        <span class="journey-kicker">analyst &middot; draft</span>
+        <h3>The note writes itself</h3>
+        <p>AI walks the paper state machine to a complete draft.</p>
+        <div class="journey-meta">draft + figures</div>
+      </article>
+      <article class="journey-step lab" data-flow="6">
+        <span class="journey-num">06</span>
+        <span class="journey-kicker">lab &middot; push back</span>
+        <h3>Improvements reach everyone</h3>
+        <p>Cron syncs your changes back, or open a direct PR.</p>
+        <div class="journey-meta">cron &middot; PR</div>
+      </article>
+      <article class="journey-step analyst" data-flow="7">
+        <span class="journey-num">07</span>
+        <span class="journey-kicker">analyst &middot; publish</span>
+        <h3>Paper + result + talks</h3>
+        <p>Methodology, physics result, model weights ship together.</p>
+        <div class="journey-meta">arxiv &middot; HF</div>
+      </article>
+      <article class="journey-step lab" data-flow="8">
+        <span class="journey-num">08</span>
+        <span class="journey-kicker">lab &middot; next inherits</span>
+        <h3>The loop starts again</h3>
+        <p>Next analyst starts on the harness you sharpened.</p>
+        <div class="journey-meta">next analyst</div>
+      </article>
 
-      <div class="skill-card rounded-lg p-5 fade-in">
-        <div class="mono text-sm mb-2" style="color: var(--primary);">/undercover-mode</div>
-        <p class="text-sm mb-3" style="color: var(--dim);">Strip AI fingerprints from commits, PRs, prose, and generated code. Persistent session-wide.</p>
-        <span class="mono text-xs pill amber px-2 py-0.5 rounded">style modifier</span>
+      <div class="journey-wrap-down" aria-hidden="true">
+        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 20 4 V 92" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M 14 86 L 20 94 L 26 86" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
       </div>
-
-      <div class="skill-card rounded-lg p-5 fade-in">
-        <div class="mono text-sm mb-2" style="color: var(--primary);">/caveman</div>
-        <p class="text-sm mb-3" style="color: var(--dim);">Ultra-compressed output mode. ~75% token reduction with full technical accuracy.</p>
-        <span class="mono text-xs pill amber px-2 py-0.5 rounded">style modifier</span>
-      </div>
-
-      <div class="skill-card rounded-lg p-5 fade-in">
-        <div class="mono text-sm mb-2" style="color: var(--primary);">/grill-me</div>
-        <p class="text-sm mb-3" style="color: var(--dim);">Interview the user relentlessly, one question at a time, until the design is locked.</p>
-        <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
-      </div>
-
-      <div class="skill-card rounded-lg p-5 fade-in" style="background: rgba(124,58,237,0.05); border-color: rgba(124,58,237,0.18);">
-        <div class="mono text-sm mb-2" style="color: var(--accent2);">+ 6 more</div>
-        <p class="text-sm mb-3" style="color: var(--dim);">an-readiness-check, curate-tests, deep-copy, evolve-skill, graphify, ralph-loop.</p>
-        <a href="https://github.com/Purdue-ATrain/atrain-skills" class="mono text-xs inline-link">see all on GitHub →</a>
+      <div class="journey-loopback" aria-hidden="true">
+        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 20 92 V 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4" fill="none"/>
+          <path d="M 14 14 L 20 6 L 26 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="journey-loopback-label">loops back</span>
       </div>
     </div>
   </div>
 </section>
+<div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== SYNTHESIS FLOW =========== -->
+<section id="synthesis" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-14 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 03</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Sharpen your skills</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
+    </div>
+
+    <p class="text-base max-w-3xl fade-in" style="color: var(--dim); line-height: 1.75;">
+      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>.<br><a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
+    </p>
+
+    <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(245, 158, 11, 0.06); border-left: 3px solid var(--amber);">
+      <span class="mono text-xs uppercase tracking-widest block mb-2" style="color: var(--amber);">// good practice</span>
+      <h3 class="hl text-xl mb-3" style="color: var(--text);">Sharpen tools for everyone.</h3>
+      <p class="text-sm mb-3" style="color: var(--dim); line-height: 1.7;">
+        Skills are shared. When you improve a skill, you're improving it for the whole group. Don't keep your sharpening private. Push your <span class="mono text-text">users/&lt;handle&gt;</span> branch so the cron picks it up, or open a direct PR for a deliberate change.
+      </p>
+      <p class="text-sm" style="color: var(--dim); line-height: 1.7;">
+        But don't over-sharpen. If your edit fundamentally changes what a skill does (what its description claims it triggers on, what category of output it produces), that's a new skill, not a modification. Sharpening a spoon into a knife leaves you with neither a working spoon nor a clean knife. Add a new skill directory at that point.
+      </p>
+    </div>
+  </div>
+</section>
 <div class="section-divider max-w-5xl mx-auto"></div>
 
 <!-- =========== DEMOS IN THE TERMINAL =========== -->
@@ -773,7 +838,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="demos" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 03</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 04</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Demos in the terminal</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Five real sessions. Click a tab to switch; press <span class="mono text-text">&#x27F2;</span> to replay.</p>
     </div>
@@ -804,194 +869,6 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
   </div>
 </section>
-
-<div class="section-divider max-w-5xl mx-auto"></div>
-
-<!-- =========== HARNESS BLUEPRINT =========== -->
-<section id="harness" class="py-28 px-6">
-  <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 04</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">The harness blueprint</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">A copier template. Everything a CMS analysis needs.</p>
-    </div>
-
-    <p class="text-base mb-8 max-w-3xl fade-in" style="color: var(--dim); line-height: 1.7;">
-      A single command generates a complete analysis tree: <span class="mono text-text">bin/</span> entry scripts, <span class="mono text-text">analysis/</span> RDataFrame event loop and define chains, per-channel <span class="mono text-text">config/</span>, <span class="mono text-text">utils/</span> for splits and Asimov significance, <span class="mono text-text">elements/</span> for C++ helpers, plus <span class="mono text-text">ml/</span>, <span class="mono text-text">inference/</span>, <span class="mono text-text">tests/</span>, <span class="mono text-text">draft/</span>, and <span class="mono text-text">docs/</span>. Built-in pixi env, LaTeX paper scaffold, and a CMS-style anti-hallucination contract in <span class="mono text-text">CLAUDE.md</span>.
-    </p>
-
-    <div class="code-block rounded-lg p-5 mono text-sm fade-in" style="color: var(--cyan);">
-      copier copy gh:Purdue-ATrain/harness-blueprint ./my-analysis
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-6 mt-10 io-pair fade-in">
-      <div class="step-card rounded-lg p-5">
-        <div class="flex items-center justify-between mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
-          <span class="mono text-xs uppercase tracking-widest" style="color: var(--primary);">// inputs · copier.yml</span>
-          <span class="mono text-xs" style="color: var(--faint);">what you describe</span>
-        </div>
-        <pre class="mono text-xs" style="line-height: 1.5; color: var(--text); margin: 0;"><span class="io-line" style="--i: 0"><span style="color: var(--primary);">analysis_name</span>: hh-vbf-bbww</span>
-<span class="io-line" style="--i: 1"><span style="color: var(--primary);">analysis_title</span>: VBF HH&rarr;bbWW (sl)</span>
-<span class="io-line" style="--i: 2"><span style="color: var(--primary);">channels</span>: emu, mumu, ee</span>
-<span class="io-line" style="--i: 3"><span style="color: var(--primary);">primary_trigger</span>: DST_HLT_PFJet120</span>
-<span class="io-line" style="--i: 4"><span style="color: var(--primary);">physics_process</span>: HH_bbww</span>
-<span class="io-line" style="--i: 5"><span style="color: var(--primary);">lead_author_name</span>: J. Doe</span>
-<span class="io-line" style="--i: 6"><span style="color: var(--primary);">lead_author_github</span>: jdoe</span>
-<span class="io-line" style="--i: 7"><span style="color: var(--primary);">motivation</span>: |</span>
-<span class="io-line" style="--i: 8">  search for VBF-produced di-Higgs</span>
-<span class="io-line" style="--i: 9">  decaying to bb + WW (semileptonic)</span></pre>
-      </div>
-
-      <div class="step-card rounded-lg p-5">
-        <div class="flex items-center justify-between mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
-          <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// outputs · template/</span>
-          <span class="mono text-xs" style="color: var(--faint);">what you get</span>
-        </div>
-        <pre class="mono text-xs" style="line-height: 1.5; color: var(--text); margin: 0;"><span class="io-line" style="--i: 0">hh-vbf-bbww/</span>
-<span class="io-line" style="--i: 1">&boxvr;&boxh; README.md</span>
-<span class="io-line" style="--i: 2">&boxvr;&boxh; CLAUDE.md            <span style="color: var(--faint);"># anti-halluc.</span></span>
-<span class="io-line" style="--i: 3">&boxvr;&boxh; pixi.toml + pixi.lock</span>
-<span class="io-line" style="--i: 4">&boxvr;&boxh; bin/                 <span style="color: var(--faint);"># entry scripts</span></span>
-<span class="io-line" style="--i: 5">&boxvr;&boxh; analysis/            <span style="color: var(--faint);"># runner, defs</span></span>
-<span class="io-line" style="--i: 6">&boxvr;&boxh; config/              <span style="color: var(--faint);"># channels.py</span></span>
-<span class="io-line" style="--i: 7">&boxvr;&boxh; utils/, elements/</span>
-<span class="io-line" style="--i: 8">&boxvr;&boxh; ml/, inference/, tests/</span>
-<span class="io-line" style="--i: 9">&boxur;&boxh; draft/, docs/, tools/</span></pre>
-      </div>
-    </div>
-
-    <div class="flex flex-wrap gap-3 mt-8">
-      <span class="mono text-xs pill px-3 py-1 rounded-full">pixi-managed env</span>
-      <span class="mono text-xs pill amber px-3 py-1 rounded-full">LaTeX paper scaffold</span>
-      <span class="mono text-xs pill violet px-3 py-1 rounded-full">anti-hallucination CLAUDE.md</span>
-      <span class="mono text-xs pill px-3 py-1 rounded-full">RDataFrame ready</span>
-      <span class="mono text-xs pill amber px-3 py-1 rounded-full">10 Jinja2 variables</span>
-    </div>
-
-    <p class="mt-8 mono text-xs" style="color: var(--faint);">
-      Source → <a href="https://github.com/Purdue-ATrain/harness-blueprint" class="inline-link">github.com/Purdue-ATrain/harness-blueprint</a>
-    </p>
-  </div>
-</section>
-
-<div class="section-divider max-w-5xl mx-auto"></div>
-
-<!-- =========== JOURNEY · FROM SCAFFOLD TO PAPER =========== -->
-<section id="journey" class="py-28 px-6">
-  <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 05</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">AI Guided Physics workflow</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">How an analysis grows on the harness.</p>
-    </div>
-
-    <p class="text-base max-w-3xl mb-10 fade-in" style="color: var(--dim); line-height: 1.7;">
-      The harness is the lab's collective substrate: each analyst adapts it, ships their physics on it, and hands it back richer for the next person.
-    </p>
-
-    <div class="journey-graph">
-      <article class="journey-step analyst" data-flow="1">
-        <span class="journey-num">01</span>
-        <span class="journey-kicker">analyst &middot; receive</span>
-        <h3>Set up in minutes</h3>
-        <p>Clone the skills, scaffold the harness, start your work.</p>
-        <div class="journey-meta">clone &middot; scaffold</div>
-      </article>
-      <article class="journey-step lab" data-flow="2">
-        <span class="journey-num">02</span>
-        <span class="journey-kicker">lab &middot; handed off</span>
-        <h3>What you inherit</h3>
-        <p>Skills, harness, conventions handed down from the analysts before you.</p>
-        <div class="journey-meta">lab repos</div>
-      </article>
-      <article class="journey-step analyst" data-flow="3">
-        <span class="journey-num">03</span>
-        <span class="journey-kicker">analyst &middot; analyze</span>
-        <h3>Morphing</h3>
-        <p>Data/MCMC handling, observables, compute, ML, all on the same tree.</p>
-        <div class="journey-meta">data/MC &middot; ML</div>
-      </article>
-      <article class="journey-step lab" data-flow="4">
-        <span class="journey-num">04</span>
-        <span class="journey-kicker">lab &middot; adapt</span>
-        <h3>Sharpen for your physics</h3>
-        <p>Edit skills on your branch as you use them.</p>
-        <div class="journey-meta">users/&lt;handle&gt;</div>
-      </article>
-      <article class="journey-step analyst" data-flow="5">
-        <span class="journey-num">05</span>
-        <span class="journey-kicker">analyst &middot; draft</span>
-        <h3>The note writes itself</h3>
-        <p>AI walks the paper state machine to a complete draft.</p>
-        <div class="journey-meta">draft + figures</div>
-      </article>
-      <article class="journey-step lab" data-flow="6">
-        <span class="journey-num">06</span>
-        <span class="journey-kicker">lab &middot; push back</span>
-        <h3>Improvements reach everyone</h3>
-        <p>Cron syncs your changes back, or open a direct PR.</p>
-        <div class="journey-meta">cron &middot; PR</div>
-      </article>
-      <article class="journey-step analyst" data-flow="7">
-        <span class="journey-num">07</span>
-        <span class="journey-kicker">analyst &middot; publish</span>
-        <h3>Paper + result + talks</h3>
-        <p>Methodology, physics result, model weights ship together.</p>
-        <div class="journey-meta">arxiv &middot; HF</div>
-      </article>
-      <article class="journey-step lab" data-flow="8">
-        <span class="journey-num">08</span>
-        <span class="journey-kicker">lab &middot; next inherits</span>
-        <h3>The loop starts again</h3>
-        <p>Next analyst starts on the harness you sharpened.</p>
-        <div class="journey-meta">next analyst</div>
-      </article>
-
-      <div class="journey-wrap-down" aria-hidden="true">
-        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 20 4 V 92" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <path d="M 14 86 L 20 94 L 26 86" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-      </div>
-      <div class="journey-loopback" aria-hidden="true">
-        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 20 92 V 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4" fill="none"/>
-          <path d="M 14 14 L 20 6 L 26 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        <span class="journey-loopback-label">loops back</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider max-w-5xl mx-auto"></div>
-
-<!-- =========== SYNTHESIS FLOW =========== -->
-<section id="synthesis" class="py-28 px-6">
-  <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Sharpen your skills</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
-    </div>
-
-    <p class="text-base max-w-3xl fade-in" style="color: var(--dim); line-height: 1.75;">
-      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>.<br><a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
-    </p>
-
-    <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(245, 158, 11, 0.06); border-left: 3px solid var(--amber);">
-      <span class="mono text-xs uppercase tracking-widest block mb-2" style="color: var(--amber);">// good practice</span>
-      <h3 class="hl text-xl mb-3" style="color: var(--text);">Sharpen tools for everyone.</h3>
-      <p class="text-sm mb-3" style="color: var(--dim); line-height: 1.7;">
-        Skills are shared. When you improve a skill, you're improving it for the whole group. Don't keep your sharpening private. Push your <span class="mono text-text">users/&lt;handle&gt;</span> branch so the cron picks it up, or open a direct PR for a deliberate change.
-      </p>
-      <p class="text-sm" style="color: var(--dim); line-height: 1.7;">
-        But don't over-sharpen. If your edit fundamentally changes what a skill does (what its description claims it triggers on, what category of output it produces), that's a new skill, not a modification. Sharpening a spoon into a knife leaves you with neither a working spoon nor a clean knife. Add a new skill directory at that point.
-      </p>
-    </div>
-  </div>
-</section>
-
 <div class="section-divider max-w-5xl mx-auto"></div>
 
 <!-- =========== BENCHMARKS (with inline compare) =========== -->
@@ -1242,7 +1119,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="benchmarks" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 05</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Pick up to three models, put them side by side.</p>
     </div>
@@ -1284,6 +1161,124 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   </div>
 </div>
 
+<div class="section-divider max-w-5xl mx-auto"></div>
+
+<!-- =========== SKILL LIBRARY =========== -->
+<section id="skills" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-14 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">The skill library</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">11 skills. Cron-curated nightly. Branched per contributor.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="skill-card rounded-lg p-5 fade-in">
+        <div class="mono text-sm mb-2" style="color: var(--primary);">/analysis-scaffold</div>
+        <p class="text-sm mb-3" style="color: var(--dim);">Spawn a new HEP analysis from a freeform description. Drives the harness-blueprint copier template.</p>
+        <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
+      </div>
+
+      <div class="skill-card rounded-lg p-5 fade-in">
+        <div class="mono text-sm mb-2" style="color: var(--primary);">/paper-pdf-writing</div>
+        <p class="text-sm mb-3" style="color: var(--dim);">Eight-phase LaTeX paper-writing state machine. Outline → sections → bibliography → build → audit.</p>
+        <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
+      </div>
+
+      <div class="skill-card rounded-lg p-5 fade-in">
+        <div class="mono text-sm mb-2" style="color: var(--primary);">/undercover-mode</div>
+        <p class="text-sm mb-3" style="color: var(--dim);">Strip AI fingerprints from commits, PRs, prose, and generated code. Persistent session-wide.</p>
+        <span class="mono text-xs pill amber px-2 py-0.5 rounded">style modifier</span>
+      </div>
+
+      <div class="skill-card rounded-lg p-5 fade-in">
+        <div class="mono text-sm mb-2" style="color: var(--primary);">/caveman</div>
+        <p class="text-sm mb-3" style="color: var(--dim);">Ultra-compressed output mode. ~75% token reduction with full technical accuracy.</p>
+        <span class="mono text-xs pill amber px-2 py-0.5 rounded">style modifier</span>
+      </div>
+
+      <div class="skill-card rounded-lg p-5 fade-in">
+        <div class="mono text-sm mb-2" style="color: var(--primary);">/grill-me</div>
+        <p class="text-sm mb-3" style="color: var(--dim);">Interview the user relentlessly, one question at a time, until the design is locked.</p>
+        <span class="mono text-xs pill px-2 py-0.5 rounded">user-invocable</span>
+      </div>
+
+      <div class="skill-card rounded-lg p-5 fade-in" style="background: rgba(124,58,237,0.05); border-color: rgba(124,58,237,0.18);">
+        <div class="mono text-sm mb-2" style="color: var(--accent2);">+ 6 more</div>
+        <p class="text-sm mb-3" style="color: var(--dim);">an-readiness-check, curate-tests, deep-copy, evolve-skill, graphify, ralph-loop.</p>
+        <a href="https://github.com/Purdue-ATrain/atrain-skills" class="mono text-xs inline-link">see all on GitHub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider max-w-5xl mx-auto"></div>
+
+<!-- =========== HARNESS BLUEPRINT =========== -->
+<section id="harness" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-14 max-w-2xl">
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">The harness blueprint</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">A copier template. Everything a CMS analysis needs.</p>
+    </div>
+
+    <p class="text-base mb-8 max-w-3xl fade-in" style="color: var(--dim); line-height: 1.7;">
+      A single command generates a complete analysis tree: <span class="mono text-text">bin/</span> entry scripts, <span class="mono text-text">analysis/</span> RDataFrame event loop and define chains, per-channel <span class="mono text-text">config/</span>, <span class="mono text-text">utils/</span> for splits and Asimov significance, <span class="mono text-text">elements/</span> for C++ helpers, plus <span class="mono text-text">ml/</span>, <span class="mono text-text">inference/</span>, <span class="mono text-text">tests/</span>, <span class="mono text-text">draft/</span>, and <span class="mono text-text">docs/</span>. Built-in pixi env, LaTeX paper scaffold, and a CMS-style anti-hallucination contract in <span class="mono text-text">CLAUDE.md</span>.
+    </p>
+
+    <div class="code-block rounded-lg p-5 mono text-sm fade-in" style="color: var(--cyan);">
+      copier copy gh:Purdue-ATrain/harness-blueprint ./my-analysis
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mt-10 io-pair fade-in">
+      <div class="step-card rounded-lg p-5">
+        <div class="flex items-center justify-between mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
+          <span class="mono text-xs uppercase tracking-widest" style="color: var(--primary);">// inputs · copier.yml</span>
+          <span class="mono text-xs" style="color: var(--faint);">what you describe</span>
+        </div>
+        <pre class="mono text-xs" style="line-height: 1.5; color: var(--text); margin: 0;"><span class="io-line" style="--i: 0"><span style="color: var(--primary);">analysis_name</span>: hh-vbf-bbww</span>
+<span class="io-line" style="--i: 1"><span style="color: var(--primary);">analysis_title</span>: VBF HH&rarr;bbWW (sl)</span>
+<span class="io-line" style="--i: 2"><span style="color: var(--primary);">channels</span>: emu, mumu, ee</span>
+<span class="io-line" style="--i: 3"><span style="color: var(--primary);">primary_trigger</span>: DST_HLT_PFJet120</span>
+<span class="io-line" style="--i: 4"><span style="color: var(--primary);">physics_process</span>: HH_bbww</span>
+<span class="io-line" style="--i: 5"><span style="color: var(--primary);">lead_author_name</span>: J. Doe</span>
+<span class="io-line" style="--i: 6"><span style="color: var(--primary);">lead_author_github</span>: jdoe</span>
+<span class="io-line" style="--i: 7"><span style="color: var(--primary);">motivation</span>: |</span>
+<span class="io-line" style="--i: 8">  search for VBF-produced di-Higgs</span>
+<span class="io-line" style="--i: 9">  decaying to bb + WW (semileptonic)</span></pre>
+      </div>
+
+      <div class="step-card rounded-lg p-5">
+        <div class="flex items-center justify-between mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
+          <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// outputs · template/</span>
+          <span class="mono text-xs" style="color: var(--faint);">what you get</span>
+        </div>
+        <pre class="mono text-xs" style="line-height: 1.5; color: var(--text); margin: 0;"><span class="io-line" style="--i: 0">hh-vbf-bbww/</span>
+<span class="io-line" style="--i: 1">&boxvr;&boxh; README.md</span>
+<span class="io-line" style="--i: 2">&boxvr;&boxh; CLAUDE.md            <span style="color: var(--faint);"># anti-halluc.</span></span>
+<span class="io-line" style="--i: 3">&boxvr;&boxh; pixi.toml + pixi.lock</span>
+<span class="io-line" style="--i: 4">&boxvr;&boxh; bin/                 <span style="color: var(--faint);"># entry scripts</span></span>
+<span class="io-line" style="--i: 5">&boxvr;&boxh; analysis/            <span style="color: var(--faint);"># runner, defs</span></span>
+<span class="io-line" style="--i: 6">&boxvr;&boxh; config/              <span style="color: var(--faint);"># channels.py</span></span>
+<span class="io-line" style="--i: 7">&boxvr;&boxh; utils/, elements/</span>
+<span class="io-line" style="--i: 8">&boxvr;&boxh; ml/, inference/, tests/</span>
+<span class="io-line" style="--i: 9">&boxur;&boxh; draft/, docs/, tools/</span></pre>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mt-8">
+      <span class="mono text-xs pill px-3 py-1 rounded-full">pixi-managed env</span>
+      <span class="mono text-xs pill amber px-3 py-1 rounded-full">LaTeX paper scaffold</span>
+      <span class="mono text-xs pill violet px-3 py-1 rounded-full">anti-hallucination CLAUDE.md</span>
+      <span class="mono text-xs pill px-3 py-1 rounded-full">RDataFrame ready</span>
+      <span class="mono text-xs pill amber px-3 py-1 rounded-full">10 Jinja2 variables</span>
+    </div>
+
+    <p class="mt-8 mono text-xs" style="color: var(--faint);">
+      Source → <a href="https://github.com/Purdue-ATrain/harness-blueprint" class="inline-link">github.com/Purdue-ATrain/harness-blueprint</a>
+    </p>
+  </div>
+</section>
 <div class="section-divider max-w-5xl mx-auto"></div>
 
 <!-- =========== REFERENCE ANALYSES =========== -->
