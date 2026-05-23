@@ -2010,6 +2010,11 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   function fmt2(n) { return (Math.round(n * 100) / 100).toFixed(2); }
   function fmtScore(n) { return n == null ? '·' : fmt2(n); }
   function fmtCost(n) { return n == null ? '·' : '$' + (Math.round(n * 100) / 100).toFixed(2); }
+  function fmtCostFine(n) { return n == null ? '·' : '$' + (Math.round(n * 1000) / 1000).toFixed(3); }
+  function avgCost(c) {
+    if (!c || c.total_cost == null || !c.n_cells) return null;
+    return c.total_cost / c.n_cells;
+  }
   function fmtWall(s) { return s == null ? '·' : (s >= 60 ? (s / 60).toFixed(1) + 'm' : Math.round(s) + 's'); }
 
   function escapeHtml(s) {
@@ -2082,7 +2087,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       return '<div class="cmp-picker-item' + (disabled ? ' cmp-disabled' : '') + '" data-model="' + escapeHtml(m) + '">' +
         '<div><span class="cmp-pi-name">' + escapeHtml(m) + '</span>' + ext + '</div>' +
         '<div class="cmp-pi-stats"><span class="cmp-pi-score">' + fmtScore(c.overall_score) + '</span> &middot; ' +
-        fmtCost(c.total_cost) + ' &middot; ' + fmtWall(c.median_wall) + '</div>' +
+        fmtCostFine(avgCost(c)) + '/cell &middot; ' + fmtWall(c.median_wall) + '</div>' +
         '</div>';
     }).join('');
     list.querySelectorAll('.cmp-picker-item').forEach(function (el) {
@@ -2142,7 +2147,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       '<div class="cmp-stat-grid">' +
         '<div class="cmp-stat"><div class="cmp-stat-label">overall</div><div class="cmp-stat-value cmp-amber">' + fmtScore(c.overall_score) + '</div></div>' +
         '<div class="cmp-stat"><div class="cmp-stat-label">cells</div><div class="cmp-stat-value">' + (c.n_cells || 0) + '</div></div>' +
-        '<div class="cmp-stat"><div class="cmp-stat-label">total cost</div><div class="cmp-stat-value cmp-green">' + fmtCost(c.total_cost) + '</div></div>' +
+        '<div class="cmp-stat"><div class="cmp-stat-label">avg cost / cell</div><div class="cmp-stat-value cmp-green">' + fmtCostFine(avgCost(c)) + '</div></div>' +
         '<div class="cmp-stat"><div class="cmp-stat-label">median wall</div><div class="cmp-stat-value cmp-cyan">' + fmtWall(c.median_wall) + '</div></div>' +
       '</div>' +
       '<div>' + renderTier('micro', tiers.micro) + renderTier('mid', tiers.mid) + renderTier('complex', tiers.complex) + '</div>' +
