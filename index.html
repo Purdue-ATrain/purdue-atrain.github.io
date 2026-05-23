@@ -429,73 +429,67 @@ tailwind.config = {
   .journey-step[data-flow="3"] { grid-column: 2; grid-row: 2; }
   .journey-step[data-flow="4"] { grid-column: 2; grid-row: 3; }
   .journey-step[data-flow="5"] { grid-column: 1; grid-row: 3; }
-  /* Spine: short down-arrows centered in col 2 (between 02->03 and 03->04) */
-  .journey-spine {
+  /* Edges overlay: every inter-card arrow lives in one SVG layered over the grid.
+     viewBox is 760x700 (= journey-graph's natural aspect) and preserveAspectRatio="none",
+     so card positions and arrow endpoints track each other through window resizes.
+     Three color buckets: fwd (amber, linear flow 1->2->3->4->5), itr (primary, 3<->5
+     iterate pair), hdf (accent, 4->1 handoff loop-back via Sharpening). */
+  .journey-edges {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    /* cover col 2 exactly: left edge of col 2 ... right padding boundary */
-    left: calc(50% + 14px);
-    right: 64px;
+    inset: 0;
     pointer-events: none;
-    color: var(--amber);
   }
-  .journey-spine svg {
+  .journey-edges svg {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .journey-spine .arrow-1 { top: calc(33.33% - 28px); }
-  .journey-spine .arrow-2 { top: calc(66.66% - 28px); }
-  /* Loop-back: curved gradient-pulse arrow up the left margin from card 05 back to card 01 */
-  .journey-loopback {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 56px;
-    pointer-events: none;
-    color: var(--accent);
-  }
-  .journey-loopback svg {
-    position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     overflow: visible;
   }
-  .journey-loopback path.track {
-    fill: none;
-    stroke: var(--accent);
-    stroke-opacity: 0.18;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-  }
-  .journey-loopback path.flow {
-    fill: none;
-    stroke: var(--accent);
+  .journey-edges path { fill: none; stroke-linecap: round; }
+  .journey-edges path.track { stroke-opacity: 0.18; stroke-width: 1.5; }
+  .journey-edges path.flow {
     stroke-width: 2;
-    stroke-linecap: round;
     stroke-dasharray: 14 220;
     animation: journey-pulse 4.2s linear infinite;
   }
-  .journey-loopback .arrowhead { fill: var(--accent); }
+  .journey-edges path.fwd { stroke: var(--amber); }
+  .journey-edges path.itr { stroke: var(--primary); }
+  .journey-edges path.hdf { stroke: var(--accent); }
+  .journey-edges polygon.head-fwd { fill: var(--amber); }
+  .journey-edges polygon.head-itr { fill: var(--primary); }
+  .journey-edges polygon.head-hdf { fill: var(--accent); }
+  /* phase offsets so pulses don't tick in lockstep */
+  .journey-edges path.flow.delay-1 { animation-delay: -0.6s; }
+  .journey-edges path.flow.delay-2 { animation-delay: -1.2s; }
+  .journey-edges path.flow.delay-3 { animation-delay: -1.8s; }
+  .journey-edges path.flow.delay-4 { animation-delay: -2.4s; }
+  .journey-edges path.flow.delay-5 { animation-delay: -3.0s; }
+  .journey-edges path.flow.delay-6 { animation-delay: -3.6s; }
   @keyframes journey-pulse {
     from { stroke-dashoffset: 0; }
     to   { stroke-dashoffset: -234; }
   }
-  .journey-loopback-label {
+  .journey-edges-label {
     position: absolute;
-    left: 6px;
-    top: 50%;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: left center;
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 10px;
-    color: var(--accent);
-    white-space: nowrap;
     letter-spacing: 0.05em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .journey-edges-label.iterate {
+    /* sit in the empty col-1 / row-2 cell between the 3<->5 arcs */
+    top: 47%;
+    left: 22%;
+    color: var(--primary);
+    opacity: 0.85;
+  }
+  .journey-edges-label.handoff {
+    /* upper-left, hugging the handoff curve as it lands on card 01 */
+    top: 7%;
+    left: 4%;
+    color: var(--accent);
   }
   @media (max-width: 768px) {
     .journey-graph {
@@ -515,11 +509,11 @@ tailwind.config = {
     .journey-step { padding: 12px 14px; min-height: 110px; }
     .journey-step h3 { font-size: 15px; }
     .journey-step .journey-num { font-size: 32px; }
-    .journey-spine, .journey-loopback { display: none; }
+    .journey-edges { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .journey-step { opacity: 1; transform: none; transition: none; }
-    .journey-loopback path.flow { animation: none; stroke-dasharray: 4 4; }
+    .journey-edges path.flow { animation: none; stroke-dasharray: 4 4; }
   }
   .cover-mask {
     mask-image: linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%);
@@ -754,34 +748,56 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         <span class="journey-num">04</span>
         <span class="journey-kicker">lab &middot; adapt</span>
         <h3>Sharpening</h3>
-        <p>Edit skills on your branch as you use them.</p>
+        <p>Edit skills and Harness as you build.</p>
         <div class="journey-meta">users/&lt;handle&gt;</div>
       </article>
       <article class="journey-step analyst" data-flow="5">
         <span class="journey-num">05</span>
         <span class="journey-kicker">analyst &middot; draft</span>
         <h3>Physics</h3>
-        <p>AI walks the paper state machine to a complete draft.</p>
+        <p>Produce Results: AI walks the paper writing to complete draft.</p>
         <div class="journey-meta">draft + figures</div>
       </article>
 
-      <div class="journey-spine" aria-hidden="true">
-        <svg class="arrow-1" width="20" height="56" viewBox="0 0 20 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 10 4 V 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <path d="M 4 40 L 10 50 L 16 40" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <div class="journey-edges" aria-hidden="true">
+        <svg viewBox="0 0 760 700" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 1 -> 2 forward (top row) -->
+          <path class="track fwd" d="M 366 98 L 384 98"/>
+          <path class="flow fwd delay-1" d="M 366 98 L 384 98"/>
+          <polygon class="head-fwd" points="378,93 388,98 378,103"/>
+
+          <!-- 2 -> 3 forward (down spine) -->
+          <path class="track fwd" d="M 545 188 L 545 250"/>
+          <path class="flow fwd delay-2" d="M 545 188 L 545 250"/>
+          <polygon class="head-fwd" points="540,244 545,254 550,244"/>
+
+          <!-- 3 -> 4 forward (down spine) -->
+          <path class="track fwd" d="M 545 440 L 545 502"/>
+          <path class="flow fwd delay-3" d="M 545 440 L 545 502"/>
+          <polygon class="head-fwd" points="540,496 545,506 550,496"/>
+
+          <!-- 4 -> 5 forward (bottom row, reversed direction) -->
+          <path class="track fwd" d="M 394 602 L 376 602"/>
+          <path class="flow fwd delay-4" d="M 394 602 L 376 602"/>
+          <polygon class="head-fwd" points="382,597 372,602 382,607"/>
+
+          <!-- 3 -> 5 iterate (forward feedback, lower arc through row-gap 2) -->
+          <path class="track itr" d="M 394 425 Q 220 470 220 510"/>
+          <path class="flow itr delay-5" d="M 394 425 Q 220 470 220 510"/>
+          <polygon class="head-itr" points="215,504 220,514 225,504"/>
+
+          <!-- 5 -> 3 iterate (back-edge, upper arc through empty col-1/row-2) -->
+          <path class="track itr" d="M 320 510 Q 260 370 386 370"/>
+          <path class="flow itr delay-6" d="M 320 510 Q 260 370 386 370"/>
+          <polygon class="head-itr" points="386,365 394,370 386,375"/>
+
+          <!-- 4 -> 1 handoff (sharpened skills loop back into next analyst's setup) -->
+          <path class="track hdf" d="M 405 510 C 200 460 -20 100 60 100"/>
+          <path class="flow hdf delay-2" d="M 405 510 C 200 460 -20 100 60 100"/>
+          <polygon class="head-hdf" points="52,95 62,100 52,105"/>
         </svg>
-        <svg class="arrow-2" width="20" height="56" viewBox="0 0 20 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 10 4 V 46" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <path d="M 4 40 L 10 50 L 16 40" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-      </div>
-      <div class="journey-loopback" aria-hidden="true">
-        <svg viewBox="0 0 56 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <path class="track" d="M 50 555 Q 28 555 28 530 L 28 70 Q 28 45 50 45"/>
-          <path class="flow"  d="M 50 555 Q 28 555 28 530 L 28 70 Q 28 45 50 45"/>
-          <polygon class="arrowhead" points="45,38 53,45 45,52"/>
-        </svg>
-        <span class="journey-loopback-label">loops back</span>
+        <span class="journey-edges-label iterate">iterate</span>
+        <span class="journey-edges-label handoff">loops back</span>
       </div>
     </div>
   </div>
