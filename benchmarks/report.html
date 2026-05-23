@@ -785,8 +785,21 @@ Object.entries(DATA.skill_cards || {})
 
 // Model cards
 const cardsRoot = document.getElementById("model-cards");
+// Pin the default-alias models (opus = 4.7, sonnet = 4.6, haiku = 4.5) to
+// the front of the lineup so the headline current-flagship cards come first,
+// then older variants sorted by score.
+const DEFAULT_PINS = ["opus", "sonnet", "haiku"];
 Object.entries(DATA.model_cards)
-  .sort(([, a], [, b]) => (b.overall_score || 0) - (a.overall_score || 0))
+  .sort(([a, ac], [b, bc]) => {
+    const ai = DEFAULT_PINS.indexOf(a);
+    const bi = DEFAULT_PINS.indexOf(b);
+    if (ai !== -1 || bi !== -1) {
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    }
+    return (bc.overall_score || 0) - (ac.overall_score || 0);
+  })
   .forEach(([m, card]) => {
   const tierRows = ["micro","mid","complex"].map(t => {
     const ts = card.tier_summary[t];
