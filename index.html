@@ -186,7 +186,6 @@ tailwind.config = {
       <a href="#harness" class="hover:text-primary transition-colors">harness</a>
       <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
-      <a href="#compare" class="hover:text-primary transition-colors">compare</a>
       <a href="#refs" class="hover:text-primary transition-colors">refs</a>
       <a href="#get-involved" class="hover:text-primary transition-colors">get-involved</a>
     </div>
@@ -661,44 +660,9 @@ git push origin users/&lt;handle&gt;
 
 <div class="section-divider max-w-5xl mx-auto"></div>
 
-<!-- =========== BENCHMARKS =========== -->
-<section id="benchmarks" class="py-28 px-6">
-  <div class="max-w-5xl mx-auto">
-    <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Per (task, model) cost and pass-rate.</p>
-    </div>
-
-    <p class="text-base max-w-3xl mb-8 fade-in" style="color: var(--dim); line-height: 1.7;">
-      <span class="mono text-text">atrain-skill-bench</span> is a benchmark harness that runs each skill on a fixed task across multiple Claude models, records token cost and pass/fail, and emits a self-contained dark-theme dashboard. Useful for "is this skill worth invoking?" decisions and for tracking regressions when skills evolve.
-    </p>
-
-    <div class="step-card rounded-lg overflow-hidden fade-in" style="border-color: rgba(245, 158, 11, 0.3);">
-      <div class="flex items-center justify-between px-5 py-3" style="background: rgba(15,23,42,.6); border-bottom: 1px solid var(--border);">
-        <div class="flex items-center gap-3">
-          <span class="mono text-xs px-2 py-0.5 rounded pill amber">// live dashboard</span>
-          <span class="mono text-xs" style="color: var(--dim);">skill-bench &middot; full-v06</span>
-        </div>
-        <div class="flex items-center gap-4">
-          <a href="#compare" class="mono text-xs inline-link">compare models &harr;</a>
-          <a href="benchmarks/report.html" class="mono text-xs inline-link">open full report &nearr;</a>
-        </div>
-      </div>
-      <iframe src="benchmarks/report.html" loading="lazy" class="w-full" style="height: 480px; border: 0; background: var(--bg);" title="Skill-bench full-v06 dashboard"></iframe>
-    </div>
-
-    <p class="mt-6 mono text-xs" style="color: var(--faint);">
-      Source → <a href="https://github.com/Purdue-ATrain/atrain-skill-bench" class="inline-link">github.com/Purdue-ATrain/atrain-skill-bench</a>
-    </p>
-  </div>
-</section>
-
-<div class="section-divider max-w-5xl mx-auto"></div>
-
-<!-- =========== COMPARE MODELS =========== -->
+<!-- =========== BENCHMARKS (with inline compare) =========== -->
 <style>
-  #compare .cmp-slot {
+  #benchmarks .cmp-slot {
     background: rgba(30, 41, 59, 0.5);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -707,7 +671,7 @@ git push origin users/&lt;handle&gt;
     transition: border-color .2s, transform .2s, box-shadow .2s;
     position: relative;
   }
-  #compare .cmp-slot.cmp-empty {
+  #benchmarks .cmp-slot.cmp-empty {
     border-style: dashed;
     border-color: rgba(34, 211, 238, .35);
     background: rgba(34, 211, 238, 0.03);
@@ -717,24 +681,24 @@ git push origin users/&lt;handle&gt;
     justify-content: center;
     flex-direction: column;
   }
-  #compare .cmp-slot.cmp-empty:hover {
+  #benchmarks .cmp-slot.cmp-empty:hover {
     border-color: var(--cyan);
     transform: translateY(-2px);
     box-shadow: 0 8px 32px rgba(34, 211, 238, 0.12);
   }
-  #compare .cmp-plus {
+  #benchmarks .cmp-plus {
     font-size: 64px;
     color: rgba(34, 211, 238, .5);
     line-height: 1;
     font-weight: 200;
   }
-  #compare .cmp-plus-label {
+  #benchmarks .cmp-plus-label {
     margin-top: 16px;
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 13px;
     color: var(--dim);
   }
-  #compare .cmp-slot.cmp-filled .cmp-header {
+  #benchmarks .cmp-slot.cmp-filled .cmp-header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -743,15 +707,15 @@ git push origin users/&lt;handle&gt;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border);
   }
-  #compare .cmp-model-name {
+  #benchmarks .cmp-model-name {
     font-family: "Bricolage Grotesque", system-ui, sans-serif;
     font-size: 24px;
     color: var(--primary);
     cursor: pointer;
     letter-spacing: -0.02em;
   }
-  #compare .cmp-model-name:hover { color: var(--amber2); }
-  #compare .cmp-slot-close {
+  #benchmarks .cmp-model-name:hover { color: var(--amber2); }
+  #benchmarks .cmp-slot-close {
     background: transparent;
     border: 1px solid rgba(63,169,245,.2);
     color: var(--dim);
@@ -762,12 +726,12 @@ git push origin users/&lt;handle&gt;
     font-family: "JetBrains Mono", ui-monospace, monospace;
     transition: background .15s, color .15s, border-color .15s;
   }
-  #compare .cmp-slot-close:hover {
+  #benchmarks .cmp-slot-close:hover {
     background: rgba(239, 68, 68, 0.1);
     color: var(--red, #EF4444);
     border-color: var(--red, #EF4444);
   }
-  #compare .cmp-ext-badge {
+  #benchmarks .cmp-ext-badge {
     display: inline-block;
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 10px;
@@ -778,36 +742,36 @@ git push origin users/&lt;handle&gt;
     border: 1px solid rgba(245, 158, 11, 0.3);
     margin-left: 8px;
   }
-  #compare .cmp-stat-grid {
+  #benchmarks .cmp-stat-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 16px;
   }
-  #compare .cmp-stat {
+  #benchmarks .cmp-stat {
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 10px 12px;
   }
-  #compare .cmp-stat-label {
+  #benchmarks .cmp-stat-label {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 10px;
     color: var(--faint);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-  #compare .cmp-stat-value {
+  #benchmarks .cmp-stat-value {
     font-family: "Bricolage Grotesque", system-ui, sans-serif;
     font-size: 22px;
     color: var(--text);
     margin-top: 4px;
     letter-spacing: -0.02em;
   }
-  #compare .cmp-stat-value.cmp-amber { color: var(--amber2); }
-  #compare .cmp-stat-value.cmp-green { color: #10B981; }
-  #compare .cmp-stat-value.cmp-cyan  { color: var(--cyan); }
-  #compare .cmp-tier-row {
+  #benchmarks .cmp-stat-value.cmp-amber { color: var(--amber2); }
+  #benchmarks .cmp-stat-value.cmp-green { color: #10B981; }
+  #benchmarks .cmp-stat-value.cmp-cyan  { color: var(--cyan); }
+  #benchmarks .cmp-tier-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -816,12 +780,12 @@ git push origin users/&lt;handle&gt;
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 12px;
   }
-  #compare .cmp-tier-row:last-child { border-bottom: 0; }
-  #compare .cmp-tier-name { color: var(--dim); }
-  #compare .cmp-tier-stat { color: var(--text); }
-  #compare .cmp-tier-cost { color: var(--faint); margin-left: 8px; }
-  #compare .cmp-skills-block { margin-top: 14px; }
-  #compare .cmp-skills-block h4 {
+  #benchmarks .cmp-tier-row:last-child { border-bottom: 0; }
+  #benchmarks .cmp-tier-name { color: var(--dim); }
+  #benchmarks .cmp-tier-stat { color: var(--text); }
+  #benchmarks .cmp-tier-cost { color: var(--faint); margin-left: 8px; }
+  #benchmarks .cmp-skills-block { margin-top: 14px; }
+  #benchmarks .cmp-skills-block h4 {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 10px;
     text-transform: uppercase;
@@ -829,16 +793,16 @@ git push origin users/&lt;handle&gt;
     color: var(--faint);
     margin: 0 0 6px;
   }
-  #compare .cmp-skill-line {
+  #benchmarks .cmp-skill-line {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 11.5px;
     display: flex;
     justify-content: space-between;
     padding: 3px 0;
   }
-  #compare .cmp-skill-name { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  #compare .cmp-skill-score { color: var(--amber2); flex-shrink: 0; margin-left: 8px; }
-  #compare .cmp-skill-score.cmp-bad { color: #EF4444; }
+  #benchmarks .cmp-skill-name { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #benchmarks .cmp-skill-score { color: var(--amber2); flex-shrink: 0; margin-left: 8px; }
+  #benchmarks .cmp-skill-score.cmp-bad { color: #EF4444; }
   /* Picker modal (fixed-position) */
   .cmp-picker-backdrop {
     position: fixed;
@@ -927,14 +891,20 @@ git push origin users/&lt;handle&gt;
     font-size: 12px;
   }
 </style>
-<section id="compare" class="py-28 px-6">
+<section id="benchmarks" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
-      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Compare models</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Pick up to three models from the tested list. Put them side by side.</p>
-      <p id="cmp-meta" class="mono text-xs mt-3" style="color: var(--faint);">8 models &middot; 24 tests &middot; source: skill-bench/results/full-v06</p>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 06</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Pick up to three models, put them side by side.</p>
     </div>
+
+    <p class="text-base max-w-3xl mb-4 fade-in" style="color: var(--dim); line-height: 1.7;">
+      <span class="mono text-text">atrain-skill-bench</span> runs each skill on a fixed task across multiple Claude models, records token cost and pass/fail, and emits a self-contained dark-theme dashboard. Useful for "is this skill worth invoking?" decisions and for tracking regressions when skills evolve. <a href="benchmarks/report.html" class="inline-link mono text-text">open the full report &nearr;</a>
+    </p>
+
+    <p id="cmp-meta" class="mono text-xs mb-8 fade-in" style="color: var(--faint);">8 models &middot; 24 tests &middot; source: skill-bench/results/full-v06</p>
+
     <div id="cmp-slots" class="grid md:grid-cols-3 gap-4 fade-in">
       <div class="cmp-slot cmp-empty" data-slot="0">
         <div class="cmp-plus">+</div>
@@ -949,6 +919,10 @@ git push origin users/&lt;handle&gt;
         <div class="cmp-plus-label">Add a model</div>
       </div>
     </div>
+
+    <p class="mt-10 mono text-xs" style="color: var(--faint);">
+      Source &rarr; <a href="https://github.com/Purdue-ATrain/atrain-skill-bench" class="inline-link">github.com/Purdue-ATrain/atrain-skill-bench</a>
+    </p>
   </div>
 </section>
 <!-- Picker modal lives outside the section so its fixed positioning is unambiguous -->
@@ -968,7 +942,7 @@ git push origin users/&lt;handle&gt;
 <section id="refs" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 07</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Reference analyses</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two working CMS analyses built on the harness. Read the code.</p>
     </div>
@@ -1003,7 +977,7 @@ git push origin users/&lt;handle&gt;
 <section id="get-involved" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 09</span>
+      <span class="mono text-xs uppercase tracking-widest" style="color: var(--amber);">// 08</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Membership is closed for v0. Open an issue to request access.</p>
     </div>
