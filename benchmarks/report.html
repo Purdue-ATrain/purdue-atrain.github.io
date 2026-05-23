@@ -739,7 +739,7 @@ Object.entries(DATA.model_cards).forEach(([m, card]) => {
         ${extRows ? `<table class="mc-ext-tbl">${extRows}</table>` : '<div class="faint" style="font-size:11px">no data</div>'}
       </div>
       <div class="mc-foot">
-        <span class="faint">total cost</span> <span class="num">${fmtCost(card.total_cost)}</span> ·
+        <span class="faint">avg cost / cell</span> <span class="num">${fmtCost(card.n_cells ? card.total_cost / card.n_cells : null)}</span> ·
         <span class="faint">median wall</span> <span class="num">${card.median_wall.toFixed(0)}s</span>
       </div>
     </div>
