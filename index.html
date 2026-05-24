@@ -2367,7 +2367,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
   function extMini(label, value, suffix) {
     var inner = (value == null)
-      ? '<div class="cmp-ext-mini-empty">—</div>'
+      ? '<div class="cmp-ext-mini-empty">&mdash;</div>'
       : '<div class="cmp-ext-mini-value">' + value + (suffix || '') + '</div>';
     return '<div class="cmp-ext-mini">' +
       '<div class="cmp-ext-mini-label">' + escapeHtml(label) + '</div>' +
