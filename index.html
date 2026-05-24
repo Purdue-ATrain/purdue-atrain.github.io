@@ -39,18 +39,18 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        bg:       '#0e0f13',
-        surface:  '#181a21',
-        primary:  '#5b8df0',
-        primary2: '#4575e0',
-        accent:   '#d4924c',
-        accent2:  '#b87a3e',
-        amber:    '#d4924c',
-        amber2:   '#b87a3e',
-        cyan:     '#6db8e8',
-        text:     '#ebebed',
-        dim:      '#9c9ea4',
-        faint:    '#5e6068',
+        bg:       'var(--bg)',
+        surface:  'var(--surface)',
+        primary:  'var(--primary)',
+        primary2: 'var(--primary2)',
+        accent:   'var(--accent)',
+        accent2:  'var(--accent2)',
+        amber:    'var(--amber)',
+        amber2:   'var(--amber2)',
+        cyan:     'var(--cyan)',
+        text:     'var(--text)',
+        dim:      'var(--dim)',
+        faint:    'var(--faint)',
       },
       fontFamily: {
         display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
@@ -72,6 +72,7 @@ tailwind.config = {
     --card-hover: rgba(91, 141, 240, 0.45);
     --card-shadow: rgba(0, 0, 0, 0.40);
     --primary: #5b8df0;
+    --primary2: #4575e0;
     --accent: #d4924c;
     --accent2: #b87a3e;
     --amber: #d4924c;
@@ -104,6 +105,7 @@ tailwind.config = {
     --card-hover: rgba(31, 79, 203, 0.55);
     --card-shadow: rgba(22, 24, 29, 0.18);
     --primary: #1f4fcb;
+    --primary2: #173da8;
     --accent: #b5722a;
     --accent2: #97601e;
     --amber: #b5722a;
