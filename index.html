@@ -493,6 +493,17 @@ tailwind.config = {
     transform: translateY(-50%) rotate(-90deg);
     transform-origin: left center;
   }
+  .journey-edges-label.handoff-note {
+    /* horizontal subtitle near the top of the loop-back arrow, above card 01 */
+    top: 2%;
+    left: 6%;
+    max-width: 230px;
+    color: var(--accent);
+    opacity: 0.85;
+    white-space: normal;
+    line-height: 1.45;
+    font-size: 10.5px;
+  }
   @media (max-width: 768px) {
     .journey-graph {
       grid-template-columns: 1fr;
@@ -795,6 +806,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         </svg>
         <span class="journey-edges-label iterate">iterate</span>
         <span class="journey-edges-label handoff">loops back</span>
+        <span class="journey-edges-label handoff-note">handoff: code repo &amp; harness<br/>to newcomers</span>
       </div>
     </div>
   </div>
