@@ -295,6 +295,33 @@ tailwind.config = {
   :root:not([data-theme="light"]) .icon-sun { display: inline-block; }
   :root:not([data-theme="light"]) .icon-moon { display: none; }
   .nav-bar.visible { transform: translateY(0); }
+  /* Nav dropdown (harness -> skills / blueprint / examples) */
+  .nav-dd { position: relative; }
+  .nav-dd-trigger {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    font-family: inherit; font-size: inherit; color: var(--dim);
+    display: inline-flex; align-items: center; gap: 3px;
+    transition: color .2s ease;
+  }
+  .nav-dd-trigger span { font-size: 9px; opacity: 0.7; }
+  .nav-dd-trigger:hover,
+  .nav-dd:hover .nav-dd-trigger,
+  .nav-dd.open .nav-dd-trigger { color: var(--primary); }
+  .nav-dd::after { content: ''; position: absolute; left: -8px; right: -8px; top: 100%; height: 12px; }
+  .nav-dd-menu {
+    position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+    display: none; flex-direction: column; min-width: 134px; padding: 6px;
+    background: var(--nav-bg); border: 1px solid var(--border); border-radius: 10px;
+    backdrop-filter: blur(12px); box-shadow: 0 10px 30px var(--card-shadow); z-index: 60;
+  }
+  .nav-dd:hover .nav-dd-menu,
+  .nav-dd:focus-within .nav-dd-menu,
+  .nav-dd.open .nav-dd-menu { display: flex; }
+  .nav-dd-menu a {
+    padding: 7px 12px; border-radius: 6px; color: var(--dim); white-space: nowrap;
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-dd-menu a:hover { background: var(--pill-blue-bg); color: var(--primary); }
   .fade-in {
     opacity: 0;
     transform: translateY(12px);
@@ -557,9 +584,14 @@ tailwind.config = {
       <a href="#multiagent" class="hover:text-primary transition-colors">agents</a>
       <a href="#demos" class="hover:text-primary transition-colors">demos</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
-      <a href="#skills" class="hover:text-primary transition-colors">skills</a>
-      <a href="#harness" class="hover:text-primary transition-colors">harness</a>
-      <a href="#refs" class="hover:text-primary transition-colors">refs</a>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false">harness <span aria-hidden="true">&#9662;</span></button>
+        <div class="nav-dd-menu" role="menu">
+          <a href="#skills" role="menuitem">skills</a>
+          <a href="#harness" role="menuitem">blueprint</a>
+          <a href="#refs" role="menuitem">examples</a>
+        </div>
+      </div>
       <a href="#get-involved" class="hover:text-primary transition-colors">get-involved</a>
     </div>
     <div class="flex items-center gap-3">
@@ -2078,6 +2110,18 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       try { localStorage.setItem('atrain_theme', next); } catch (e) { /* ignore */ }
       document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
     });
+  })();
+
+  // ---- Nav dropdown (harness) ----
+  (function () {
+    var dd = document.querySelector('.nav-dd');
+    if (!dd) return;
+    var trigger = dd.querySelector('.nav-dd-trigger');
+    function setOpen(on) { dd.classList.toggle('open', on); trigger.setAttribute('aria-expanded', on ? 'true' : 'false'); }
+    trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!dd.classList.contains('open')); });
+    dd.querySelectorAll('.nav-dd-menu a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+    document.addEventListener('click', function (e) { if (!dd.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
   })();
 
   // ---- Copy tour prompt to clipboard ----
