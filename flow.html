@@ -291,25 +291,52 @@
   function setNightly(v) { nightlyLevel = Math.max(0.04, Math.min(1, v)); gsap.to(nightlyWater, { scaleY: nightlyLevel, duration: 0.5, ease: 'power2.out' }); }
   function setMain(v)    { mainLevel = Math.max(0.04, Math.min(1, v));    gsap.to(mainWater,    { scaleY: mainLevel,    duration: 0.8, ease: 'power2.out' }); }
 
-  function colorVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  // surface y of each basin's water at the current level (for ripples)
+  function nightlySurfaceY() { return 400 - 200 * nightlyLevel; }
+  function mainSurfaceY()    { return 450 - 300 * mainLevel; }
+
+  // expanding ring when a droplet lands in a basin
+  function ripple(cx, cy, color) {
+    if (reduced) return;
+    var r = document.createElementNS(SVGNS, 'circle');
+    r.setAttribute('cx', cx); r.setAttribute('cy', cy); r.setAttribute('r', 2);
+    r.setAttribute('fill', 'none'); r.setAttribute('stroke', color); r.setAttribute('stroke-width', 1.5);
+    svg.appendChild(r);
+    gsap.to(r, { attr: { r: 16 }, opacity: 0, duration: 0.85, ease: 'power2.out', onComplete: function () { r.remove(); } });
+  }
+
+  // gate flash on a commit crossing
+  var gate1rect = document.querySelector('#gate1 rect');
+  var gate2rect = document.querySelector('#gate2 rect');
+  function pulseGate(rect, accepted) {
+    gsap.fromTo(rect, { fill: 'var(--surface)' },
+      { fill: accepted ? 'var(--cyan)' : 'var(--amber)', duration: 0.16, yoyo: true, repeat: 1, ease: 'sine.inOut', overwrite: 'auto' });
+  }
 
   function spawnDroplet() {
     if (reduced) return;
     var lane = lanes[Math.floor(Math.random() * lanes.length)];
     var accepted = Math.random() > 0.28;            // ~72% accepted
+    var rad = 3.5 + Math.random() * 2.6;             // varied droplet size for a denser, liquid feel
     var c = document.createElementNS(SVGNS, 'circle');
-    c.setAttribute('r', 4.5);
+    c.setAttribute('r', rad);
     c.setAttribute('class', 'droplet');
     c.setAttribute('fill', accepted ? 'var(--primary)' : 'var(--cyan)');
+    c.setAttribute('opacity', 0.92);
     svg.appendChild(c);
 
     if (accepted) {
+      var dur = 3.0 + Math.random() * 0.8;
+      // flash each gate as the commit crosses it (throttled so it shimmers, not strobes)
+      if (Math.random() < 0.5) gsap.delayedCall(dur * 0.30, function () { pulseGate(gate1rect, true); });
+      if (Math.random() < 0.5) gsap.delayedCall(dur * 0.50, function () { pulseGate(gate2rect, true); });
       gsap.to(c, {
-        duration: 3.2 + Math.random() * 0.8, ease: 'none',
+        duration: dur, ease: 'none',
         motionPath: { path: '#' + lane, align: '#' + lane, alignOrigin: [0.5, 0.5] },
         onComplete: function () {
           c.remove();
-          setNightly(nightlyLevel + 0.05);          // each accepted commit raises nightly
+          setNightly(nightlyLevel + 0.02);            // each accepted commit raises nightly a touch
+          ripple(905, nightlySurfaceY(), 'var(--accent)');
         }
       });
     } else {
@@ -321,9 +348,7 @@
         duration: 1.4, ease: 'none',
         motionPath: { path: '#' + lane, align: '#' + lane, alignOrigin: [0.5, 0.5], start: 0, end: toGate },
         onComplete: function () {
-          // pulse the gate
-          var gate = document.querySelector(which === 0 ? '#gate1 rect' : '#gate2 rect');
-          gsap.fromTo(gate, { fill: 'var(--surface)' }, { fill: 'var(--amber)', duration: 0.12, yoyo: true, repeat: 1 });
+          pulseGate(which === 0 ? gate1rect : gate2rect, false);
           gsap.to(c, {
             duration: 1.6, ease: 'power1.in',
             motionPath: { path: '#' + gutter, align: '#' + gutter, alignOrigin: [0.5, 0.5] },
@@ -335,9 +360,16 @@
     }
   }
 
-  // emitter
+  // emitter — denser stream to read as a flood (≈13 droplets/s, ~40 alive at steady state)
   var emitter = null;
-  if (!reduced) emitter = setInterval(spawnDroplet, 230);
+  if (!reduced) emitter = setInterval(function () { spawnDroplet(); if (Math.random() < 0.6) spawnDroplet(); }, 120);
+
+  // gates breathe continuously so they always feel active; basins shimmer like liquid
+  if (!reduced) {
+    gsap.to([gate1rect, gate2rect], { attr: { opacity: 0.6 }, duration: 1.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    gsap.to(nightlyWater, { opacity: 0.82, duration: 1.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    gsap.to(mainWater,    { opacity: 0.46, duration: 2.3, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  }
 
   // cron pulse + sluice cycle
   var sluiceGate = document.getElementById('sluiceGate');
