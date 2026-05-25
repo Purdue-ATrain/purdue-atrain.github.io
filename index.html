@@ -1053,15 +1053,22 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
   function pick(a) { return a[(Math.random() * a.length) | 0]; }
 
-  function aim(p) { var t = pick(targets); p.tx = t.x + (Math.random() - 0.5) * 38; p.ty = t.y + (Math.random() - 0.5) * 38; }
+  // assign a base goal (jittered around a target) + a phase for the idle orbit
+  function aim(p) {
+    var t = pick(targets);
+    p.btx = t.x + (Math.random() - 0.5) * 30;
+    p.bty = t.y + (Math.random() - 0.5) * 30;
+    if (p.ph === undefined) p.ph = Math.random() * Math.PI * 2;
+  }
 
   function spawn() {
-    var c = core(), ang = Math.random() * Math.PI * 2;
-    var p = { x: c.x + Math.cos(ang) * 5, y: c.y + Math.sin(ang) * 5,
-              color: pick(COLORS), r: 1.6 + Math.random() * 1.8,
-              life: 0, max: 150 + Math.random() * 90, dead: 0, trail: [] };
+    var c = core(), ang = Math.random() * Math.PI * 2, d = Math.random() * 8;
+    var p = { x: c.x + Math.cos(ang) * d, y: c.y + Math.sin(ang) * d,
+              color: pick(COLORS), r: 1.6 + Math.random() * 1.8, trail: [] };
     aim(p); particles.push(p);
   }
+
+  function seed() { particles.length = 0; for (var i = 0; i < 28; i++) spawn(); }
 
   function setMode(i) {
     modeIdx = i; targets = targetsFor(MODES[i].name);
@@ -1112,16 +1119,14 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     ctx.clearRect(0, 0, W, H);
     drawFlow();
     drawCore(ts);
-    if (particles.length < 64) { spawn(); if (Math.random() < 0.5) spawn(); }
-    for (var i = particles.length - 1; i >= 0; i--) {
+    for (var i = 0; i < particles.length; i++) {
       var p = particles[i];
-      p.x += (p.tx - p.x) * 0.02; p.y += (p.ty - p.y) * 0.02; p.life++;
+      // live goal = base goal + a small idle orbit, so settled agents shimmer, not freeze
+      var tx = p.btx + Math.cos(ts / 900 + p.ph) * 6;
+      var ty = p.bty + Math.sin(ts / 900 + p.ph) * 6;
+      p.x += (tx - p.x) * 0.04; p.y += (ty - p.y) * 0.04;
       p.trail.push({ x: p.x, y: p.y }); if (p.trail.length > 9) p.trail.shift();
-      var near = Math.abs(p.tx - p.x) < 5 && Math.abs(p.ty - p.y) < 5;
-      var fade = 1;
-      if (p.life > p.max || near) { p.dead++; fade = Math.max(0, 1 - p.dead / 22); }
-      drawParticle(p, fade);
-      if (fade <= 0) particles.splice(i, 1);
+      drawParticle(p, 1);
     }
     ctx.globalAlpha = 1;
   }
@@ -1134,13 +1139,13 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   }
 
   function staticFrame() {
-    particles.length = 0;
+    seed();
     ctx.clearRect(0, 0, W, H);
     drawFlow();
     drawCore(0);
-    for (var i = 0; i < 48; i++) {
-      spawn(); var p = particles[particles.length - 1]; var k = Math.random();
-      p.x += (p.tx - p.x) * k; p.y += (p.ty - p.y) * k;
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.x = p.btx; p.y = p.bty;   // settled at their goals
       ctx.globalAlpha = 0.85; ctx.fillStyle = p.color;
       ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     }
@@ -1161,6 +1166,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     });
     setMode(0);
     if (reduced) { staticFrame(); return; }
+    seed();
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) {
         es.forEach(function (e) { e.isIntersecting ? start() : stop(); });
