@@ -859,7 +859,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     </div>
 
     <p class="text-base max-w-3xl fade-in" style="color: var(--dim); line-height: 1.75;">
-      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesises onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>.<br><a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
+      Skills evolve through two paths: a deliberate <span class="text-text">direct PR</span> off <span class="mono text-text">main</span>, or an organic <span class="mono text-text">users/&lt;handle&gt;</span> branch that a nightly cron audits and synthesizes onto <span class="mono text-text">nightly</span>. Both converge at <span class="mono text-text">main</span>.<br><a href="sharpen.html" class="inline-link mono text-text">See how the two paths work &nearr;</a>
     </p>
 
     <div class="rounded-lg p-5 mt-10 fade-in" style="background: rgba(255, 158, 100, 0.06); border-left: 3px solid var(--amber);">
@@ -1943,7 +1943,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         <span class="hl text-3xl" style="color: var(--primary);">3</span>
         <div>
           <h3 class="font-semibold mb-1">Use, edit, push</h3>
-          <p class="text-sm" style="color: var(--dim);">Edit skills as you use them. Push to your branch. The nightly cron synthesises your contributions back into <span class="mono text-text">main</span> after a maintainer review.</p>
+          <p class="text-sm" style="color: var(--dim);">Edit skills as you use them. Push to your branch. The nightly cron synthesizes your contributions back into <span class="mono text-text">main</span> after a maintainer review.</p>
         </div>
       </li>
     </ol>
@@ -2320,27 +2320,27 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           { o: MAG + '[Claude reads CLAUDE.md, looks at analysis/variables.py]' + R, a: 220 },
           { o: MAG + '[Found PlotVar pattern at analysis/variables.py:42]' + R, a: 220 },
           { o: MAG + '[Scanning config/channels.py for trigger keys... found DST_JetHT]' + R, a: 220 },
-          { o: MAG + '[No existing plots at z_prelims/btag_score/]' + R + '\r\n', a: 450 },
-          { o: 'I will mirror the existing PlotVar pattern, save to z_prelims/btag_score/', a: 60 },
+          { o: MAG + '[No existing plots at output/plots/btag_score/]' + R + '\r\n', a: 450 },
+          { o: 'I will mirror the existing PlotVar pattern, save to output/plots/btag_score/', a: 60 },
           { o: 'per the project convention, and use 1 MC file so it runs fast.\r\n', a: 200 },
-          { o: '  Created: ' + YEL + 'z_prelims/scripts/btag_score_stacked.py' + R },
-          { o: '  Created: ' + YEL + 'z_prelims/btag_score/.gitkeep' + R + '\r\n', a: 200 },
+          { o: '  Created: ' + YEL + 'scratch/btag_score_stacked.py' + R },
+          { o: '  Created: ' + YEL + 'output/plots/btag_score/.gitkeep' + R + '\r\n', a: 200 },
           { o: 'Run it now? (y/n)\r\n', a: 500 },
           { o: CYN + '> y' + R + '\r\n', a: 300 },
           { p: { env: 'my-analysis', path: '~/work/my-analysis' } },
-          { c: 'pixi run python z_prelims/scripts/btag_score_stacked.py --max-mc-files 1', a: 350 },
+          { c: 'pixi run python scratch/btag_score_stacked.py --max-mc-files 1', a: 350 },
           { o: MAG + '[ROOT]' + R + ' gROOT.GetVersion() == 6.32.04' },
           { o: MAG + '[load]' + R + ' HHbbtt (1/1 files), DY (1/1), TT (1/1), QCD (1/1)' },
           { o: MAG + '[trigger]' + R + ' DST_JetHT applied, eff=' + YEL + '0.18' + R + ' on data' },
-          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'z_prelims/btag_score/DST_JetHT_data_stacked.png' + R },
-          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'z_prelims/btag_score/DST_JetHT_data_shape.png' + R },
-          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'z_prelims/btag_score/DST_JetHT_data_ratio.png' + R + '\r\n', a: 400 },
+          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'output/plots/btag_score/DST_JetHT_data_stacked.png' + R },
+          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'output/plots/btag_score/DST_JetHT_data_shape.png' + R },
+          { o: MAG + '[plot]' + R + ' saved ' + YEL + 'output/plots/btag_score/DST_JetHT_data_ratio.png' + R + '\r\n', a: 400 },
           { o: CYN + '> Looks good. Add the b-jet eta distribution to the same script.' + R + '\r\n', a: 400 },
-          { o: MAG + '[Claude edits z_prelims/scripts/btag_score_stacked.py]' + R, a: 180 },
+          { o: MAG + '[Claude edits scratch/btag_score_stacked.py]' + R, a: 180 },
           { o: MAG + '[Added: bjet_eta PlotVar (50 bins, -2.5..2.5)]' + R, a: 180 },
           { o: MAG + '[Re-running...]' + R + '\r\n', a: 350 },
           { p: { env: 'my-analysis', path: '~/work/my-analysis' } },
-          { c: 'ls z_prelims/btag_score/' },
+          { c: 'ls output/plots/btag_score/' },
           { o: 'DST_JetHT_data_stacked.png    DST_JetHT_data_shape.png' },
           { o: 'DST_JetHT_data_ratio.png      DST_JetHT_data_stacked_bjet_eta.png' }
         ]
@@ -2387,14 +2387,14 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           { o: MAG + '[atrain-cron]' + R + ' walking branches: main, users/jdoe, users/alice, users/bob' },
           { o: MAG + '[evolve-skill]' + R + ' grill-me: 3 candidates' },
           { o: '  layer-1 regex:   ' + GRN + '3/3 pass' + R },
-          { o: '  layer-2 claude:  synthesising best-of-breed...' },
+          { o: '  layer-2 claude:  synthesizing best-of-breed...' },
           { o: "  decision:        incorporate jdoe's pacing line, keep alice's example block" },
-          { o: MAG + '[atrain-cron]' + R + ' committed to nightly: evolve: synthesise grill-me\r\n', a: 350 },
+          { o: MAG + '[atrain-cron]' + R + ' committed to nightly: evolve: synthesize grill-me\r\n', a: 350 },
           { p: { path: '~/.claude/skills' } },
           { c: 'git fetch origin nightly && git log origin/nightly --oneline | head -3' },
-          { o: YEL + '1a2b3c4' + R + ' evolve: synthesise grill-me from main, users/jdoe, users/alice' },
-          { o: YEL + '5d6e7f8' + R + ' evolve: synthesise curate-tests from main, users/alice' },
-          { o: YEL + '9a0b1c2' + R + ' evolve: synthesise analysis-scaffold from main, users/jdoe' }
+          { o: YEL + '1a2b3c4' + R + ' evolve: synthesize grill-me from main, users/jdoe, users/alice' },
+          { o: YEL + '5d6e7f8' + R + ' evolve: synthesize curate-tests from main, users/alice' },
+          { o: YEL + '9a0b1c2' + R + ' evolve: synthesize analysis-scaffold from main, users/jdoe' }
         ]
       },
       {
