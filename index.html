@@ -1356,7 +1356,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     <div class="mb-10 max-w-2xl">
       <span class="section-num" style="color: var(--amber);">// 05</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Demos in the terminal</h2>
-      <p class="serif-italic text-xl" style="color: var(--dim);">Five real sessions. Click a tab to switch; press <span class="mono text-text">&#x27F2;</span> to replay.</p>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Seven real sessions. Click a tab to switch; press <span class="mono text-text">&#x27F2;</span> to replay.</p>
     </div>
 
     <div id="atrain-terminal" class="terminal-window fade-in">
@@ -1366,6 +1366,8 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         <button type="button" class="term-tab" role="tab" data-demo="2" aria-selected="false">03 / contribute</button>
         <button type="button" class="term-tab" role="tab" data-demo="3" aria-selected="false">04 / spawn an analysis</button>
         <button type="button" class="term-tab" role="tab" data-demo="4" aria-selected="false">05 / undercover-mode</button>
+        <button type="button" class="term-tab" role="tab" data-demo="5" aria-selected="false">06 / orchestrate a crew</button>
+        <button type="button" class="term-tab" role="tab" data-demo="6" aria-selected="false">07 / watch the grid</button>
       </div>
       <div class="terminal-chrome">
         <div class="chrome-dots">
@@ -2536,6 +2538,63 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           { o: '[main ' + YEL + 'a1b2c3d' + R + '] fix(event_loop): handle empty RDataFrame after trigger cut' },
           { o: ' 3 files changed, 18 insertions(+), 2 deletions(-)\r\n', a: 300 },
           { o: DIM + '# the commit landed clean. no AI attribution anywhere.' + R }
+        ]
+      },
+      {
+        label: '06 / orchestrate a crew',
+        title: 'demo-06-orchestrate-a-crew',
+        events: [
+          { p: { path: '~/work/hh-bbtautau' } },
+          { c: 'claude', a: 300 },
+          { o: '', a: 150 },
+          { o: CYN + '> The VJets samples keep diverging. Survey all six datasets and tell me' + R, a: 70 },
+          { o: CYN + '  which CMSSW configs differ, and why. /agents' + R + '\r\n', a: 450 },
+          { o: MAG + '[agents / gate]' + R + ' read-heavy, parallelizable, 6 independent samples', a: 240 },
+          { o: MAG + '[agents / gate]' + R + ' verdict: ' + GRN + 'fan out' + R + '  ' + DIM + '(a single agent would serialize 6 surveys)' + R, a: 380 },
+          { o: 'Substrate? subagents (parallel, read-only) or an Agent Team (peers)?\r\n', a: 320 },
+          { o: CYN + '> subagents' + R + '\r\n', a: 380 },
+          { o: MAG + '[spawning 6 explorers / haiku / read-only / worktree-free]' + R + '\r\n', a: 420 },
+          { o: DIM + '  explorer 1  WtoLNu-4Jets   reading configs/' + R, a: 95 },
+          { o: DIM + '  explorer 2  Wto2Q-HT       reading configs/' + R, a: 95 },
+          { o: DIM + '  explorer 3  DYto2L-4Jets   reading configs/' + R, a: 95 },
+          { o: DIM + '  explorer 4  WZto3LNu       reading configs/' + R, a: 95 },
+          { o: DIM + '  explorer 5  ZZto2L2Q       reading configs/' + R, a: 95 },
+          { o: DIM + '  explorer 6  WWto2L2Nu      reading configs/' + R + '\r\n', a: 520 },
+          { o: GRN + '  done' + R + ' explorer 3  ' + DIM + '18 keys, globalTag 140X_mcRun3_2024' + R, a: 200 },
+          { o: GRN + '  done' + R + ' explorer 1  ' + DIM + '18 keys, globalTag 140X_mcRun3_2024' + R, a: 150 },
+          { o: GRN + '  done' + R + ' explorer 6', a: 130 },
+          { o: GRN + '  done' + R + ' explorer 2  ' + YEL + 'FileBased split, unitsPerJob 1' + R, a: 170 },
+          { o: GRN + '  done' + R + ' explorer 4  ' + YEL + '4FS fragment' + R, a: 150 },
+          { o: GRN + '  done' + R + ' explorer 5' + '\r\n', a: 420 },
+          { o: MAG + '[reconciler / opus]' + R + ' synthesizing 6 findings, resolving conflicts...' + '\r\n', a: 480 },
+          { o: 'All six share globalTag ' + YEL + '140X_mcRun3_2024' + R + '. Two diverge:', a: 70 },
+          { o: '  ' + YEL + 'Wto2Q-HT-800to1500' + R + '  FileBased, unitsPerJob 1 (the rest are LumiBased)', a: 70 },
+          { o: '  ' + YEL + 'WZto3LNu-1Jets' + R + '      built from the 4FS fragment, not 5FS', a: 70 },
+          { o: 'That FileBased split is why Bin-4J was the straggler.\r\n', a: 380 },
+          { o: DIM + '# 6 reads in parallel, one synthesis. crew landed on a branch, no writes to main.' + R }
+        ]
+      },
+      {
+        label: '07 / watch the grid',
+        title: 'demo-07-watch-the-grid',
+        events: [
+          { p: { path: '~/work/Run3_nano_submission' } },
+          { c: 'claude', a: 300 },
+          { o: '', a: 150 },
+          { o: CYN + '> Watch the CRAB jobs. Ping me when one finishes or a task fails. /agents monitor' + R + '\r\n', a: 480 },
+          { o: MAG + '[agents / monitor]' + R + ' trigger: scheduled (/loop 4m) + event-driven (task state change)', a: 240 },
+          { o: MAG + '[agents / monitor]' + R + ' read-only. it reports and escalates, it does not resubmit.' + '\r\n', a: 380 },
+          { o: 'Watching ' + YEL + '22 datasets' + R + '. Quiet ticks below, push on a real change.\r\n', a: 420 },
+          { o: DIM + '  06:04  11/22 done   no change' + R, a: 240 },
+          { o: DIM + '  06:08  11/22 done   no change' + R, a: 240 },
+          { o: DIM + '  06:12  Wto2Q-HT-400to800  83.6% -> 91.0%' + R, a: 300 },
+          { o: GRN + '  06:16  Wto2Q-HT-400to800  COMPLETE (100%)  ->  12/22' + R, a: 220 },
+          { o: MAG + '         [push]' + R + ' "Wto2Q-HT-400to800 done, 12/22 complete"\r\n', a: 420 },
+          { o: RED + '  06:24  WZto3LNu-1Jets-4FS  task FAILED (SUBMITREFUSED)' + R, a: 220 },
+          { o: MAG + '         [push]' + R + ' "WZto3LNu-1Jets-4FS failed, needs you"', a: 200 },
+          { o: '         likely the >100k-lumi split. it will not resubmit on its own:', a: 70 },
+          { o: '         escalated for a human to set FileBased + unitsPerJob.\r\n', a: 380 },
+          { o: DIM + '# autonomy on the trigger, not on the merge. you stay on the loop.' + R }
         ]
       }
     ];
