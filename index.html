@@ -963,7 +963,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
         </tbody>
       </table>
     </div>
-    <p class="text-sm max-w-3xl mb-12 fade-in" style="color: var(--faint);">The lab mostly runs orchestrator-worker, not a true swarm, so it calls it that.</p>
+    <div class="mb-12"></div>
 
     <h3 class="hl text-2xl mb-4 fade-in">Three ways an agent starts</h3>
     <div class="ma-trigger-grid mb-12 fade-in">
@@ -991,11 +991,11 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       <span class="k">// say what you mean</span>
       <dl>
         <dt>Swarm</dt>
-        <dd>Many agents on one task, all converging on a single goal. The swarm tab above.</dd>
+        <dd>Many agents converging on one goal.</dd>
         <dt>Fleet</dt>
-        <dd>Many long-lived agents, each owning a different goal: one per analysis, per submission stream, per docs. The fleet tab above.</dd>
+        <dd>Many agents, each on a different goal: one per analysis, per stream, per docs.</dd>
         <dt>Fleet-swarm</dt>
-        <dd>Groups of agents, each group converging on its own goal: a fleet of swarms. The fleet-swarm tab above.</dd>
+        <dd>Groups of agents, each group on its own goal. A fleet of swarms.</dd>
       </dl>
     </div>
   </div>
