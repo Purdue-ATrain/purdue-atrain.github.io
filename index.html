@@ -579,10 +579,15 @@ tailwind.config = {
     <div class="hidden md:flex items-center gap-6 mono text-xs" style="color: var(--dim);">
       <a href="#ai-tour" class="hover:text-primary transition-colors">ai-tour</a>
       <a href="#quick-start" class="hover:text-primary transition-colors">quick-start</a>
-      <a href="#journey" class="hover:text-primary transition-colors">journey</a>
-      <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false">journey <span aria-hidden="true">&#9662;</span></button>
+        <div class="nav-dd-menu" role="menu">
+          <a href="#synthesis" role="menuitem">synthesis</a>
+          <a href="#journey" role="menuitem">morphing</a>
+          <a href="#demos" role="menuitem">demos</a>
+        </div>
+      </div>
       <a href="#multiagent" class="hover:text-primary transition-colors">agents</a>
-      <a href="#demos" class="hover:text-primary transition-colors">demos</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
       <div class="nav-dd">
         <button type="button" class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false">harness <span aria-hidden="true">&#9662;</span></button>
@@ -2114,16 +2119,32 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     });
   })();
 
-  // ---- Nav dropdown (harness) ----
+  // ---- Nav dropdowns (journey, harness) ----
   (function () {
-    var dd = document.querySelector('.nav-dd');
-    if (!dd) return;
-    var trigger = dd.querySelector('.nav-dd-trigger');
-    function setOpen(on) { dd.classList.toggle('open', on); trigger.setAttribute('aria-expanded', on ? 'true' : 'false'); }
-    trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!dd.classList.contains('open')); });
-    dd.querySelectorAll('.nav-dd-menu a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
-    document.addEventListener('click', function (e) { if (!dd.contains(e.target)) setOpen(false); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.nav-dd'));
+    if (!dds.length) return;
+    function setOpen(dd, on) {
+      dd.classList.toggle('open', on);
+      var t = dd.querySelector('.nav-dd-trigger');
+      if (t) t.setAttribute('aria-expanded', on ? 'true' : 'false');
+    }
+    function closeAll() { dds.forEach(function (dd) { setOpen(dd, false); }); }
+    dds.forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dd-trigger');
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var willOpen = !dd.classList.contains('open');
+        closeAll();
+        setOpen(dd, willOpen);
+      });
+      dd.querySelectorAll('.nav-dd-menu a').forEach(function (a) {
+        a.addEventListener('click', function () { setOpen(dd, false); });
+      });
+    });
+    document.addEventListener('click', function (e) {
+      dds.forEach(function (dd) { if (!dd.contains(e.target)) setOpen(dd, false); });
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
   })();
 
   // ---- Copy tour prompt to clipboard ----
