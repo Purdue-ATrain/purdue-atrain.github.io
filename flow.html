@@ -29,6 +29,7 @@
     --border: rgba(235, 235, 237, 0.10); --divider: rgba(235, 235, 237, 0.16);
     --nav-bg: rgba(14, 15, 19, 0.82);
     --basin: rgba(91, 141, 240, 0.30); --basin-edge: rgba(91, 141, 240, 0.6);
+    --reject: #f7768e;
   }
   :root[data-theme="light"] {
     --bg: #f6f5f1; --surface: #ebe9e1; --surface-strong: #ebe9e1;
@@ -37,6 +38,7 @@
     --border: rgba(22, 24, 29, 0.14); --divider: rgba(22, 24, 29, 0.22);
     --nav-bg: rgba(246, 245, 241, 0.92);
     --basin: rgba(31, 79, 203, 0.26); --basin-edge: rgba(31, 79, 203, 0.6);
+    --reject: #c43d4f;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text);
@@ -93,7 +95,7 @@
   .slot-div { stroke: var(--cyan); stroke-width: 1; opacity: 0.35; }
   .zone-label { font-family: "JetBrains Mono", ui-monospace, monospace; fill: var(--dim); }
   .basin-tank { fill: none; stroke: var(--basin-edge); stroke-width: 2; }
-  .reject-gutter { fill: none; stroke: var(--faint); stroke-width: 1; stroke-dasharray: 2 5; opacity: 0.4; }
+  .reject-track { fill: none; stroke: var(--reject); stroke-width: 1.3; stroke-dasharray: 3 5; opacity: 0.5; }
   .node { fill: var(--surface); stroke: var(--cyan); stroke-width: 2; }
   @media (prefers-reduced-motion: reduce) { .channel-core { animation: none; } }
 
@@ -140,7 +142,8 @@
         <path id="rAI"   d="M 461 250 H 540" />
         <path id="rQ"    d="M 722 250 H 770" />
         <path id="rMain" d="M 934 250 H 952" />
-        <path id="gut"   d="M 360 325 C 360 460 360 500 410 520" />
+        <path id="rejPre" d="M 390 322 C 390 345 430 360 466 362" />
+        <path id="rejAI"  d="M 600 322 C 600 345 560 360 524 362" />
         <path id="planIn" d="M 55 470 H 250" />
         <path id="planBypass" d="M 334 470 H 800 C 842 470 845 330 845 276" />
         <path id="loop"  d="M 1042 120 C 1042 55 1042 48 940 48 L 150 48 C 85 48 65 68 65 120" />
@@ -151,10 +154,13 @@
       <use href="#laneH" class="channel-core" /><use href="#laneA1" class="channel-core" /><use href="#laneA2" class="channel-core" />
       <use href="#rAI" class="channel-core" /><use href="#rQ" class="channel-core" /><use href="#rMain" class="channel-core" />
       <use href="#planIn" class="channel-core" style="opacity:.55" /><use href="#planBypass" class="channel-core" style="opacity:.5; stroke: var(--accent);" />
-      <use href="#gut" class="reject-gutter" />
+      <use href="#rejPre" class="reject-track" /><use href="#rejAI" class="reject-track" />
       <use href="#loop" class="channel-core" style="opacity:.5" />
 
-      <text x="540" y="548" class="zone-label" font-size="10" fill="var(--faint)">bounced &mdash; back to author</text>
+      <!-- bounce box: rejects from presubmit + AI review return here -->
+      <rect id="bounceBox" x="448" y="360" width="94" height="46" rx="6" fill="var(--surface)" stroke="var(--reject)" stroke-width="1.5" opacity="0.92"/>
+      <text x="495" y="381" class="zone-label" font-size="9.5" text-anchor="middle" fill="var(--reject)">bounce</text>
+      <text x="495" y="394" class="zone-label" font-size="8.5" text-anchor="middle" fill="var(--faint)">back to author</text>
       <text x="545" y="42" class="zone-label" font-size="10" text-anchor="middle">next worktree branches off main &#8593;</text>
 
       <!-- worktrees -->
@@ -216,7 +222,7 @@
 
   <div class="legend">
     <span><i style="background:var(--primary)"></i> commit</span>
-    <span><i style="background:var(--faint)"></i> bounced</span>
+    <span><i style="background:var(--reject)"></i> bounced &rarr; author</span>
     <span><i style="background:var(--cyan)"></i> merged change (a batch)</span>
     <span><i style="background:var(--accent)"></i> plan-first</span>
     <span><i style="background:var(--basin-edge)"></i> main (always green)</span>
@@ -303,11 +309,12 @@
     if (accepted) {
       tl.to(c, { x: slot.x, y: slot.y, duration: 0.45, ease: 'power2.out' });
     } else {
-      // bounce: peel down the gutter, fade
-      tl.add(function () { gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 }); });
-      tl.to(c, { duration: 1.4, ease: 'power1.in',
-        motionPath: { path: '#gut' },
-        opacity: 0, scale: 0.3, transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
+      // bounce: turn red, ride the presubmit reject track into the bounce box, fade
+      tl.add(function () { c.setAttribute('fill', 'var(--reject)'); gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 }); });
+      tl.to(c, { x: 390, y: 322, duration: 0.4, ease: 'power1.in' })
+        .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejPre' } })
+        .add(function () { gsap.fromTo('#bounceBox', { opacity: 0.92 }, { opacity: 0.55, duration: 0.14, yoyo: true, repeat: 1 }); })
+        .to(c, { opacity: 0, scale: 0.4, duration: 0.3, transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
     }
   }
 
@@ -324,6 +331,18 @@
       gsap.to(c, { x: slot.x, y: slot.y, duration: 0.95, ease: 'power1.inOut', delay: 0.2 + i * 0.12 });
     }
     presubmit.items.forEach(function (c, idx) { gsap.to(c, { x: presubmit.slots[idx].x, y: presubmit.slots[idx].y, duration: 0.4 }); });
+  }
+
+  // ---- AI review rejects a commit -> reddish ball rides the AI reject track to the bounce box ----
+  function aiReject() {
+    if (reduced || !aiReview.items.length || Math.random() > 0.5) return;
+    var c = aiReview.items.pop();                         // newest in the bay
+    c.setAttribute('fill', 'var(--reject)');
+    gsap.timeline()
+      .to(c, { x: 600, y: 322, duration: 0.4, ease: 'power1.in' })
+      .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejAI' } })
+      .add(function () { gsap.fromTo('#bounceBox', { opacity: 0.92 }, { opacity: 0.55, duration: 0.14, yoyo: true, repeat: 1 }); })
+      .to(c, { opacity: 0, scale: 0.4, duration: 0.3, transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
   }
 
   // ---- AI review batches a cluster -> funnel -> one merged ball -> queue slot ----
@@ -389,6 +408,7 @@
   if (!reduced) {
     setInterval(emit, 430);
     setInterval(meter, 1500);
+    setInterval(aiReject, 3200);
     setInterval(mergeBatch, 2400);
     setInterval(spawnPlan, 6500);
     setTimeout(spawnPlan, 2000);
