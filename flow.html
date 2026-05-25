@@ -84,7 +84,10 @@
   footer a { text-decoration: none; } footer a:hover { color: var(--primary); }
 
   .channel { fill: none; stroke: var(--border); stroke-width: 8; stroke-linecap: round; }
-  .channel-core { fill: none; stroke: var(--divider); stroke-width: 1.5; stroke-dasharray: 3 6; }
+  .channel-core { fill: none; stroke: var(--divider); stroke-width: 1.5; stroke-dasharray: 4 8;
+    animation: wire-flow 0.9s linear infinite; }
+  @keyframes wire-flow { to { stroke-dashoffset: -12; } }
+  @media (prefers-reduced-motion: reduce) { .channel-core { animation: none; } }
   .gate-mod { fill: var(--surface); stroke: var(--amber); stroke-width: 1.5; opacity: 0.9; }
   .gate-human { fill: var(--surface); stroke: var(--primary); stroke-width: 1.8; opacity: 0.95; }
   .gate-label, .zone-label { font-family: "JetBrains Mono", ui-monospace, monospace; fill: var(--dim); }
