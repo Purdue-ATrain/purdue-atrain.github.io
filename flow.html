@@ -29,7 +29,7 @@
     --border: rgba(235, 235, 237, 0.10); --divider: rgba(235, 235, 237, 0.16);
     --nav-bg: rgba(14, 15, 19, 0.82);
     --basin: rgba(91, 141, 240, 0.30); --basin-edge: rgba(91, 141, 240, 0.6);
-    --reject: #f7768e;
+    --reject: #f7768e; --ok: #9ece6a;
   }
   :root[data-theme="light"] {
     --bg: #f6f5f1; --surface: #ebe9e1; --surface-strong: #ebe9e1;
@@ -38,7 +38,7 @@
     --border: rgba(22, 24, 29, 0.14); --divider: rgba(22, 24, 29, 0.22);
     --nav-bg: rgba(246, 245, 241, 0.92);
     --basin: rgba(31, 79, 203, 0.26); --basin-edge: rgba(31, 79, 203, 0.6);
-    --reject: #c43d4f;
+    --reject: #c43d4f; --ok: #3f7e2e;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text);
@@ -221,8 +221,8 @@
   </div>
 
   <div class="legend">
-    <span><i style="background:var(--primary)"></i> commit</span>
-    <span><i style="background:var(--reject)"></i> bounced &rarr; author</span>
+    <span><i style="background:var(--ok)"></i> commit (passes)</span>
+    <span><i style="background:var(--reject)"></i> commit (bounces &rarr; author)</span>
     <span><i style="background:var(--cyan)"></i> merged change (a batch)</span>
     <span><i style="background:var(--accent)"></i> plan-first</span>
     <span><i style="background:var(--basin-edge)"></i> main (always green)</span>
@@ -262,8 +262,9 @@
     for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) s.push({ x: x0 + c * dx, y: y0 + r * dy });
     return s;
   }
-  var presubmit = { slots: grid(372, 210, 2, 3, 46, 40), items: [] };   // cap 6
-  var aiReview  = { slots: grid(582, 210, 2, 3, 46, 40), items: [] };   // cap 6
+  // single row ON the road line (y=250) so balls ride the track through each bay
+  var presubmit = { slots: grid(350, 250, 6, 1, 18, 0), items: [] };   // cap 6
+  var aiReview  = { slots: grid(552, 250, 6, 1, 18, 0), items: [] };   // cap 6
   var queue     = { slots: [{x:789,y:250},{x:826,y:250},{x:864,y:250},{x:901,y:250}], balls: [], reserved: 0 }; // cap 4
 
   // ---- main reservoir fill ----
@@ -300,8 +301,9 @@
     if (reduced) return;
     if (presubmit.items.length >= presubmit.slots.length) return;   // bay full: throttle
     var ent = entries[Math.floor(Math.random() * entries.length)];
-    var accepted = Math.random() > 0.2;
-    var c = dot('var(--primary)', 4.2 + Math.random() * 1.6);
+    var accepted = Math.random() > 0.25;
+    // commits are green (good) or red (bad) from the worktree
+    var c = dot(accepted ? 'var(--ok)' : 'var(--reject)', 4.2 + Math.random() * 1.6);
     var slot = presubmit.slots[presubmit.items.length];
     if (accepted) presubmit.items.push(c);
     var tl = gsap.timeline();
@@ -309,8 +311,8 @@
     if (accepted) {
       tl.to(c, { x: slot.x, y: slot.y, duration: 0.45, ease: 'power2.out' });
     } else {
-      // bounce: turn red, ride the presubmit reject track into the bounce box, fade
-      tl.add(function () { c.setAttribute('fill', 'var(--reject)'); gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 }); });
+      // a bad commit: ride the presubmit reject track into the bounce box, fade
+      tl.add(function () { gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 }); });
       tl.to(c, { x: 390, y: 322, duration: 0.4, ease: 'power1.in' })
         .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejPre' } })
         .add(function () { gsap.fromTo('#bounceBox', { opacity: 0.92 }, { opacity: 0.55, duration: 0.14, yoyo: true, repeat: 1 }); })
@@ -325,12 +327,11 @@
     openDoor('meterGate');
     var n = Math.min(1 + (Math.random() < 0.5 ? 1 : 0), presubmit.items.length, aiReview.slots.length - aiReview.items.length);
     for (var i = 0; i < n; i++) {
-      var c = presubmit.items.shift();
+      var c = presubmit.items.pop();                 // drain from the gate side -> travels straight along the road
       var slot = aiReview.slots[aiReview.items.length];
       aiReview.items.push(c);
       gsap.to(c, { x: slot.x, y: slot.y, duration: 0.95, ease: 'power1.inOut', delay: 0.2 + i * 0.12 });
     }
-    presubmit.items.forEach(function (c, idx) { gsap.to(c, { x: presubmit.slots[idx].x, y: presubmit.slots[idx].y, duration: 0.4 }); });
   }
 
   // ---- AI review rejects a commit -> reddish ball rides the AI reject track to the bounce box ----
@@ -352,8 +353,7 @@
     if (aiReview.items.length < BATCH || queue.reserved >= queue.slots.length) return;
     pulse(document.getElementById('funnel'), 'var(--cyan)');
     var idx = queue.reserved++;                         // reserve a slot up front (prevents overfill)
-    var cluster = aiReview.items.splice(0, BATCH);
-    aiReview.items.forEach(function (c, j) { gsap.to(c, { x: aiReview.slots[j].x, y: aiReview.slots[j].y, duration: 0.4 }); });
+    var cluster = aiReview.items.splice(aiReview.items.length - BATCH, BATCH);  // funnel-side balls
     // funnel the cluster: into the wide mouth, down to the tip, fade
     cluster.forEach(function (c, i) {
       gsap.timeline({ delay: 0.25 })
@@ -423,8 +423,8 @@
   } else {
     // static frame: partially-filled bays + half-full main
     setMain(0.6);
-    presubmit.slots.slice(0, 4).forEach(function (s) { var c = dot('var(--primary)', 4.5); gsap.set(c, { x: s.x, y: s.y }); });
-    aiReview.slots.slice(0, 3).forEach(function (s) { var c = dot('var(--primary)', 4.5); gsap.set(c, { x: s.x, y: s.y }); });
+    presubmit.slots.slice(0, 4).forEach(function (s) { var c = dot('var(--ok)', 4.5); gsap.set(c, { x: s.x, y: s.y }); });
+    aiReview.slots.slice(0, 3).forEach(function (s) { var c = dot('var(--ok)', 4.5); gsap.set(c, { x: s.x, y: s.y }); });
     queue.slots.slice(0, 2).forEach(function (s) { var c = dot('var(--cyan)', 13); gsap.set(c, { x: s.x, y: s.y }); });
   }
 })();
