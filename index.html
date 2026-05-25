@@ -952,7 +952,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       <div class="ma-stage">
         <canvas id="ma-canvas" aria-label="A pulsing core emits agent particles with trailing tails; they regroup as swarm, fleet, and fleet-swarm."></canvas>
         <div class="ma-mode"><span class="dot">&#9679;</span> <span class="what" id="ma-mode-what">all agents converge on one goal</span></div>
-        <div class="ma-legend">core emits agents &middot; tails show their path</div>
+        <div class="ma-legend"><span style="color:#c8324b">dispatched</span> &middot; <span style="color:#e2893a">working</span> &middot; <span style="color:#4e9e6b">returning</span></div>
       </div>
     </div>
     <p class="mono text-xs text-center mb-10" style="color: var(--faint);">the orchestrator emits agents; how they move is the pattern: swarm to one, fleet to many, fleet-swarm in groups.</p>
@@ -1031,7 +1031,8 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  var COLORS = ['#c8324b', '#c8324b', '#c8324b', '#4e9e6b'];   // crimson-dominant + a little green
+  // color encodes lifecycle state: red dispatched, orange working, green returning
+  var STATE_COLOR = { wait: '#c8324b', out: '#c8324b', dwell: '#e2893a', back: '#4e9e6b', done: '#4e9e6b' };
   var MODES = [
     { name: 'swarm',       what: 'many agents, one shared goal' },
     { name: 'fleet',       what: 'one agent per goal, spread out' },
@@ -1049,7 +1050,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     particles.push({
       x: c.x + (Math.random() - 0.5) * 10, y: c.y + (Math.random() - 0.5) * 10,
       btx: gx, bty: gy, ph: Math.random() * Math.PI * 2,
-      color: pick(COLORS), r: 1.7 + Math.random() * 1.6, trail: [],
+      color: '#c8324b', r: 1.7 + Math.random() * 1.6, trail: [],
       state: 'wait', delay: Math.random() * 1600, dwellUntil: 0
     });
   }
@@ -1135,15 +1136,16 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       if (p.state === 'wait') { gx = c.x; gy = c.y; if (age > p.delay) p.state = 'out'; }
       if (p.state === 'out') {
         gx = p.btx + Math.cos(ts / 900 + p.ph) * 5; gy = p.bty + Math.sin(ts / 900 + p.ph) * 5;
-        if (Math.abs(p.btx - p.x) < 6 && Math.abs(p.bty - p.y) < 6) { p.state = 'dwell'; p.dwellUntil = ts + 700 + Math.random() * 2200; }
+        if (Math.abs(p.btx - p.x) < 11 && Math.abs(p.bty - p.y) < 11) { p.state = 'dwell'; p.dwellUntil = ts + 900 + Math.random() * 2400; }
       } else if (p.state === 'dwell') {
         gx = p.btx + Math.cos(ts / 900 + p.ph) * 5; gy = p.bty + Math.sin(ts / 900 + p.ph) * 5;
         if (ts > p.dwellUntil) p.state = 'back';
       } else if (p.state === 'back') {
         gx = c.x; gy = c.y;
-        if (Math.abs(c.x - p.x) < 7 && Math.abs(c.y - p.y) < 7) p.state = 'done';
+        if (Math.abs(c.x - p.x) < 13 && Math.abs(c.y - p.y) < 13) p.state = 'done';
       } else if (p.state === 'done') { gx = c.x; gy = c.y; }
       if (p.state !== 'done') allDone = false;
+      p.color = STATE_COLOR[p.state] || '#c8324b';
       p.x += (gx - p.x) * 0.04; p.y += (gy - p.y) * 0.04;
       p.trail.push({ x: p.x, y: p.y }); if (p.trail.length > 9) p.trail.shift();
       drawParticle(p, 1);
@@ -1172,8 +1174,8 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     drawCore(0);
     for (var i = 0; i < particles.length; i++) {
       var p = particles[i];
-      p.x = p.btx; p.y = p.bty;   // shown arrived at their goals
-      ctx.globalAlpha = 0.85; ctx.fillStyle = p.color;
+      p.x = p.btx; p.y = p.bty;   // shown arrived + working at their goals
+      ctx.globalAlpha = 0.85; ctx.fillStyle = '#e2893a';
       ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1;
