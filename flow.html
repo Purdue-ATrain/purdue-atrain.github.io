@@ -29,7 +29,7 @@
     --border: rgba(235, 235, 237, 0.10); --divider: rgba(235, 235, 237, 0.16);
     --nav-bg: rgba(14, 15, 19, 0.82);
     --basin: rgba(91, 141, 240, 0.30); --basin-edge: rgba(91, 141, 240, 0.6);
-    --reject: #f7768e; --ok: #9ece6a;
+    --reject: #f85149; --ok: #3fb950;
   }
   :root[data-theme="light"] {
     --bg: #f6f5f1; --surface: #ebe9e1; --surface-strong: #ebe9e1;
@@ -38,7 +38,7 @@
     --border: rgba(22, 24, 29, 0.14); --divider: rgba(22, 24, 29, 0.22);
     --nav-bg: rgba(246, 245, 241, 0.92);
     --basin: rgba(31, 79, 203, 0.26); --basin-edge: rgba(31, 79, 203, 0.6);
-    --reject: #c43d4f; --ok: #3f7e2e;
+    --reject: #cf222e; --ok: #1f883d;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text);
@@ -297,21 +297,28 @@
   }
 
   // ---- emit: worktree -> PR -> presubmit bay slot (or bounce) ----
+  function restack(bay) {
+    bay.items.forEach(function (c, i) { gsap.to(c, { x: bay.slots[i].x, y: bay.slots[i].y, duration: 0.3, ease: 'power1.out' }); });
+  }
+
   function emit() {
     if (reduced) return;
-    if (presubmit.items.length >= presubmit.slots.length) return;   // bay full: throttle
+    var good = Math.random() > 0.25;                       // green good vs red bad commit
+    var slipsPast = !good && Math.random() < 0.33;         // presubmit misses some bad ones
+    var willPark = good || slipsPast;
+    if (willPark && presubmit.items.length >= presubmit.slots.length) return;   // bay full
     var ent = entries[Math.floor(Math.random() * entries.length)];
-    var accepted = Math.random() > 0.25;
-    // commits are green (good) or red (bad) from the worktree
-    var c = dot(accepted ? 'var(--ok)' : 'var(--reject)', 4.2 + Math.random() * 1.6);
-    var slot = presubmit.slots[presubmit.items.length];
-    if (accepted) presubmit.items.push(c);
+    var c = dot(good ? 'var(--ok)' : 'var(--reject)', 4.2 + Math.random() * 1.6);
+    if (!good) c._bad = true;
     var tl = gsap.timeline();
     tl.to(c, { duration: 1.6 + Math.random() * 0.4, ease: 'none', motionPath: { path: '#' + ent } });
-    if (accepted) {
+    if (willPark) {
+      // good commit (or a bad one presubmit missed) parks in the presubmit bay
+      var slot = presubmit.slots[presubmit.items.length];
+      presubmit.items.push(c);
       tl.to(c, { x: slot.x, y: slot.y, duration: 0.45, ease: 'power2.out' });
     } else {
-      // a bad commit: ride the presubmit reject track into the bounce box, fade
+      // bad commit caught at presubmit -> bounce box
       tl.add(function () { gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 }); });
       tl.to(c, { x: 390, y: 322, duration: 0.4, ease: 'power1.in' })
         .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejPre' } })
@@ -334,11 +341,14 @@
     }
   }
 
-  // ---- AI review rejects a commit -> reddish ball rides the AI reject track to the bounce box ----
+  // ---- AI review catches a bad commit presubmit missed -> rides the AI reject track to the bounce box ----
   function aiReject() {
-    if (reduced || !aiReview.items.length || Math.random() > 0.5) return;
-    var c = aiReview.items.pop();                         // newest in the bay
-    c.setAttribute('fill', 'var(--reject)');
+    if (reduced) return;
+    var bi = -1;
+    for (var i = 0; i < aiReview.items.length; i++) { if (aiReview.items[i]._bad) { bi = i; break; } }
+    if (bi < 0) return;                                   // nothing bad to catch right now
+    var c = aiReview.items.splice(bi, 1)[0];
+    restack(aiReview);
     gsap.timeline()
       .to(c, { x: 600, y: 322, duration: 0.4, ease: 'power1.in' })
       .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejAI' } })
@@ -349,11 +359,14 @@
   // ---- AI review batches a cluster -> funnel -> one merged ball -> queue slot ----
   var BATCH = 3;
   function mergeBatch() {
-    if (reduced) return;
-    if (aiReview.items.length < BATCH || queue.reserved >= queue.slots.length) return;
+    if (reduced || queue.reserved >= queue.slots.length) return;
+    var good = aiReview.items.filter(function (c) { return !c._bad; });   // only green commits get merged
+    if (good.length < BATCH) return;
     pulse(document.getElementById('funnel'), 'var(--cyan)');
     var idx = queue.reserved++;                         // reserve a slot up front (prevents overfill)
-    var cluster = aiReview.items.splice(aiReview.items.length - BATCH, BATCH);  // funnel-side balls
+    var cluster = good.slice(-BATCH);                   // funnel-side good balls
+    aiReview.items = aiReview.items.filter(function (c) { return cluster.indexOf(c) < 0; });
+    restack(aiReview);
     // funnel the cluster: into the wide mouth, down to the tip, fade
     cluster.forEach(function (c, i) {
       gsap.timeline({ delay: 0.25 })
@@ -408,7 +421,7 @@
   if (!reduced) {
     setInterval(emit, 430);
     setInterval(meter, 1500);
-    setInterval(aiReject, 3200);
+    setInterval(aiReject, 1400);
     setInterval(mergeBatch, 2400);
     setInterval(spawnPlan, 6500);
     setTimeout(spawnPlan, 2000);
