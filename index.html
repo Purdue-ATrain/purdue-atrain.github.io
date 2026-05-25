@@ -847,16 +847,44 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <!-- =========== MULTI-AGENT =========== -->
 <style>
   /* Canvas particle animation lives on its own dark "screen" so the glow pops
-     in both themes (same idea as the terminal demos). */
+     in both themes. Tab strip to pick the pattern, same idea as the terminal demos. */
+  .ma-window {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #0b0c10;
+  }
+  .ma-tabs {
+    display: flex;
+    overflow-x: auto;
+    background: rgba(15, 23, 42, 0.5);
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: thin;
+  }
+  .ma-tab {
+    flex-shrink: 0;
+    padding: 9px 18px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: #a9b1d6;
+    background: transparent;
+    border: 0;
+    border-right: 1px solid rgba(122, 162, 247, 0.08);
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+    white-space: nowrap;
+  }
+  .ma-tab:hover { background: rgba(122, 162, 247, 0.05); color: #c0caf5; }
+  .ma-tab.active {
+    color: #e06c75;
+    background: rgba(224, 108, 117, 0.08);
+    box-shadow: inset 0 -2px 0 0 #e06c75;
+  }
   .ma-stage {
     position: relative;
     width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    background: radial-gradient(ellipse 60% 80% at 28% 50%, #14131c, #0b0c10 70%);
-    border: 1px solid var(--border);
     aspect-ratio: 2 / 1;
-    max-height: 420px;
+    max-height: 400px;
   }
   .ma-stage canvas { display: block; width: 100%; height: 100%; }
   .ma-mode {
@@ -908,10 +936,17 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       The useful split is not "AI vs agents", it is <span class="text-text">workflow vs agent</span>: in a workflow your code decides the steps; in an agent the model decides them. Most things worth building are workflows, and that is a feature. An agent earns its autonomy only when the steps genuinely cannot be enumerated ahead of time.
     </p>
 
-    <div class="ma-stage mb-3 fade-in">
-      <canvas id="ma-canvas" aria-label="A pulsing core emits agent particles with trailing tails; they regroup as swarm, fleet, and fleet-swarm."></canvas>
-      <div class="ma-mode"><span class="dot">&#9679;</span> <span id="ma-mode-name">swarm</span> <span class="what" id="ma-mode-what">&middot; all agents converge on one goal</span></div>
-      <div class="ma-legend">core emits agents &middot; tails show their path</div>
+    <div class="ma-window mb-3 fade-in">
+      <div class="ma-tabs" role="tablist" aria-label="Agent patterns">
+        <button type="button" class="ma-tab active" role="tab" data-mode="0" aria-selected="true">swarm</button>
+        <button type="button" class="ma-tab" role="tab" data-mode="1" aria-selected="false">fleet</button>
+        <button type="button" class="ma-tab" role="tab" data-mode="2" aria-selected="false">fleet-swarm</button>
+      </div>
+      <div class="ma-stage">
+        <canvas id="ma-canvas" aria-label="A pulsing core emits agent particles with trailing tails; they regroup as swarm, fleet, and fleet-swarm."></canvas>
+        <div class="ma-mode"><span class="dot">&#9679;</span> <span class="what" id="ma-mode-what">all agents converge on one goal</span></div>
+        <div class="ma-legend">core emits agents &middot; tails show their path</div>
+      </div>
     </div>
     <p class="mono text-xs text-center mb-10" style="color: var(--faint);">the orchestrator emits agents; how they move is the pattern: swarm to one, fleet to many, fleet-swarm in groups.</p>
 
@@ -925,7 +960,6 @@ Ask me my GitHub handle first, then start with step 1.</pre>
           <tr><td class="topo">router</td><td>classify, dispatch to one handler</td><td class="when">enumerable categories</td></tr>
           <tr><td class="topo">orchestrator-worker</td><td>a lead decomposes at runtime, delegates</td><td class="when">open-ended; can't predict the subtasks</td></tr>
           <tr><td class="topo">parallel fan-out</td><td>same op across many items, then aggregate</td><td class="when">embarrassingly parallel, latency-bound</td></tr>
-          <tr><td class="topo">swarm</td><td>peers hand control among themselves</td><td class="when">conversational flows, clean handoffs</td></tr>
         </tbody>
       </table>
     </div>
@@ -957,11 +991,11 @@ Ask me my GitHub handle first, then start with step 1.</pre>
       <span class="k">// say what you mean</span>
       <dl>
         <dt>Swarm</dt>
-        <dd>Many agents on one task, converging on a single goal. The animation above: every agent flows to one point.</dd>
+        <dd>Many agents on one task, all converging on a single goal. The swarm tab above.</dd>
         <dt>Fleet</dt>
-        <dd>Many long-lived agents, each owning a different goal: one per analysis, per submission stream, per docs. The agents scatter to their own lanes.</dd>
+        <dd>Many long-lived agents, each owning a different goal: one per analysis, per submission stream, per docs. The fleet tab above.</dd>
         <dt>Fleet-swarm</dt>
-        <dd>Groups of agents, each group converging on its own goal. A fleet of swarms: several clusters, each solving one thing together.</dd>
+        <dd>Groups of agents, each group converging on its own goal: a fleet of swarms. The fleet-swarm tab above.</dd>
       </dl>
     </div>
   </div>
@@ -975,8 +1009,8 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   var canvas = document.getElementById('ma-canvas');
   if (!canvas || !canvas.getContext) return;
   var ctx = canvas.getContext('2d');
-  var nameEl = document.getElementById('ma-mode-name');
   var whatEl = document.getElementById('ma-mode-what');
+  var tabs = [].slice.call(document.querySelectorAll('.ma-tab'));
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var W = 0, H = 0;
@@ -992,9 +1026,9 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 
   var COLORS = ['#5b8df0', '#d4924c', '#6db8e8', '#e06c75', '#9ece6a', '#c5a9ff'];
   var MODES = [
-    { name: 'swarm',       what: '· all agents converge on one goal' },
-    { name: 'fleet',       what: '· agents scatter to their own goals' },
-    { name: 'fleet-swarm', what: '· groups converge on separate goals' }
+    { name: 'swarm',       what: 'all agents converge on one goal' },
+    { name: 'fleet',       what: 'agents scatter to their own goals' },
+    { name: 'fleet-swarm', what: 'groups converge on separate goals' }
   ];
   var modeIdx = 0, particles = [], targets = [];
 
@@ -1025,12 +1059,16 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   function setMode(i) {
     modeIdx = i; targets = targetsFor(MODES[i].name);
     for (var k = 0; k < particles.length; k++) aim(particles[k]);
-    if (nameEl) nameEl.textContent = MODES[i].name;
     if (whatEl) whatEl.textContent = MODES[i].what;
+    tabs.forEach(function (t, ti) {
+      var on = ti === i;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
   }
 
   function drawCore(ts) {
-    var c = core(), pulse = 0.5 + 0.5 * Math.sin(ts / 620), R = (24 + pulse * 9) * 2.1;
+    var c = core(), pulse = 0.5 + 0.5 * Math.sin(ts / 620), R = (12 + pulse * 5) * 1.6;
     var g = ctx.createRadialGradient(c.x, c.y, 2, c.x, c.y, R);
     g.addColorStop(0, 'rgba(255,255,255,0.95)');
     g.addColorStop(0.28, 'rgba(255,150,110,0.82)');
@@ -1059,16 +1097,15 @@ Ask me my GitHub handle first, then start with step 1.</pre>
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   }
 
-  var raf = 0, running = false, lastSwitch = 0;
+  var raf = 0, running = false;
   function loop(ts) {
     if (!running) return;
-    if (!lastSwitch) lastSwitch = ts;
     step(ts);
-    if (ts - lastSwitch > 5600) { lastSwitch = ts; setMode((modeIdx + 1) % MODES.length); }
     raf = requestAnimationFrame(loop);
   }
 
   function staticFrame() {
+    particles.length = 0;
     ctx.fillStyle = '#0a0b0f'; ctx.fillRect(0, 0, W, H);
     drawCore(0);
     ctx.globalCompositeOperation = 'lighter';
@@ -1082,6 +1119,12 @@ Ask me my GitHub handle first, then start with step 1.</pre>
   function init() {
     resize();
     if (!W) { setTimeout(init, 120); return; }
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        setMode(parseInt(t.dataset.mode, 10));
+        if (reduced) staticFrame();
+      });
+    });
     setMode(0);
     if (reduced) { staticFrame(); return; }
     if ('IntersectionObserver' in window) {
