@@ -554,6 +554,7 @@ tailwind.config = {
       <a href="#quick-start" class="hover:text-primary transition-colors">quick-start</a>
       <a href="#journey" class="hover:text-primary transition-colors">journey</a>
       <a href="#synthesis" class="hover:text-primary transition-colors">synthesis</a>
+      <a href="#multiagent" class="hover:text-primary transition-colors">agents</a>
       <a href="#demos" class="hover:text-primary transition-colors">demos</a>
       <a href="#benchmarks" class="hover:text-primary transition-colors">benchmarks</a>
       <a href="#skills" class="hover:text-primary transition-colors">skills</a>
@@ -843,6 +844,141 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 </section>
 <div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== MULTI-AGENT =========== -->
+<style>
+  .ma-graph { width: 100%; max-width: 680px; margin: 6px auto 0; display: block; overflow: visible; }
+  .ma-graph text { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; fill: var(--text); text-anchor: middle; dominant-baseline: middle; }
+  .ma-graph text.sub { font-size: 10px; fill: var(--dim); }
+  .ma-node rect { fill: var(--surface); stroke-width: 1.5; rx: 9; }
+  .ma-node.lead rect, .ma-node.result rect { stroke: var(--primary); }
+  .ma-node.worker rect { stroke: var(--accent); }
+  .ma-edges path.track { fill: none; stroke: var(--divider); stroke-width: 1.5; }
+  .ma-edges path.flow {
+    fill: none; stroke-width: 2; stroke-linecap: round;
+    stroke-dasharray: 10 140;
+    animation: ma-pulse 3.2s linear infinite;
+  }
+  .ma-edges path.flow.down { stroke: var(--primary); }
+  .ma-edges path.flow.up { stroke: var(--accent); }
+  .ma-edges path.flow.d1 { animation-delay: -0.4s; }
+  .ma-edges path.flow.d2 { animation-delay: -0.8s; }
+  .ma-edges path.flow.d3 { animation-delay: -1.2s; }
+  .ma-edges path.flow.d4 { animation-delay: -1.6s; }
+  @keyframes ma-pulse { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -150; } }
+  .ma-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ma-table th, .ma-table td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .ma-table thead th { color: var(--faint); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+  .ma-table tbody tr:last-child td { border-bottom: 0; }
+  .ma-table td.topo { font-family: "JetBrains Mono", ui-monospace, monospace; color: var(--primary); white-space: nowrap; }
+  .ma-table td.when { color: var(--dim); }
+  .ma-trigger-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .ma-trigger-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; background: var(--surface-strong); }
+  .ma-trigger-card .k { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); display: block; margin-bottom: 6px; }
+  .ma-trigger-card h4 { font-family: "Bricolage Grotesque", system-ui, sans-serif; font-size: 16px; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .ma-trigger-card p { font-size: 12.5px; color: var(--dim); line-height: 1.55; margin: 0; }
+  .ma-vocab { background: var(--pill-amber-bg); border-left: 3px solid var(--amber); border-radius: 10px; padding: 18px 20px; }
+  .ma-vocab .k { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--amber); display: block; margin-bottom: 10px; }
+  .ma-vocab dt { font-family: "Bricolage Grotesque", system-ui, sans-serif; color: var(--text); font-size: 15px; margin-top: 10px; }
+  .ma-vocab dt:first-of-type { margin-top: 0; }
+  .ma-vocab dd { margin: 2px 0 0; font-size: 13px; color: var(--dim); line-height: 1.55; }
+  @media (max-width: 768px) {
+    .ma-trigger-grid { grid-template-columns: 1fr; }
+    .ma-table { font-size: 12px; }
+    .ma-table td.topo { white-space: normal; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ma-edges path.flow { animation: none; stroke-dasharray: 3 6; }
+  }
+</style>
+
+<section id="multiagent" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-12 max-w-2xl">
+      <span class="section-num" style="color: var(--amber);">// 04</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">Multi-agent, when it earns it</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">Most "agents" should be workflows. The few that should fan out, fan out for a reason.</p>
+    </div>
+
+    <p class="text-base max-w-3xl mb-6 fade-in" style="color: var(--dim); line-height: 1.7;">
+      The useful split is not "AI vs agents", it is <span class="text-text">workflow vs agent</span>: in a workflow your code decides the steps; in an agent the model decides them. Most things worth building are workflows, and that is a feature. An agent earns its autonomy only when the steps genuinely cannot be enumerated ahead of time.
+    </p>
+
+    <div class="step-card rounded-lg p-6 mb-10 fade-in">
+      <svg class="ma-graph" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" aria-label="A lead agent fans out to four worker agents, whose findings converge into one result.">
+        <g class="ma-edges">
+          <path class="track" d="M340 64 L75 149"/><path class="flow down d1" d="M340 64 L75 149"/>
+          <path class="track" d="M340 64 L245 149"/><path class="flow down d2" d="M340 64 L245 149"/>
+          <path class="track" d="M340 64 L415 149"/><path class="flow down d3" d="M340 64 L415 149"/>
+          <path class="track" d="M340 64 L585 149"/><path class="flow down d4" d="M340 64 L585 149"/>
+          <path class="track" d="M75 191 L340 276"/><path class="flow up d4" d="M75 191 L340 276"/>
+          <path class="track" d="M245 191 L340 276"/><path class="flow up d3" d="M245 191 L340 276"/>
+          <path class="track" d="M415 191 L340 276"/><path class="flow up d2" d="M415 191 L340 276"/>
+          <path class="track" d="M585 191 L340 276"/><path class="flow up d1" d="M585 191 L340 276"/>
+        </g>
+        <g class="ma-node lead"><rect x="288" y="22" width="104" height="42"/><text x="340" y="43">lead</text></g>
+        <g class="ma-node worker"><rect x="22" y="149" width="106" height="42"/><text x="75" y="166">explorer</text><text class="sub" x="75" y="180">read</text></g>
+        <g class="ma-node worker"><rect x="192" y="149" width="106" height="42"/><text x="245" y="166">explorer</text><text class="sub" x="245" y="180">read</text></g>
+        <g class="ma-node worker"><rect x="362" y="149" width="106" height="42"/><text x="415" y="166">explorer</text><text class="sub" x="415" y="180">read</text></g>
+        <g class="ma-node worker"><rect x="532" y="149" width="106" height="42"/><text x="585" y="166">explorer</text><text class="sub" x="585" y="180">read</text></g>
+        <g class="ma-node result"><rect x="278" y="276" width="124" height="42"/><text x="340" y="297">result</text></g>
+      </svg>
+      <p class="mt-4 mono text-xs text-center" style="color: var(--faint);">orchestrator-worker: a lead fans out to readers, their findings converge into one answer.</p>
+    </div>
+
+    <h3 class="hl text-2xl mb-4 fade-in">The shapes</h3>
+    <div class="step-card rounded-lg p-2 mb-4 fade-in" style="overflow-x: auto;">
+      <table class="ma-table">
+        <thead><tr><th>topology</th><th>what it is</th><th>when it fits</th></tr></thead>
+        <tbody>
+          <tr><td class="topo">single agent</td><td>one loop, one context, all tools</td><td class="when">the default; anything write-heavy</td></tr>
+          <tr><td class="topo">pipeline</td><td>fixed sequential stages, output to input</td><td class="when">cleanly decomposable, predictable steps</td></tr>
+          <tr><td class="topo">router</td><td>classify, dispatch to one handler</td><td class="when">enumerable categories</td></tr>
+          <tr><td class="topo">orchestrator-worker</td><td>a lead decomposes at runtime, delegates</td><td class="when">open-ended; can't predict the subtasks</td></tr>
+          <tr><td class="topo">parallel fan-out</td><td>same op across many items, then aggregate</td><td class="when">embarrassingly parallel, latency-bound</td></tr>
+          <tr><td class="topo">swarm</td><td>peers hand control among themselves</td><td class="when">conversational flows, clean handoffs</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm max-w-3xl mb-12 fade-in" style="color: var(--faint);">The lab mostly runs orchestrator-worker, not a true swarm, so it calls it that.</p>
+
+    <h3 class="hl text-2xl mb-4 fade-in">Three ways an agent starts</h3>
+    <div class="ma-trigger-grid mb-12 fade-in">
+      <div class="ma-trigger-card">
+        <span class="k">on-demand</span>
+        <h4>You invoke it</h4>
+        <p>A crew you spawn now for the task in front of you.</p>
+      </div>
+      <div class="ma-trigger-card">
+        <span class="k">scheduled</span>
+        <h4>It runs on a clock</h4>
+        <p>The nightly skill-curation cron; a grid-status check every few minutes.</p>
+      </div>
+      <div class="ma-trigger-card">
+        <span class="k">event-driven</span>
+        <h4>A signal fires it</h4>
+        <p>A job finishes, a PR opens, CI goes red. It reacts, reports, escalates.</p>
+      </div>
+    </div>
+    <p class="text-base max-w-3xl mb-12 fade-in" style="color: var(--dim); line-height: 1.7;">
+      Scheduled and event-driven agents stay on the loop: they report and escalate, a human approves anything that writes. Autonomy on the trigger, not on the merge.
+    </p>
+
+    <div class="ma-vocab max-w-3xl fade-in">
+      <span class="k">// say what you mean</span>
+      <dl>
+        <dt>Fleet</dt>
+        <dd>Many long-lived agents, each owning a lane: one per analysis, per submission stream, per docs. Loosely coordinated, not one crew. The lab runs a fleet.</dd>
+        <dt>Orchestrator-worker</dt>
+        <dd>One lead decomposes a task and delegates to workers, then synthesizes. The usual crew shape.</dd>
+        <dt>Swarm</dt>
+        <dd>Many agents on one task handing control among themselves, no central lead. Powerful but hard to bound; rarely the right tool.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider max-w-5xl mx-auto"></div>
+
 <!-- =========== DEMOS IN THE TERMINAL =========== -->
 <style>
   .terminal-window {
@@ -955,7 +1091,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="demos" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 04</span>
+      <span class="section-num" style="color: var(--amber);">// 05</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Demos in the terminal</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Five real sessions. Click a tab to switch; press <span class="mono text-text">&#x27F2;</span> to replay.</p>
     </div>
@@ -1317,7 +1453,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="benchmarks" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 05</span>
+      <span class="section-num" style="color: var(--amber);">// 06</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Pick up to three models, put them side by side.</p>
     </div>
@@ -1365,7 +1501,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="skills" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 06</span>
+      <span class="section-num" style="color: var(--amber);">// 07</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The skill library</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">11 skills. Cron-curated nightly. Branched per contributor.</p>
     </div>
@@ -1415,7 +1551,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="harness" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 07</span>
+      <span class="section-num" style="color: var(--amber);">// 08</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The harness blueprint</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">A copier template. Everything a CMS analysis needs.</p>
     </div>
@@ -1483,7 +1619,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="refs" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 08</span>
+      <span class="section-num" style="color: var(--amber);">// 09</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Reference analyses</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two working CMS analyses built on the harness. Read the code.</p>
     </div>
@@ -1518,7 +1654,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="get-involved" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 09</span>
+      <span class="section-num" style="color: var(--amber);">// 10</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Membership is closed for v0. Open an issue to request access.</p>
     </div>
