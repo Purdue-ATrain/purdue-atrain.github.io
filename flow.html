@@ -142,7 +142,7 @@
         <path id="rMain" d="M 934 250 H 952" />
         <path id="gut"   d="M 360 325 C 360 460 360 500 410 520" />
         <path id="planIn" d="M 55 470 H 250" />
-        <path id="planUp" d="M 334 470 C 410 470 300 250 295 250" />
+        <path id="planBypass" d="M 334 470 H 800 C 842 470 845 330 845 276" />
         <path id="loop"  d="M 1042 120 C 1042 55 1042 48 940 48 L 150 48 C 85 48 65 68 65 120" />
       </defs>
 
@@ -150,7 +150,7 @@
       <use href="#rAI" class="channel" /><use href="#rQ" class="channel" /><use href="#rMain" class="channel" />
       <use href="#laneH" class="channel-core" /><use href="#laneA1" class="channel-core" /><use href="#laneA2" class="channel-core" />
       <use href="#rAI" class="channel-core" /><use href="#rQ" class="channel-core" /><use href="#rMain" class="channel-core" />
-      <use href="#planIn" class="channel-core" style="opacity:.55" /><use href="#planUp" class="channel-core" style="opacity:.55" />
+      <use href="#planIn" class="channel-core" style="opacity:.55" /><use href="#planBypass" class="channel-core" style="opacity:.5; stroke: var(--accent);" />
       <use href="#gut" class="reject-gutter" />
       <use href="#loop" class="channel-core" style="opacity:.5" />
 
@@ -209,7 +209,8 @@
       <text x="292" y="468" class="zone-label" font-size="9.5" text-anchor="middle" fill="var(--accent)">Plan-Request</text>
       <text x="292" y="479" class="zone-label" font-size="8.5" text-anchor="middle" fill="var(--faint)">draft PR</text>
       <text x="150" y="458" class="zone-label" font-size="9.5" fill="var(--faint)">big change</text>
-      <text x="292" y="508" class="zone-label" font-size="9" text-anchor="middle" fill="var(--faint)">owner approves intent &#8593;</text>
+      <text x="292" y="508" class="zone-label" font-size="9" text-anchor="middle" fill="var(--faint)">owner approves intent</text>
+      <text x="560" y="462" class="zone-label" font-size="9" text-anchor="middle" fill="var(--accent)">pre-approved &mdash; bypasses review &rarr; merge queue</text>
     </svg>
   </div>
 
@@ -367,23 +368,22 @@
     if (mainLevel > 0.9) gsap.delayedCall(2.4, function () { setMain(0.16); });
   }
 
-  // ---- plan-first: big change -> Plan-Request -> joins presubmit ----
+  // ---- plan-first: big change -> Plan-Request (owner approves intent) ->
+  //      pre-approved, so it BYPASSES presubmit + AI review and drops an
+  //      orange ball straight into the merge queue ----
   function spawnPlan() {
-    if (reduced || presubmit.items.length >= presubmit.slots.length) return;
+    if (reduced || queue.reserved >= queue.slots.length) return;   // needs a free queue slot
     var c = dot('var(--accent)', 5);
     gsap.set(c, { x: 55, y: 470 });
+    var idx = queue.reserved++;
+    var slot = queue.slots[idx];
     var tl = gsap.timeline();
-    tl.to(c, { duration: 1.5, ease: 'none', motionPath: { path: '#planIn' } })
+    tl.to(c, { duration: 1.4, ease: 'none', motionPath: { path: '#planIn' } })
       .add(function () { gsap.fromTo('#planReq', { opacity: 0.92 }, { opacity: 0.45, duration: 0.3, yoyo: true, repeat: 3 }); })
-      .to(c, { duration: 1.3, ease: 'power1.inOut', delay: 0.3,
-        motionPath: { path: '#planUp' } })
-      .add(function () {
-        c.setAttribute('fill', 'var(--primary)');
-        if (presubmit.items.length < presubmit.slots.length) {
-          var slot = presubmit.slots[presubmit.items.length]; presubmit.items.push(c);
-          gsap.to(c, { x: slot.x, y: slot.y, attr: { r: 4.6 }, duration: 0.5, ease: 'power2.out' });
-        } else { c.remove(); }
-      });
+      .to(c, { attr: { r: 13 }, duration: 0.32, ease: 'back.out(2)', delay: 0.4 })   // becomes a merge-ready change
+      .to(c, { duration: 1.7, ease: 'power1.inOut', motionPath: { path: '#planBypass' } })
+      .to(c, { x: slot.x, y: slot.y, duration: 0.4, ease: 'power2.out' })
+      .add(function () { queue.balls.push(c); if (queue.balls.length >= queue.slots.length) drainQueue(); });
   }
 
   if (!reduced) {
