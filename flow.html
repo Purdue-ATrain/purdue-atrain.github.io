@@ -4,14 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>The engine · Purdue-ATrain</title>
-<meta name="description" content="How the ATrain lab absorbs a flood of human + AI commits into a clean, compounding main — an animated view of the contribution engine." />
+<meta name="description" content="How the lab ships a flood of human + AI commits into a clean, always-green main — an animated view of the contribution workflow." />
 <link rel="icon" href="assets/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <script>
-  // Theme boot: match stored preference before first paint
   (function () {
     try {
       var stored = localStorage.getItem('atrain_theme');
@@ -24,40 +23,20 @@
 
 <style>
   :root {
-    --bg: #0e0f13;
-    --surface: #181a21;
-    --surface-strong: rgba(24, 26, 33, 0.7);
-    --primary: #5b8df0;
-    --accent: #d4924c;
-    --accent2: #b87a3e;
-    --amber: #d4924c;
-    --cyan: #6db8e8;
-    --text: #ebebed;
-    --dim: #9c9ea4;
-    --faint: #5e6068;
-    --border: rgba(235, 235, 237, 0.10);
-    --divider: rgba(235, 235, 237, 0.16);
+    --bg: #0e0f13; --surface: #181a21; --surface-strong: rgba(24, 26, 33, 0.7);
+    --primary: #5b8df0; --accent: #d4924c; --accent2: #b87a3e; --amber: #d4924c;
+    --cyan: #6db8e8; --text: #ebebed; --dim: #9c9ea4; --faint: #5e6068;
+    --border: rgba(235, 235, 237, 0.10); --divider: rgba(235, 235, 237, 0.16);
     --nav-bg: rgba(14, 15, 19, 0.82);
-    --basin: rgba(212, 146, 76, 0.30);
-    --basin-edge: rgba(212, 146, 76, 0.55);
+    --basin: rgba(91, 141, 240, 0.30); --basin-edge: rgba(91, 141, 240, 0.6);
   }
   :root[data-theme="light"] {
-    --bg: #f6f5f1;
-    --surface: #ebe9e1;
-    --surface-strong: #ebe9e1;
-    --primary: #1f4fcb;
-    --accent: #b5722a;
-    --accent2: #97601e;
-    --amber: #b5722a;
-    --cyan: #126b87;
-    --text: #16181d;
-    --dim: #2d3035;
-    --faint: #5a5d65;
-    --border: rgba(22, 24, 29, 0.14);
-    --divider: rgba(22, 24, 29, 0.22);
+    --bg: #f6f5f1; --surface: #ebe9e1; --surface-strong: #ebe9e1;
+    --primary: #1f4fcb; --accent: #b5722a; --accent2: #97601e; --amber: #b5722a;
+    --cyan: #126b87; --text: #16181d; --dim: #2d3035; --faint: #5a5d65;
+    --border: rgba(22, 24, 29, 0.14); --divider: rgba(22, 24, 29, 0.22);
     --nav-bg: rgba(246, 245, 241, 0.92);
-    --basin: rgba(181, 114, 42, 0.28);
-    --basin-edge: rgba(181, 114, 42, 0.6);
+    --basin: rgba(31, 79, 203, 0.26); --basin-edge: rgba(31, 79, 203, 0.6);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text);
@@ -67,11 +46,8 @@
   .serif-italic { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; }
   a { color: inherit; }
 
-  nav.bar {
-    position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 50;
-    background: var(--nav-bg); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-  }
+  nav.bar { position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 50;
+    background: var(--nav-bg); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
   nav.bar .inner { max-width: 1180px; margin: 0 auto; padding: 0 24px; height: 100%;
     display: flex; align-items: center; justify-content: space-between; }
   nav.bar a.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
@@ -93,11 +69,8 @@
   .lede { font-size: 16px; color: var(--dim); line-height: 1.7; max-width: 52rem; margin: 0 0 28px; }
   .lede b { color: var(--text); font-weight: 600; }
 
-  .engine-wrap {
-    border: 1px solid var(--border); border-radius: 14px;
-    background: var(--surface-strong); backdrop-filter: blur(8px);
-    padding: 8px; overflow: hidden;
-  }
+  .engine-wrap { border: 1px solid var(--border); border-radius: 14px;
+    background: var(--surface-strong); backdrop-filter: blur(8px); padding: 8px; overflow: hidden; }
   #engine { width: 100%; height: auto; display: block; }
 
   .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px;
@@ -110,14 +83,14 @@
     align-items: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--faint); }
   footer a { text-decoration: none; } footer a:hover { color: var(--primary); }
 
-  /* engine svg element styling */
   .channel { fill: none; stroke: var(--border); stroke-width: 8; stroke-linecap: round; }
   .channel-core { fill: none; stroke: var(--divider); stroke-width: 1.5; stroke-dasharray: 3 6; }
   .gate-mod { fill: var(--surface); stroke: var(--amber); stroke-width: 1.5; opacity: 0.9; }
+  .gate-human { fill: var(--surface); stroke: var(--primary); stroke-width: 1.8; opacity: 0.95; }
   .gate-label, .zone-label { font-family: "JetBrains Mono", ui-monospace, monospace; fill: var(--dim); }
   .basin-tank { fill: none; stroke: var(--basin-edge); stroke-width: 2; }
-  .droplet { stroke: none; }
   .reject-gutter { fill: none; stroke: var(--faint); stroke-width: 1; stroke-dasharray: 2 5; opacity: 0.4; }
+  .node { fill: var(--surface); stroke: var(--cyan); stroke-width: 2; }
 
   @media (max-width: 720px) {
     nav.bar .links a:not(.keep) { display: none; }
@@ -130,123 +103,122 @@
 
 <nav class="bar">
   <div class="inner">
-    <a class="brand" href="index.html">
-      <img src="assets/logo.png" alt="" />
-      <span class="hl" style="font-size:14px;">Purdue-ATrain</span>
-    </a>
+    <a class="brand" href="index.html"><img src="assets/logo.png" alt="" /><span class="hl" style="font-size:14px;">Purdue-ATrain</span></a>
     <div class="links">
       <a class="keep" href="index.html">&larr; home</a>
       <a href="sharpen.html">sharpen</a>
       <a href="benchmarks/report.html">benchmarks</a>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-        <span class="icon-sun">&#9728;</span><span class="icon-moon">&#9789;</span>
-      </button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"><span class="icon-sun">&#9728;</span><span class="icon-moon">&#9789;</span></button>
     </div>
   </div>
 </nav>
 
 <main>
   <span class="section-num">// the engine</span>
-  <h1 class="title hl">Absorbing the flood</h1>
-  <p class="subtitle serif-italic">How the lab turns a torrent of commits into a clean, compounding <span class="mono" style="font-style:normal;">main</span>.</p>
+  <h1 class="title hl">Shipping into a green main</h1>
+  <p class="subtitle serif-italic">Many worktrees, many agents &mdash; one always-green <span class="mono" style="font-style:normal;">main</span>.</p>
   <p class="lede">
-    Humans and AI agents fire commits all day across every repo. Left raw, that torrent would drown <b>main</b>.
-    Instead it runs an engine: contributions pour into <b>per-analyst branches</b> and PRs, pass through
-    <b>audit gates</b> (a regex scan, then a Claude semantic review), and the accepted flow is
-    <b>synthesised</b> into the <b>nightly</b> basin. A human opens the final <b>sluice</b> — and only then
-    does it merge into <b>main</b>, which rises a little richer each cycle for the next analyst to draw from.
+    Every contributor &mdash; human or Claude Code agent &mdash; works in its own <b>worktree</b>, never the shared checkout, and opens a small <b>PR</b>.
+    Each PR runs a gauntlet of gates: an automatic <b>presubmit</b> (build, tests, lint, forbidden-pattern scan), then a required <b>AI review</b>,
+    then a human <b>owner LGTM</b>. Survivors enter a <b>merge queue</b> that re-tests each one against the latest <b>main</b> before it lands &mdash; so
+    <b>main</b> is always green, and the next worktree branches off something a little richer. Big changes open a draft <b>Plan-Request</b> first,
+    so the owner approves the <i>intent</i> before any code is generated.
   </p>
 
   <div class="engine-wrap">
-    <svg id="engine" viewBox="0 0 1200 620" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="Animated diagram of the contribution engine: commit streams filtered through audit gates, synthesised into the nightly basin, then released by a human sluice into the main reservoir, looping back to the sources.">
+    <svg id="engine" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Animated diagram of the contribution workflow: worktrees open PRs that pass through presubmit, AI review, and owner-LGTM gates, then a merge queue lands them on main, which loops back to feed the next worktree.">
       <defs>
-        <!-- accepted lane paths: source -> through gates -> converge at cron -> nightly inlet -->
-        <path id="laneA" d="M 70 170 L 620 170 C 710 170 730 300 845 300" />
-        <path id="laneB" d="M 70 300 L 845 300" />
-        <path id="laneC" d="M 70 430 L 620 430 C 710 430 730 300 845 300" />
-        <!-- reject gutter drop paths from each gate x -->
-        <path id="gutA1" d="M 430 170 C 430 520 430 540 470 560" />
-        <path id="gutB1" d="M 430 300 C 430 520 430 540 470 560" />
-        <path id="gutC1" d="M 430 430 C 430 520 430 540 470 560" />
-        <path id="gutA2" d="M 590 170 C 590 520 590 540 630 560" />
-        <path id="gutB2" d="M 590 300 C 590 520 590 540 630 560" />
-        <path id="gutC2" d="M 590 430 C 590 520 590 540 630 560" />
-        <!-- loop-back pipe: main top -> arc over -> sources -->
-        <path id="loopPipe" d="M 1085 150 C 1085 70 1085 60 1000 60 L 150 60 C 90 60 70 80 70 130" />
+        <!-- entry: each worktree spout -> PR convergence at (300,250) -->
+        <path id="entH"  d="M 65 150 C 175 150 195 250 300 250" />
+        <path id="entA1" d="M 65 250 L 300 250" />
+        <path id="entA2" d="M 65 350 C 175 350 195 250 300 250" />
+        <!-- shared review channel: PR (300,250) -> through gates -> main inlet (950,250) -->
+        <path id="review" d="M 300 250 H 950" />
+        <!-- reject gutters from presubmit (x=420) and AI review (x=560) -->
+        <path id="gut1" d="M 420 250 C 420 470 420 500 460 520" />
+        <path id="gut2" d="M 560 250 C 560 470 500 500 600 520" />
+        <!-- plan-first: big-change spout -> Plan-Request -> up into review channel -->
+        <path id="planIn" d="M 65 470 H 250" />
+        <path id="planUp" d="M 330 470 C 410 470 360 250 360 250" />
+        <!-- loop back: main top -> over -> worktrees -->
+        <path id="loop" d="M 1040 130 C 1040 60 1040 50 940 50 L 150 50 C 85 50 65 70 65 115" />
       </defs>
 
       <!-- visible channels -->
-      <use href="#laneA" class="channel" /><use href="#laneB" class="channel" /><use href="#laneC" class="channel" />
-      <use href="#laneA" class="channel-core" /><use href="#laneB" class="channel-core" /><use href="#laneC" class="channel-core" />
+      <use href="#entH" class="channel" /><use href="#entA1" class="channel" /><use href="#entA2" class="channel" />
+      <use href="#review" class="channel" />
+      <use href="#entH" class="channel-core" /><use href="#entA1" class="channel-core" /><use href="#entA2" class="channel-core" />
+      <use href="#review" class="channel-core" />
+      <use href="#planIn" class="channel-core" style="opacity:.55" /><use href="#planUp" class="channel-core" style="opacity:.55" />
+      <use href="#gut1" class="reject-gutter" /><use href="#gut2" class="reject-gutter" />
+      <use href="#loop" class="channel-core" style="opacity:.5" />
 
-      <!-- reject gutters -->
-      <use href="#gutA1" class="reject-gutter" /><use href="#gutB1" class="reject-gutter" /><use href="#gutC1" class="reject-gutter" />
-      <use href="#gutA2" class="reject-gutter" /><use href="#gutB2" class="reject-gutter" /><use href="#gutC2" class="reject-gutter" />
-      <text x="555" y="585" class="gate-label" font-size="10" fill="var(--faint)">rejected</text>
+      <text x="540" y="548" class="gate-label" font-size="10" fill="var(--faint)">bounced &mdash; back to author</text>
+      <text x="540" y="42" class="zone-label" font-size="10" text-anchor="middle">next worktree branches off main &#8593;</text>
 
-      <!-- loop pipe (dim) -->
-      <use href="#loopPipe" class="channel-core" style="opacity:.5" />
-      <text x="560" y="50" class="zone-label" font-size="10" text-anchor="middle">next analyst inherits &#8593;</text>
-
-      <!-- source spouts -->
+      <!-- worktree spouts -->
       <g id="sources">
-        <circle cx="60" cy="170" r="14" fill="var(--surface)" stroke="var(--primary)" stroke-width="2"/>
-        <circle cx="60" cy="300" r="14" fill="var(--surface)" stroke="var(--primary)" stroke-width="2"/>
-        <circle cx="60" cy="430" r="14" fill="var(--surface)" stroke="var(--primary)" stroke-width="2"/>
-        <text x="60" y="478" class="zone-label" font-size="11" text-anchor="middle">contributors</text>
-        <text x="200" y="158" class="zone-label" font-size="10" fill="var(--faint)">users/&lt;handle&gt;</text>
-        <text x="200" y="288" class="zone-label" font-size="10" fill="var(--faint)">direct PR</text>
-        <text x="200" y="418" class="zone-label" font-size="10" fill="var(--faint)">plan-flow</text>
+        <circle cx="55" cy="150" r="13" class="node" stroke="var(--primary)"/>
+        <circle cx="55" cy="250" r="13" class="node" stroke="var(--primary)"/>
+        <circle cx="55" cy="350" r="13" class="node" stroke="var(--primary)"/>
+        <text x="55" y="398" class="zone-label" font-size="11" text-anchor="middle">worktrees</text>
+        <text x="150" y="138" class="zone-label" font-size="9.5" fill="var(--faint)">human</text>
+        <text x="150" y="238" class="zone-label" font-size="9.5" fill="var(--faint)">agent</text>
+        <text x="150" y="338" class="zone-label" font-size="9.5" fill="var(--faint)">agent</text>
       </g>
 
-      <!-- gate modules -->
-      <g id="gate1">
-        <rect x="414" y="135" width="32" height="330" rx="8" class="gate-mod"/>
-        <text x="430" y="498" class="gate-label" font-size="11" text-anchor="middle">regex</text>
-      </g>
-      <g id="gate2">
-        <rect x="574" y="135" width="32" height="330" rx="8" class="gate-mod"/>
-        <text x="590" y="498" class="gate-label" font-size="11" text-anchor="middle">claude</text>
-      </g>
-      <text x="510" y="120" class="zone-label" font-size="11" text-anchor="middle" fill="var(--amber)">audit gates</text>
-
-      <!-- cron node -->
-      <g id="cron">
-        <circle cx="790" cy="300" r="20" fill="var(--surface)" stroke="var(--cyan)" stroke-width="2"/>
-        <text x="790" y="345" class="zone-label" font-size="11" text-anchor="middle">cron · synth</text>
+      <!-- PR node -->
+      <g id="prNode">
+        <circle cx="300" cy="250" r="15" class="node"/>
+        <text x="300" y="290" class="zone-label" font-size="11" text-anchor="middle">PR</text>
       </g>
 
-      <!-- nightly basin -->
-      <g id="nightlyBasin">
-        <clipPath id="clipNightly"><rect x="846" y="200" width="118" height="200" rx="6"/></clipPath>
-        <rect id="nightlyWater" x="846" y="200" width="118" height="200" fill="var(--basin)" clip-path="url(#clipNightly)" />
-        <rect x="846" y="200" width="118" height="200" rx="6" class="basin-tank"/>
-        <text x="905" y="425" class="zone-label" font-size="11" text-anchor="middle" fill="var(--amber)">nightly</text>
-      </g>
+      <!-- gates -->
+      <g id="gate1"><rect x="406" y="160" width="28" height="180" rx="7" class="gate-mod"/>
+        <text x="420" y="372" class="gate-label" font-size="10.5" text-anchor="middle">presubmit</text></g>
+      <g id="gate2"><rect x="546" y="160" width="28" height="180" rx="7" class="gate-mod"/>
+        <text x="560" y="372" class="gate-label" font-size="10.5" text-anchor="middle">AI review</text></g>
+      <g id="gate3"><rect x="686" y="160" width="28" height="180" rx="7" class="gate-human"/>
+        <text x="700" y="372" class="gate-label" font-size="10.5" text-anchor="middle" fill="var(--primary)">owner LGTM</text>
+        <text x="700" y="386" class="gate-label" font-size="9" text-anchor="middle" fill="var(--faint)">(human)</text></g>
+      <text x="510" y="146" class="zone-label" font-size="11" text-anchor="middle" fill="var(--amber)">required checks</text>
 
-      <!-- sluice gate -->
-      <g id="sluice">
-        <rect id="sluiceGate" x="968" y="250" width="14" height="100" rx="3" fill="var(--accent)" opacity="0.85"/>
-        <text x="975" y="200" class="zone-label" font-size="10" text-anchor="middle">sluice</text>
-        <text x="975" y="214" class="zone-label" font-size="9" text-anchor="middle" fill="var(--faint)">(human)</text>
+      <!-- merge queue -->
+      <g id="mq">
+        <rect x="772" y="234" width="120" height="32" rx="6" fill="var(--surface)" stroke="var(--cyan)" stroke-width="1.5" opacity="0.9"/>
+        <line x1="802" y1="234" x2="802" y2="266" stroke="var(--cyan)" stroke-width="1" opacity="0.4"/>
+        <line x1="832" y1="234" x2="832" y2="266" stroke="var(--cyan)" stroke-width="1" opacity="0.4"/>
+        <line x1="862" y1="234" x2="862" y2="266" stroke="var(--cyan)" stroke-width="1" opacity="0.4"/>
+        <text x="832" y="290" class="zone-label" font-size="10.5" text-anchor="middle">merge queue</text>
       </g>
 
       <!-- main reservoir -->
       <g id="mainReservoir">
-        <clipPath id="clipMain"><rect x="990" y="150" width="150" height="300" rx="6"/></clipPath>
-        <rect id="mainWater" x="990" y="150" width="150" height="300" fill="var(--primary)" opacity="0.32" clip-path="url(#clipMain)"/>
-        <rect x="990" y="150" width="150" height="300" rx="6" class="basin-tank" stroke="var(--primary)"/>
-        <text x="1065" y="475" class="zone-label" font-size="13" text-anchor="middle" fill="var(--primary)">main</text>
+        <clipPath id="clipMain"><rect x="950" y="120" width="180" height="270" rx="8"/></clipPath>
+        <rect id="mainWater" x="950" y="120" width="180" height="270" fill="var(--basin)" clip-path="url(#clipMain)"/>
+        <rect x="950" y="120" width="180" height="270" rx="8" class="basin-tank"/>
+        <text x="1040" y="412" class="zone-label" font-size="14" text-anchor="middle" fill="var(--primary)">main</text>
+      </g>
+
+      <!-- plan-first sidebar -->
+      <g id="planFirst">
+        <circle cx="55" cy="470" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+        <rect id="planReq" x="256" y="452" width="84" height="34" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="298" y="467" class="zone-label" font-size="9.5" text-anchor="middle" fill="var(--accent)">Plan-Request</text>
+        <text x="298" y="478" class="zone-label" font-size="8.5" text-anchor="middle" fill="var(--faint)">draft PR</text>
+        <text x="150" y="458" class="zone-label" font-size="9.5" fill="var(--faint)">big change</text>
+        <text x="298" y="512" class="zone-label" font-size="9" text-anchor="middle" fill="var(--faint)">owner approves intent &#8593;</text>
       </g>
     </svg>
   </div>
 
   <div class="legend">
-    <span><i style="background:var(--primary)"></i> commit (accepted)</span>
-    <span><i style="background:var(--faint)"></i> rejected by a gate</span>
-    <span><i style="background:var(--accent)"></i> nightly basin / main reservoir</span>
-    <span class="mono">auto-loops &middot; ~20s</span>
+    <span><i style="background:var(--primary)"></i> commit / PR (passing)</span>
+    <span><i style="background:var(--faint)"></i> bounced by a gate</span>
+    <span><i style="background:var(--accent)"></i> plan-first (big change)</span>
+    <span><i style="background:var(--basin-edge)"></i> main (always green)</span>
+    <span class="mono">auto-loops</span>
   </div>
 </main>
 
@@ -263,7 +235,6 @@
 (function () {
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // theme toggle
   var tt = document.getElementById('theme-toggle');
   if (tt) tt.addEventListener('click', function () {
     var isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -276,26 +247,15 @@
 
   var svg = document.getElementById('engine');
   var SVGNS = 'http://www.w3.org/2000/svg';
-  var lanes = ['laneA', 'laneB', 'laneC'];
-  var gutters = { laneA: ['gutA1','gutA2'], laneB: ['gutB1','gutB2'], laneC: ['gutC1','gutC2'] };
+  var entries = ['entH', 'entA1', 'entA2'];
 
-  // nightly fill state (0..1)
-  var nightlyLevel = 0.06;
+  // main reservoir fill (0..1), grows from the bottom
   var mainLevel = 0.12;
-  var nightlyWater = document.getElementById('nightlyWater');
   var mainWater = document.getElementById('mainWater');
-  // water rects grow from the bottom via scaleY about their own bottom edge
-  gsap.set(nightlyWater, { transformOrigin: '50% 100%', svgOrigin: '905 400', scaleY: nightlyLevel });
-  gsap.set(mainWater,    { transformOrigin: '50% 100%', svgOrigin: '1065 450', scaleY: mainLevel });
+  gsap.set(mainWater, { svgOrigin: '1040 390', scaleY: mainLevel });
+  function setMain(v) { mainLevel = Math.max(0.04, Math.min(1, v)); gsap.to(mainWater, { scaleY: mainLevel, duration: 0.7, ease: 'power2.out' }); }
+  function mainSurfaceY() { return 390 - 270 * mainLevel; }
 
-  function setNightly(v) { nightlyLevel = Math.max(0.04, Math.min(1, v)); gsap.to(nightlyWater, { scaleY: nightlyLevel, duration: 0.5, ease: 'power2.out' }); }
-  function setMain(v)    { mainLevel = Math.max(0.04, Math.min(1, v));    gsap.to(mainWater,    { scaleY: mainLevel,    duration: 0.8, ease: 'power2.out' }); }
-
-  // surface y of each basin's water at the current level (for ripples)
-  function nightlySurfaceY() { return 400 - 200 * nightlyLevel; }
-  function mainSurfaceY()    { return 450 - 300 * mainLevel; }
-
-  // expanding ring when a droplet lands in a basin
   function ripple(cx, cy, color) {
     if (reduced) return;
     var r = document.createElementNS(SVGNS, 'circle');
@@ -305,110 +265,92 @@
     gsap.to(r, { attr: { r: 16 }, opacity: 0, duration: 0.85, ease: 'power2.out', onComplete: function () { r.remove(); } });
   }
 
-  // gate flash on a commit crossing
-  var gate1rect = document.querySelector('#gate1 rect');
-  var gate2rect = document.querySelector('#gate2 rect');
+  var g1 = document.querySelector('#gate1 rect'), g2 = document.querySelector('#gate2 rect'), g3 = document.querySelector('#gate3 rect');
   function pulseGate(rect, accepted) {
     gsap.fromTo(rect, { fill: 'var(--surface)' },
       { fill: accepted ? 'var(--cyan)' : 'var(--amber)', duration: 0.16, yoyo: true, repeat: 1, ease: 'sine.inOut', overwrite: 'auto' });
   }
+  function pulseOwner() {
+    gsap.fromTo(g3, { fill: 'var(--surface)' }, { fill: 'var(--primary)', duration: 0.2, yoyo: true, repeat: 1, ease: 'sine.inOut', overwrite: 'auto' });
+  }
 
-  function spawnDroplet() {
-    if (reduced) return;
-    var lane = lanes[Math.floor(Math.random() * lanes.length)];
-    var accepted = Math.random() > 0.28;            // ~72% accepted
-    var rad = 3.5 + Math.random() * 2.6;             // varied droplet size for a denser, liquid feel
+  function dot(color, rad) {
     var c = document.createElementNS(SVGNS, 'circle');
-    c.setAttribute('r', rad);
-    c.setAttribute('class', 'droplet');
-    c.setAttribute('fill', accepted ? 'var(--primary)' : 'var(--cyan)');
-    c.setAttribute('opacity', 0.92);
-    svg.appendChild(c);
+    c.setAttribute('r', rad); c.setAttribute('fill', color); c.setAttribute('opacity', 0.92);
+    svg.appendChild(c); return c;
+  }
 
+  // gate x-positions along the shared review channel (300..950) as path fractions
+  var L0 = 300, L1 = 950;
+  function frac(x) { return (x - L0) / (L1 - L0); }
+  var fPre = frac(420), fAI = frac(560), fOwner = frac(700);
+
+  // send an already-at-PR droplet down the review channel
+  function runReview(c) {
+    var accepted = Math.random() > 0.26;
     if (accepted) {
-      var dur = 3.0 + Math.random() * 0.8;
-      // flash each gate as the commit crosses it (throttled so it shimmers, not strobes)
-      if (Math.random() < 0.5) gsap.delayedCall(dur * 0.30, function () { pulseGate(gate1rect, true); });
-      if (Math.random() < 0.5) gsap.delayedCall(dur * 0.50, function () { pulseGate(gate2rect, true); });
-      gsap.to(c, {
-        duration: dur, ease: 'none',
-        motionPath: { path: '#' + lane, align: '#' + lane, alignOrigin: [0.5, 0.5] },
-        onComplete: function () {
-          c.remove();
-          setNightly(nightlyLevel + 0.02);            // each accepted commit raises nightly a touch
-          ripple(905, nightlySurfaceY(), 'var(--accent)');
-        }
-      });
+      var dur = 3.0 + Math.random() * 0.7;
+      if (Math.random() < 0.6) gsap.delayedCall(dur * fPre,   function () { pulseGate(g1, true); });
+      if (Math.random() < 0.6) gsap.delayedCall(dur * fAI,    function () { pulseGate(g2, true); });
+      gsap.delayedCall(dur * fOwner, pulseOwner);
+      gsap.to(c, { duration: dur, ease: 'none',
+        motionPath: { path: '#review', align: '#review', alignOrigin: [0.5, 0.5] },
+        onComplete: function () { c.remove(); setMain(mainLevel + 0.02); ripple(1040, mainSurfaceY(), 'var(--primary)'); } });
     } else {
-      // travel to a gate, then peel into a gutter and fade
-      var which = Math.random() < 0.6 ? 0 : 1;       // rejected at regex (gate1) or claude (gate2)
-      var gutter = gutters[lane][which];
-      var toGate = which === 0 ? 0.30 : 0.50;        // fraction of lane before the peel
-      gsap.to(c, {
-        duration: 1.4, ease: 'none',
-        motionPath: { path: '#' + lane, align: '#' + lane, alignOrigin: [0.5, 0.5], start: 0, end: toGate },
+      var atAI = Math.random() < 0.5;                 // bounced at presubmit or AI review
+      var endF = atAI ? fAI : fPre;
+      var gutter = atAI ? '#gut2' : '#gut1';
+      var gate = atAI ? g2 : g1;
+      gsap.to(c, { duration: 1.5 * endF + 0.5, ease: 'none',
+        motionPath: { path: '#review', align: '#review', alignOrigin: [0.5, 0.5], start: 0, end: endF },
         onComplete: function () {
-          pulseGate(which === 0 ? gate1rect : gate2rect, false);
-          gsap.to(c, {
-            duration: 1.6, ease: 'power1.in',
-            motionPath: { path: '#' + gutter, align: '#' + gutter, alignOrigin: [0.5, 0.5] },
-            opacity: 0, scale: 0.3, transformOrigin: '50% 50%',
-            onComplete: function () { c.remove(); }
-          });
-        }
-      });
+          pulseGate(gate, false);
+          gsap.to(c, { duration: 1.5, ease: 'power1.in',
+            motionPath: { path: gutter, align: gutter, alignOrigin: [0.5, 0.5] },
+            opacity: 0, scale: 0.3, transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
+        } });
     }
   }
 
-  // emitter — denser stream to read as a flood (≈13 droplets/s, ~40 alive at steady state)
-  var emitter = null;
-  if (!reduced) emitter = setInterval(function () { spawnDroplet(); if (Math.random() < 0.6) spawnDroplet(); }, 120);
-
-  // gates breathe continuously so they always feel active; basins shimmer like liquid
-  if (!reduced) {
-    gsap.to([gate1rect, gate2rect], { attr: { opacity: 0.6 }, duration: 1.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    gsap.to(nightlyWater, { opacity: 0.82, duration: 1.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    gsap.to(mainWater,    { opacity: 0.46, duration: 2.3, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  function spawnPR() {
+    if (reduced) return;
+    var ent = entries[Math.floor(Math.random() * entries.length)];
+    var c = dot('var(--primary)', 3.5 + Math.random() * 2.4);
+    gsap.to(c, { duration: 1.0 + Math.random() * 0.4, ease: 'none',
+      motionPath: { path: '#' + ent, align: '#' + ent, alignOrigin: [0.5, 0.5] },
+      onComplete: function () { runReview(c); } });
   }
 
-  // cron pulse + sluice cycle
-  var sluiceGate = document.getElementById('sluiceGate');
-  function cronPulse() {
-    gsap.fromTo('#cron circle', { scale: 1, transformOrigin: '50% 50%', svgOrigin: '790 300' },
-      { scale: 1.18, duration: 0.4, yoyo: true, repeat: 1, ease: 'sine.inOut' });
-  }
-
-  function sluiceCycle() {
-    // open sluice: lift the gate, drain nightly, surge main up a notch
-    var tl = gsap.timeline();
-    tl.to(sluiceGate, { y: '-=70', duration: 0.5, ease: 'power2.out' })
-      .add(function () {
-        setMain(mainLevel + Math.max(0.10, nightlyLevel * 0.5));   // main rises by what nightly held
-        setNightly(0.06);                                          // nightly drains
-      }, '>-0.1')
-      .to(sluiceGate, { y: '+=70', duration: 0.5, ease: 'power2.in' }, '+=0.6')
-      .add(function () {
-        // loop-back: a droplet rides the pipe from main to the sources
-        if (reduced) return;
-        var c = document.createElementNS(SVGNS, 'circle');
-        c.setAttribute('r', 5); c.setAttribute('class', 'droplet'); c.setAttribute('fill', 'var(--primary)');
-        svg.appendChild(c);
-        gsap.to(c, { duration: 2.4, ease: 'power1.inOut',
-          motionPath: { path: '#loopPipe', align: '#loopPipe', alignOrigin: [0.5, 0.5] },
-          onComplete: function () { c.remove(); } });
-      });
-    // reset main occasionally so it "starts a new era" rather than overflowing forever
-    if (mainLevel > 0.85) setTimeout(function () { setMain(0.14); }, 1600);
+  // plan-first: big change -> Plan-Request (owner approves intent) -> joins the review channel
+  function spawnPlan() {
+    if (reduced) return;
+    var c = dot('var(--accent)', 5);
+    gsap.to(c, { duration: 1.6, ease: 'none',
+      motionPath: { path: '#planIn', align: '#planIn', alignOrigin: [0.5, 0.5] },
+      onComplete: function () {
+        gsap.fromTo('#planReq', { opacity: 0.9 }, { opacity: 0.4, duration: 0.3, yoyo: true, repeat: 3, ease: 'sine.inOut' });
+        gsap.to(c, { duration: 1.4, ease: 'power1.inOut', delay: 0.4,
+          motionPath: { path: '#planUp', align: '#planUp', alignOrigin: [0.5, 0.5] },
+          onComplete: function () { c.setAttribute('fill', 'var(--primary)'); runReview(c); } });
+      } });
   }
 
   if (!reduced) {
-    gsap.set(svg, { autoAlpha: 1 });
-    var cronTimer = setInterval(cronPulse, 2400);
-    var sluiceTimer = setInterval(sluiceCycle, 8000);
-    setTimeout(sluiceCycle, 4000);   // first release a bit early so it's visible quickly
+    setInterval(function () { spawnPR(); if (Math.random() < 0.6) spawnPR(); }, 130);
+    setInterval(spawnPlan, 5200);
+    setTimeout(spawnPlan, 1500);
+    // gates breathe; main loops to a fresh era when near full
+    gsap.to([g1, g2], { attr: { opacity: 0.6 }, duration: 1.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    setInterval(function () {
+      // loop-back droplet rides main -> worktrees
+      var c = dot('var(--primary)', 5);
+      gsap.to(c, { duration: 2.6, ease: 'power1.inOut',
+        motionPath: { path: '#loop', align: '#loop', alignOrigin: [0.5, 0.5] },
+        onComplete: function () { c.remove(); } });
+      if (mainLevel > 0.9) setMain(0.16);
+    }, 6000);
   } else {
-    // static end-state frame: filled basins, no motion
-    setNightly(0.55); setMain(0.6);
+    setMain(0.6);
   }
 })();
 </script>
