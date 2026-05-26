@@ -238,13 +238,6 @@
       <span class="dotpair"><i></i></span></button>
   </div>
 
-  <div class="legend">
-    <span><i style="background:var(--ok)"></i> commit (passes)</span>
-    <span><i style="background:var(--reject)"></i> commit (bounces &rarr; author)</span>
-    <span><i style="background:var(--cyan)"></i> merged change (a batch)</span>
-    <span><i style="background:var(--accent)"></i> plan-first</span>
-    <span><i style="background:var(--basin-edge)"></i> main (always green)</span>
-  </div>
 </main>
 
 <footer>
@@ -282,8 +275,8 @@
   }
   // 2D grid that fills the whole box; balls ride the road in, settle into a grid
   // spot (FIFO), then exit back onto the road to travel to the next box / funnel.
-  var presubmit = { slots: grid(352, 198, 4, 4, 30, 34), items: [] };   // cap 16, box x=330-450
-  var aiReview  = { slots: grid(562, 198, 4, 4, 30, 34), items: [] };   // cap 16, box x=540-660
+  var presubmit = { slots: grid(352, 198, 4, 4, 30, 34), items: [], occ: [] };   // cap 16, box x=330-450
+  var aiReview  = { slots: grid(562, 198, 4, 4, 30, 34), items: [], occ: [] };   // cap 16, box x=540-660
   var queue     = { slots: [{x:789,y:250},{x:826,y:250},{x:864,y:250},{x:901,y:250}], balls: [], reserved: 0 }; // cap 4
 
   // ---- main reservoir fill ----
@@ -315,64 +308,75 @@
     gsap.to('#' + gateId, { y: -42, duration: 0.3, ease: 'power2.out', yoyo: true, repeat: 1, repeatDelay: 0.45 });
   }
 
-  // ---- emit: worktree -> PR -> presubmit bay slot (or bounce) ----
-  function restack(bay) {
-    bay.items.forEach(function (c, i) { gsap.to(c, { x: bay.slots[i].x, y: bay.slots[i].y, duration: 0.3, ease: 'power1.out' }); });
+  // ---- slot bookkeeping: each ball holds a fixed grid slot (no mass restack) ----
+  var SPOUTS = [{ x: 55, y: 160 }, { x: 55, y: 250 }, { x: 55, y: 340 }];   // laneH / laneA1 / laneA2
+  function freeSlot(bay) { for (var i = 0; i < bay.slots.length; i++) if (!bay.occ[i]) return i; return -1; }
+  function park(bay, c) { var i = freeSlot(bay); if (i < 0) return -1; bay.occ[i] = c; c._slot = i; bay.items.push(c); return i; }
+  function takeOldest(bay) { var c = bay.items.shift(); if (c) bay.occ[c._slot] = null; return c; }
+  function takeFirst(bay, pred) {
+    for (var k = 0; k < bay.items.length; k++) {
+      if (pred(bay.items[k])) { var c = bay.items.splice(k, 1)[0]; bay.occ[c._slot] = null; return c; }
+    }
+    return null;
+  }
+  function bounceFromPresubmit(c) {
+    gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 });
+    gsap.timeline()
+      .to(c, { x: 390, y: 322, duration: 0.4, ease: 'power1.in' })
+      .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejPre' } })
+      .add(function () { gsap.fromTo('#bounceBox', { opacity: 0.92 }, { opacity: 0.55, duration: 0.14, yoyo: true, repeat: 1 }); })
+      .to(c, { opacity: 0, scale: 0.4, duration: 0.3, transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
   }
 
-  function emit() {
-    if (reduced) return;
+  // ---- emit: a commit rides its worktree lane to PR, then parks in presubmit (or bounces) ----
+  //      Decision happens on ARRIVAL so rapid spam-clicks always produce a visible ball.
+  function emit(manual) {
+    if (reduced && !manual) return;
     var good = Math.random() > 0.25;                       // green good vs red bad commit
-    var slipsPast = !good && Math.random() < 0.33;         // presubmit misses some bad ones
-    var willPark = good || slipsPast;
-    if (willPark && presubmit.items.length >= presubmit.slots.length) return;   // bay full
-    var ent = entries[Math.floor(Math.random() * entries.length)];
-    var c = dot(good ? 'var(--ok)' : 'var(--reject)', 4.2 + Math.random() * 1.6);
+    if (!manual && good && freeSlot(presubmit) < 0) return; // auto: skip when bay full
+    var ei = Math.floor(Math.random() * entries.length);
+    var ent = entries[ei], sp = SPOUTS[ei];
+    var c = dot(good ? 'var(--ok)' : 'var(--reject)', 4.6);
     if (!good) c._bad = true;
     var tl = gsap.timeline();
-    tl.to(c, { duration: 1.6 + Math.random() * 0.4, ease: 'none', motionPath: { path: '#' + ent } });
-    if (willPark) {
-      // good commit (or a bad one presubmit missed) parks in the presubmit bay
-      var slot = presubmit.slots[presubmit.items.length];
-      presubmit.items.push(c);
-      tl.to(c, { x: slot.x, y: slot.y, duration: 0.45, ease: 'power2.out' });
-    } else {
-      // bad commit caught at presubmit -> bounce box
-      tl.add(function () { gsap.fromTo('#preBay', { opacity: 0.92 }, { opacity: 0.5, duration: 0.12, yoyo: true, repeat: 1 }); });
-      tl.to(c, { x: 390, y: 322, duration: 0.4, ease: 'power1.in' })
-        .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejPre' } })
-        .add(function () { gsap.fromTo('#bounceBox', { opacity: 0.92 }, { opacity: 0.55, duration: 0.14, yoyo: true, repeat: 1 }); })
-        .to(c, { opacity: 0, scale: 0.4, duration: 0.3, transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
+    if (manual) {                                          // drop in at the worktree on click
+      gsap.set(c, { x: sp.x, y: sp.y - 50, opacity: 0 });
+      tl.to(c, { opacity: 0.95, y: sp.y, duration: 0.32, ease: 'power2.out' });
     }
+    tl.to(c, { duration: 1.7 + Math.random() * 0.4, ease: 'none', motionPath: { path: '#' + ent } });
+    tl.add(function () {
+      var slipsPast = !good && Math.random() < 0.33;       // presubmit misses some bad ones
+      if ((good || slipsPast) && freeSlot(presubmit) >= 0) {
+        var i = park(presubmit, c); var s = presubmit.slots[i];
+        gsap.to(c, { x: s.x, y: s.y, duration: 0.4, ease: 'power2.out' });
+      } else {
+        bounceFromPresubmit(c);                            // bad commit, or bay full
+      }
+    });
   }
 
-  // ---- meter: presubmit -> AI review (door lifts) ----
+  // ---- meter: the gate opens and passes up to 8 balls (FIFO) into AI review ----
   function meter() {
-    if (reduced) return;
-    if (!presubmit.items.length || aiReview.items.length >= aiReview.slots.length) return;
+    if (reduced || !presubmit.items.length) return;
+    var free = aiReview.slots.length - aiReview.items.length;
+    if (free <= 0) return;
     openDoor('meterGate');
-    var n = Math.min(1 + (Math.random() < 0.5 ? 1 : 0), presubmit.items.length, aiReview.slots.length - aiReview.items.length);
+    var n = Math.min(8, presubmit.items.length, free);
     for (var i = 0; i < n; i++) {
-      var c = presubmit.items.shift();               // FIFO: oldest leaves first
-      var slot = aiReview.slots[aiReview.items.length];
-      aiReview.items.push(c);
-      // exit onto the road at the gate, ride the road, settle into an AI-review grid spot
-      gsap.timeline({ delay: 0.2 + i * 0.14 })
+      var c = takeOldest(presubmit);
+      var ai = park(aiReview, c); var s = aiReview.slots[ai];
+      gsap.timeline({ delay: i * 0.16 })                   // staggered single-file -> no overlap
         .to(c, { x: 450, y: 250, duration: 0.4, ease: 'power1.in' })
         .to(c, { x: 540, y: 250, duration: 0.5, ease: 'none' })
-        .to(c, { x: slot.x, y: slot.y, duration: 0.4, ease: 'power1.out' });
+        .to(c, { x: s.x, y: s.y, duration: 0.4, ease: 'power1.out' });
     }
-    restack(presubmit);                              // remaining balls re-pack the grid
   }
 
   // ---- AI review catches a bad commit presubmit missed -> rides the AI reject track to the bounce box ----
   function aiReject() {
     if (reduced) return;
-    var bi = -1;
-    for (var i = 0; i < aiReview.items.length; i++) { if (aiReview.items[i]._bad) { bi = i; break; } }
-    if (bi < 0) return;                                   // nothing bad to catch right now
-    var c = aiReview.items.splice(bi, 1)[0];
-    restack(aiReview);
+    var c = takeFirst(aiReview, function (b) { return b._bad; });
+    if (!c) return;
     gsap.timeline()
       .to(c, { x: 600, y: 322, duration: 0.4, ease: 'power1.in' })
       .to(c, { duration: 0.9, ease: 'power1.in', motionPath: { path: '#rejAI' } })
@@ -384,13 +388,13 @@
   var BATCH = 3;
   function mergeBatch() {
     if (reduced || queue.reserved >= queue.slots.length) return;
-    var good = aiReview.items.filter(function (c) { return !c._bad; });   // only green commits get merged
-    if (good.length < BATCH) return;
+    var goodCount = 0;
+    for (var k = 0; k < aiReview.items.length; k++) if (!aiReview.items[k]._bad) goodCount++;
+    if (goodCount < BATCH) return;
     pulse(document.getElementById('funnel'), 'var(--cyan)');
     var idx = queue.reserved++;                         // reserve a slot up front (prevents overfill)
-    var cluster = good.slice(0, BATCH);                 // oldest good balls (funnel/front side)
-    aiReview.items = aiReview.items.filter(function (c) { return cluster.indexOf(c) < 0; });
-    restack(aiReview);
+    var cluster = [];
+    for (var j = 0; j < BATCH; j++) cluster.push(takeFirst(aiReview, function (b) { return !b._bad; }));
     // funnel the cluster: into the wide mouth, down to the tip, fade
     cluster.forEach(function (c, i) {
       gsap.timeline({ delay: 0.25 })
@@ -428,24 +432,35 @@
   // ---- plan-first: big change -> Plan-Request (owner approves intent) ->
   //      pre-approved, so it BYPASSES presubmit + AI review and drops an
   //      orange ball straight into the merge queue ----
-  function spawnPlan() {
-    if (reduced || queue.reserved >= queue.slots.length) return;   // needs a free queue slot
+  function spawnPlan(manual) {
+    if (reduced && !manual) return;
+    if (!manual && queue.reserved >= queue.slots.length) return;   // auto: wait for a queue slot
     var c = dot('var(--accent)', 5);
-    gsap.set(c, { x: 55, y: 470 });
-    var idx = queue.reserved++;
-    var slot = queue.slots[idx];
+    var hasSlot = queue.reserved < queue.slots.length;
+    var idx = hasSlot ? queue.reserved++ : -1;             // spam past a full queue -> fast-track to main
     var tl = gsap.timeline();
+    if (manual) { gsap.set(c, { x: 55, y: 470 - 46, opacity: 0 }); tl.to(c, { opacity: 0.95, y: 470, duration: 0.32, ease: 'power2.out' }); }
+    else { gsap.set(c, { x: 55, y: 470 }); }
     tl.to(c, { duration: 1.4, ease: 'none', motionPath: { path: '#planIn' } })
       .add(function () { gsap.fromTo('#planReq', { opacity: 0.92 }, { opacity: 0.45, duration: 0.3, yoyo: true, repeat: 3 }); })
       .to(c, { attr: { r: 13 }, duration: 0.32, ease: 'back.out(2)', delay: 0.4 })   // becomes a merge-ready change
       .to(c, { duration: 1.7, ease: 'power1.inOut', motionPath: { path: '#planBypass' } })
-      .to(c, { x: slot.x, y: slot.y, duration: 0.4, ease: 'power2.out' })
-      .add(function () { queue.balls.push(c); if (queue.balls.length >= queue.slots.length) drainQueue(); });
+      .add(function () {
+        if (idx >= 0) {
+          var slot = queue.slots[idx];
+          gsap.to(c, { x: slot.x, y: slot.y, duration: 0.4, ease: 'power2.out',
+            onComplete: function () { queue.balls.push(c); if (queue.balls.length >= queue.slots.length) drainQueue(); } });
+        } else {
+          // queue full: pre-approved change fast-tracks straight into main
+          gsap.to(c, { x: 1042, y: mainSurfaceY(), duration: 0.7, ease: 'power2.in', opacity: 0, scale: 0.5,
+            transformOrigin: '50% 50%', onComplete: function () { c.remove(); setMain(mainLevel + 0.04); ripple(1042, mainSurfaceY(), 'var(--accent)'); } });
+        }
+      });
   }
 
   if (!reduced) {
     setInterval(emit, 430);
-    setInterval(meter, 1500);
+    setInterval(meter, 3500);
     setInterval(aiReject, 1400);
     setInterval(mergeBatch, 2400);
     setInterval(spawnPlan, 6500);
@@ -469,8 +484,8 @@
   // manual controls: spawn a ball at the worktrees that then follows the usual tracks
   var bPR = document.getElementById('btn-pr');
   var bPlan = document.getElementById('btn-plan');
-  if (bPR) bPR.addEventListener('click', function () { emit(); });
-  if (bPlan) bPlan.addEventListener('click', function () { spawnPlan(); });
+  if (bPR) bPR.addEventListener('click', function () { emit(true); });
+  if (bPlan) bPlan.addEventListener('click', function () { spawnPlan(true); });
 })();
 </script>
 
