@@ -236,6 +236,7 @@
       <span class="dotpair"><i style="background:var(--ok)"></i><i style="background:var(--reject)"></i></span></button>
     <button id="btn-plan" class="ctl-btn ctl-plan">+ big change <span class="sub">Plan-Request (bypass)</span>
       <span class="dotpair"><i></i></span></button>
+    <button id="btn-reset" class="ctl-btn" title="clear and restart">&#x21bb; reset</button>
   </div>
 
 </main>
@@ -289,7 +290,7 @@
   function dot(color, r) {
     var c = document.createElementNS(NS, 'circle');
     c.setAttribute('r', r); c.setAttribute('fill', color); c.setAttribute('cx', 0); c.setAttribute('cy', 0);
-    c.setAttribute('opacity', 0.95);
+    c.setAttribute('opacity', 0.95); c.setAttribute('class', 'ball');
     svg.appendChild(c); return c;
   }
   function ripple(cx, cy, color) {
@@ -481,11 +482,22 @@
     queue.slots.slice(0, 2).forEach(function (s) { var c = dot('var(--cyan)', 13); gsap.set(c, { x: s.x, y: s.y }); });
   }
 
+  // refresh: clear every in-flight/parked ball and reset the engine state
+  function reset() {
+    document.querySelectorAll('#engine circle.ball').forEach(function (c) { gsap.killTweensOf(c); c.remove(); });
+    presubmit.items = []; presubmit.occ = [];
+    aiReview.items = []; aiReview.occ = [];
+    queue.balls = []; queue.reserved = 0;
+    mainLevel = 0.12; gsap.set(mainWater, { scaleY: mainLevel });
+  }
+
   // manual controls: spawn a ball at the worktrees that then follows the usual tracks
   var bPR = document.getElementById('btn-pr');
   var bPlan = document.getElementById('btn-plan');
+  var bReset = document.getElementById('btn-reset');
   if (bPR) bPR.addEventListener('click', function () { emit(true); });
   if (bPlan) bPlan.addEventListener('click', function () { spawnPlan(true); });
+  if (bReset) bReset.addEventListener('click', reset);
 })();
 </script>
 
