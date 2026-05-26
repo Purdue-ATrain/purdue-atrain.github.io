@@ -283,8 +283,8 @@
   }
   // 2D grid that fills the whole box; balls ride the road in, settle into a grid
   // spot (FIFO), then exit back onto the road to travel to the next box / funnel.
-  var presubmit = { slots: grid(352, 198, 4, 4, 30, 34), items: [], occ: [] };   // cap 16, box x=330-450
-  var aiReview  = { slots: grid(562, 198, 4, 4, 30, 34), items: [], occ: [] };   // cap 16, box x=540-660
+  var presubmit = { slots: grid(346, 192, 5, 5, 24, 28), items: [], occ: [] };   // cap 25, box x=330-450
+  var aiReview  = { slots: grid(556, 192, 5, 5, 24, 28), items: [], occ: [] };   // cap 25, box x=540-660
   var queue     = { slots: [{x:789,y:250},{x:826,y:250},{x:864,y:250},{x:901,y:250}], balls: [], reserved: 0 }; // cap 4
 
   // ---- main reservoir fill ----
