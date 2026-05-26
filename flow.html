@@ -75,6 +75,17 @@
     background: var(--surface-strong); backdrop-filter: blur(8px); padding: 8px; overflow: hidden; }
   #engine { width: 100%; height: auto; display: block; }
 
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+  .ctl-btn { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px;
+    padding: 9px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface-strong); color: var(--text); cursor: pointer;
+    transition: border-color .2s, background .2s, transform .08s; display: inline-flex; align-items: center; gap: 8px; }
+  .ctl-btn:hover { border-color: var(--ok); background: var(--surface); }
+  .ctl-btn:active { transform: translateY(1px); }
+  .ctl-btn .sub { color: var(--faint); font-size: 11px; }
+  .ctl-btn .dotpair i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 2px; }
+  .ctl-plan:hover { border-color: var(--accent); }
+  .ctl-plan .dotpair i { background: var(--accent); }
   .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px;
     font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; color: var(--faint); }
   .legend span { display: inline-flex; align-items: center; gap: 7px; }
@@ -220,6 +231,13 @@
     </svg>
   </div>
 
+  <div class="controls">
+    <button id="btn-pr" class="ctl-btn">+ open a PR <span class="sub">random commit</span>
+      <span class="dotpair"><i style="background:var(--ok)"></i><i style="background:var(--reject)"></i></span></button>
+    <button id="btn-plan" class="ctl-btn ctl-plan">+ big change <span class="sub">Plan-Request (bypass)</span>
+      <span class="dotpair"><i></i></span></button>
+  </div>
+
   <div class="legend">
     <span><i style="background:var(--ok)"></i> commit (passes)</span>
     <span><i style="background:var(--reject)"></i> commit (bounces &rarr; author)</span>
@@ -264,8 +282,8 @@
   }
   // 2D grid that fills the whole box; balls ride the road in, settle into a grid
   // spot (FIFO), then exit back onto the road to travel to the next box / funnel.
-  var presubmit = { slots: grid(360, 208, 3, 3, 33, 42), items: [] };   // cap 9, box x=330-450
-  var aiReview  = { slots: grid(570, 208, 3, 3, 33, 42), items: [] };   // cap 9, box x=540-660
+  var presubmit = { slots: grid(352, 198, 4, 4, 30, 34), items: [] };   // cap 16, box x=330-450
+  var aiReview  = { slots: grid(562, 198, 4, 4, 30, 34), items: [] };   // cap 16, box x=540-660
   var queue     = { slots: [{x:789,y:250},{x:826,y:250},{x:864,y:250},{x:901,y:250}], balls: [], reserved: 0 }; // cap 4
 
   // ---- main reservoir fill ----
@@ -447,6 +465,12 @@
     aiReview.slots.slice(0, 3).forEach(function (s) { var c = dot('var(--ok)', 4.5); gsap.set(c, { x: s.x, y: s.y }); });
     queue.slots.slice(0, 2).forEach(function (s) { var c = dot('var(--cyan)', 13); gsap.set(c, { x: s.x, y: s.y }); });
   }
+
+  // manual controls: spawn a ball at the worktrees that then follows the usual tracks
+  var bPR = document.getElementById('btn-pr');
+  var bPlan = document.getElementById('btn-plan');
+  if (bPR) bPR.addEventListener('click', function () { emit(); });
+  if (bPlan) bPlan.addEventListener('click', function () { spawnPlan(); });
 })();
 </script>
 
