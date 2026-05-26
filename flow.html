@@ -404,31 +404,33 @@
 
   // ---- AI review batches a cluster -> funnel -> one merged ball -> queue slot ----
   var BATCH = 3;
+  function aiFill() { return aiReview.items.length / aiReview.slots.length; }   // 0..1 crowding
   function mergeBatch() {
     if (reduced || queue.reserved >= queue.slots.length) return;
     var goodCount = 0;
     for (var k = 0; k < aiReview.items.length; k++) if (!aiReview.items[k]._bad) goodCount++;
     if (goodCount < BATCH) return;
+    var sp = 1 + 2.4 * aiFill();                        // crowded AI review -> faster merge (1x..~3.4x)
     pulse(document.getElementById('funnel'), 'var(--cyan)');
     var idx = queue.reserved++;                         // reserve a slot up front (prevents overfill)
     var cluster = [];
     for (var j = 0; j < BATCH; j++) cluster.push(takeFirst(aiReview, function (b) { return !b._bad; }));
-    // funnel the cluster: into the wide mouth, down to the tip, fade
+    // funnel the cluster: into the wide mouth, down to the tip, fade (faster when crowded)
     cluster.forEach(function (c, i) {
-      gsap.timeline({ delay: 0.25 })
-        .to(c, { x: 660, y: 250, duration: 0.32, ease: 'power1.in' })          // exit AI bay onto the road
-        .to(c, { x: 694, y: 246 + i * 6, duration: 0.3, ease: 'none' })        // into the funnel mouth
-        .to(c, { x: 720, y: 250, duration: 0.33, ease: 'power2.in', opacity: 0, scale: 0.35,
+      gsap.timeline({ delay: 0.25 / sp })
+        .to(c, { x: 660, y: 250, duration: 0.32 / sp, ease: 'power1.in' })          // exit AI bay onto the road
+        .to(c, { x: 694, y: 246 + i * 6, duration: 0.3 / sp, ease: 'none' })        // into the funnel mouth
+        .to(c, { x: 720, y: 250, duration: 0.33 / sp, ease: 'power2.in', opacity: 0, scale: 0.35,
           transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
     });
     // one merged change emerges from the funnel tip
-    gsap.delayedCall(1.0, function () {
+    gsap.delayedCall(1.0 / sp, function () {
       var slot = queue.slots[idx];
       var big = dot('var(--cyan)', 3);
       gsap.set(big, { x: 724, y: 250 });
       gsap.timeline()
-        .to(big, { attr: { r: 13 }, duration: 0.32, ease: 'back.out(2)' })
-        .to(big, { x: slot.x, y: slot.y, duration: 0.75, ease: 'power1.inOut' })
+        .to(big, { attr: { r: 13 }, duration: 0.32 / sp, ease: 'back.out(2)' })
+        .to(big, { x: slot.x, y: slot.y, duration: 0.75 / sp, ease: 'power1.inOut' })
         .add(function () { queue.balls.push(big); if (queue.balls.length >= queue.slots.length) drainQueue(); });
     });
   }
@@ -480,7 +482,12 @@
     setInterval(emit, 430);
     setInterval(meter, 3500);
     setInterval(aiReject, 1400);
-    setInterval(mergeBatch, 2400);
+    // adaptive merge cadence: fires sooner as AI review fills, to clear the backlog
+    (function scheduleMerge() {
+      mergeBatch();
+      var delay = 2400 - 1800 * aiFill();              // ~2400ms empty -> ~600ms full
+      setTimeout(scheduleMerge, Math.max(550, delay));
+    })();
     setInterval(spawnPlan, 6500);
     setTimeout(spawnPlan, 2000);
     // loop-back droplet on main
