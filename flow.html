@@ -313,7 +313,17 @@
   }
   // a gate is a <g> wrapping its door rect; lift the door to let balls pass, then close
   function openDoor(gateId) {
-    gsap.to('#' + gateId, { y: -42, duration: 0.3, ease: 'power2.out', yoyo: true, repeat: 1, repeatDelay: 0.45 });
+    var el = document.getElementById(gateId);
+    if (!el) return;
+    gsap.killTweensOf(el);                 // avoid stacked tweens leaving the door stuck open
+    gsap.set(el, { y: 0 });
+    gsap.to(el, { y: -42, duration: 0.3, ease: 'power2.out', yoyo: true, repeat: 1, repeatDelay: 0.45, overwrite: true });
+  }
+  function closeDoors() {                  // snap all gate doors shut (used on reset)
+    ['meterGate', 'queueGate'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) { gsap.killTweensOf(el); gsap.set(el, { y: 0 }); }
+    });
   }
 
   // ---- slot bookkeeping: each ball holds a fixed grid slot (no mass restack) ----
@@ -496,6 +506,7 @@
     aiReview.items = []; aiReview.occ = [];
     queue.balls = []; queue.reserved = 0;
     mainLevel = 0.12; gsap.set(mainWater, { scaleY: mainLevel });
+    closeDoors();                          // restore gate doors so the meter works after reset
   }
 
   // manual controls: spawn a ball at the worktrees that then follows the usual tracks
