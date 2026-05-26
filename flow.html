@@ -262,10 +262,10 @@
     for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) s.push({ x: x0 + c * dx, y: y0 + r * dy });
     return s;
   }
-  // single row ON the road line (y=250); slots ordered EXIT-first (gate/funnel side)
-  // so the bay is a FIFO conveyor: oldest ball is at the front, leaves first, rest advance.
-  var presubmit = { slots: grid(440, 250, 6, 1, -18, 0), items: [] };   // cap 6, exit at x=440 (meter)
-  var aiReview  = { slots: grid(642, 250, 6, 1, -18, 0), items: [] };   // cap 6, exit at x=642 (funnel)
+  // 2D grid that fills the whole box; balls ride the road in, settle into a grid
+  // spot (FIFO), then exit back onto the road to travel to the next box / funnel.
+  var presubmit = { slots: grid(360, 208, 3, 3, 33, 42), items: [] };   // cap 9, box x=330-450
+  var aiReview  = { slots: grid(570, 208, 3, 3, 33, 42), items: [] };   // cap 9, box x=540-660
   var queue     = { slots: [{x:789,y:250},{x:826,y:250},{x:864,y:250},{x:901,y:250}], balls: [], reserved: 0 }; // cap 4
 
   // ---- main reservoir fill ----
@@ -335,12 +335,16 @@
     openDoor('meterGate');
     var n = Math.min(1 + (Math.random() < 0.5 ? 1 : 0), presubmit.items.length, aiReview.slots.length - aiReview.items.length);
     for (var i = 0; i < n; i++) {
-      var c = presubmit.items.shift();               // FIFO: oldest (at the gate/front) leaves first
+      var c = presubmit.items.shift();               // FIFO: oldest leaves first
       var slot = aiReview.slots[aiReview.items.length];
       aiReview.items.push(c);
-      gsap.to(c, { x: slot.x, y: slot.y, duration: 0.95, ease: 'power1.inOut', delay: 0.2 + i * 0.12 });
+      // exit onto the road at the gate, ride the road, settle into an AI-review grid spot
+      gsap.timeline({ delay: 0.2 + i * 0.14 })
+        .to(c, { x: 450, y: 250, duration: 0.4, ease: 'power1.in' })
+        .to(c, { x: 540, y: 250, duration: 0.5, ease: 'none' })
+        .to(c, { x: slot.x, y: slot.y, duration: 0.4, ease: 'power1.out' });
     }
-    restack(presubmit);                              // remaining balls advance toward the gate
+    restack(presubmit);                              // remaining balls re-pack the grid
   }
 
   // ---- AI review catches a bad commit presubmit missed -> rides the AI reject track to the bounce box ----
@@ -372,7 +376,8 @@
     // funnel the cluster: into the wide mouth, down to the tip, fade
     cluster.forEach(function (c, i) {
       gsap.timeline({ delay: 0.25 })
-        .to(c, { x: 694, y: 240 + i * 8, duration: 0.4, ease: 'power1.in' })
+        .to(c, { x: 660, y: 250, duration: 0.32, ease: 'power1.in' })          // exit AI bay onto the road
+        .to(c, { x: 694, y: 246 + i * 6, duration: 0.3, ease: 'none' })        // into the funnel mouth
         .to(c, { x: 720, y: 250, duration: 0.33, ease: 'power2.in', opacity: 0, scale: 0.35,
           transformOrigin: '50% 50%', onComplete: function () { c.remove(); } });
     });
