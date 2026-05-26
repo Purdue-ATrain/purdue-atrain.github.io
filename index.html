@@ -564,6 +564,11 @@ tailwind.config = {
   }
   /* Mermaid styling override */
   .mermaid svg { background: transparent !important; }
+  /* Embedded contribution engine (flow.html in an iframe) */
+  .engine-embed { border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    background: var(--surface-strong); }
+  .engine-embed iframe { width: 100%; height: 600px; border: 0; display: block; }
+  @media (max-width: 768px) { .engine-embed iframe { height: 440px; } }
 </style>
 </head>
 
@@ -583,6 +588,7 @@ tailwind.config = {
         <button type="button" class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false">journey <span aria-hidden="true">&#9662;</span></button>
         <div class="nav-dd-menu" role="menu">
           <a href="#journey" role="menuitem">workflow</a>
+          <a href="#engine" role="menuitem">engine</a>
           <a href="#synthesis" role="menuitem">sharpen</a>
           <a href="#demos" role="menuitem">demos</a>
         </div>
@@ -854,11 +860,30 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 </section>
 <div class="section-divider max-w-5xl mx-auto"></div>
 
+<!-- =========== CONTRIBUTION ENGINE (embedded flow.html) =========== -->
+<section id="engine" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-8 max-w-2xl">
+      <span class="section-num" style="color: var(--amber);">// 03</span>
+      <h2 class="hl text-5xl mt-3 mb-4 fade-in">The contribution engine</h2>
+      <p class="serif-italic text-xl" style="color: var(--dim);">A flood of human + AI commits, landing cleanly on <span class="mono text-text">main</span>.</p>
+    </div>
+    <p class="text-base max-w-3xl mb-8 fade-in" style="color: var(--dim); line-height: 1.7;">
+      Commits pool in <span class="mono text-text">presubmit</span>, meter into AI review, batch through a merge funnel into the queue, and a human gate releases them to <span class="mono text-text">main</span> &mdash; while bad ones bounce back to the author and pre-approved big changes bypass straight to the queue. <a href="flow.html" class="inline-link mono text-text">open the full view &nearr;</a>
+    </p>
+    <div class="engine-embed fade-in">
+      <iframe src="flow.html?embed=1" title="Animated contribution engine" loading="lazy"></iframe>
+    </div>
+    <p class="mt-3 mono text-xs" style="color: var(--faint);">Live diagram &middot; try the <span class="text-text">open a PR</span> and <span class="text-text">big change</span> buttons.</p>
+  </div>
+</section>
+<div class="section-divider max-w-5xl mx-auto"></div>
+
 <!-- =========== SYNTHESIS FLOW =========== -->
 <section id="synthesis" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 03</span>
+      <span class="section-num" style="color: var(--amber);">// 04</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Sharpen your skills</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two contribution paths. Same destination: <span class="mono text-text">main</span>.</p>
     </div>
@@ -971,7 +996,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="multiagent" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-12 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 04</span>
+      <span class="section-num" style="color: var(--amber);">// 05</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Multi-agent, when it earns it</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Most "agents" should be workflows. The few that should fan out, fan out for a reason.</p>
     </div>
@@ -1359,7 +1384,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="demos" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 05</span>
+      <span class="section-num" style="color: var(--amber);">// 06</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Demos in the terminal</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Seven real sessions. Click a tab to switch; press <span class="mono text-text">&#x27F2;</span> to replay.</p>
     </div>
@@ -1723,7 +1748,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="benchmarks" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 06</span>
+      <span class="section-num" style="color: var(--amber);">// 07</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Benchmarks</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Measure whether the skills actually help. Pick up to three models, put them side by side.</p>
     </div>
@@ -1771,7 +1796,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="skills" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 07</span>
+      <span class="section-num" style="color: var(--amber);">// 08</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The skill library</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">11 skills. Cron-curated nightly. Branched per contributor.</p>
     </div>
@@ -1821,7 +1846,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="harness" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 08</span>
+      <span class="section-num" style="color: var(--amber);">// 09</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">The harness blueprint</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">A copier template. Everything a CMS analysis needs.</p>
     </div>
@@ -1889,7 +1914,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="refs" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 09</span>
+      <span class="section-num" style="color: var(--amber);">// 10</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Reference analyses</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Two working CMS analyses built on the harness. Read the code.</p>
     </div>
@@ -1924,7 +1949,7 @@ Ask me my GitHub handle first, then start with step 1.</pre>
 <section id="get-involved" class="py-28 px-6">
   <div class="max-w-5xl mx-auto">
     <div class="mb-14 max-w-2xl">
-      <span class="section-num" style="color: var(--amber);">// 10</span>
+      <span class="section-num" style="color: var(--amber);">// 11</span>
       <h2 class="hl text-5xl mt-3 mb-4 fade-in">Get involved</h2>
       <p class="serif-italic text-xl" style="color: var(--dim);">Membership is closed for v0. Open an issue to request access.</p>
     </div>

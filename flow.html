@@ -18,6 +18,8 @@
       var theme = stored || (prefersLight ? 'light' : 'dark');
       if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
     } catch (e) {}
+    // embed mode (?embed): strip page chrome so just the engine + controls show in an iframe
+    try { if (new URLSearchParams(location.search).has('embed')) document.documentElement.classList.add('embed'); } catch (e) {}
   })();
 </script>
 
@@ -114,6 +116,12 @@
     nav.bar .links a:not(.keep) { display: none; }
     main { padding-top: 92px; }
   }
+  /* embed mode: hide page chrome, show only the engine + controls (for iframe on index.html) */
+  .embed nav.bar, .embed footer, .embed .section-num,
+  .embed h1.title, .embed .subtitle, .embed .lede { display: none !important; }
+  .embed body, .embed { background: transparent !important; }
+  .embed main { padding: 14px 16px 16px !important; max-width: 1180px; }
+  .embed .engine-wrap { background: transparent; border: 0; }
 </style>
 </head>
 
